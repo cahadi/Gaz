@@ -6,5 +6,9 @@
   {
     "outputFile": "wwwroot/css/noscript.css",
     "inputFile": "wwwroot/sass/noscript.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/table.css",
+    "inputFile": "wwwroot/sass/table.scss"
   }
 ]
