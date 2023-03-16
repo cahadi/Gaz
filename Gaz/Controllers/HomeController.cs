@@ -13,5 +13,9 @@ namespace Gaz.Controllers
         {
             return View();
         }
+        public IActionResult Marks()
+        {
+            return View();
+        }
     }
 }
