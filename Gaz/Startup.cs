@@ -1,9 +1,17 @@
-﻿namespace Gaz
+﻿using Gaz.Service;
+
+namespace Gaz
 {
 	public class Startup
 	{
+		public IConfiguration Configuration { get; }
+		public Startup(IConfiguration configuration) =>
+			Configuration = configuration;
+
 		public void ConfigureServices(IServiceCollection services)
 		{
+			Configuration.Bind("Project", new Config());
+
 			services.AddControllersWithViews().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0).AddSessionStateTempDataProvider();
 		}
 

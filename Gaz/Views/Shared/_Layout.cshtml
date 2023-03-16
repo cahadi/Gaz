@@ -4,16 +4,24 @@
 	@await Html.PartialAsync("MetatagsPartial")
 	@await Html.PartialAsync("CssPartial")
 </head>
-<body class="landing is-preload">
+<body class="is-preload">
 
-	<!-- Page Wrapper -->
-	<div id="page-wrapper">
+	<!-- Wrapper -->
+	<div id="wrapper">
 		@await Html.PartialAsync("HeaderPartial")
-		
-		@RenderBody()
+		<!-- Main -->
+		<div id="main">
+
+			@RenderBody()
+
+		</div>
+
+		@await Html.PartialAsync("FooterPartial")
 
 	</div>
 
+	<!-- BG -->
+	<div id="bg"></div>
 	@await Html.PartialAsync("ScriptsPartial")
 </body>
 </html>
