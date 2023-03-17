@@ -17,11 +17,15 @@ namespace Gaz.Controllers
         {
             return View();
         }
+		public IActionResult HRdepartment()
+        {
+            return View();
+        }
         public IActionResult List()
         {
             return View();
         }
-		public IActionResult HRdepartment()
+        public IActionResult Add()
         {
             return View();
         }
