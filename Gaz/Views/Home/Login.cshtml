@@ -1,5 +1,6 @@
 ﻿
 <header id="header">
+    <h1>Добро пожаловать в систему</h1>
     <nav>
         <ul>
             <li><a href="#auth">Войти</a></li>
@@ -11,12 +12,14 @@
         <h3 class="major">Аунтификация</h3>
         <form method="post" action="#">
             <div class="fields">
-                <label for="demo-email">Email</label>
-                <input type="email" name="demo-email" id="demo-email" value="" />
-            </div>
-            <div class="fields">
-                <label for="demo-name">Пароль</label>
-                <input type="password" name="demo-name" id="demo-name" value="" />
+                <div class=" field">
+                    <label for="demo-email">Email</label>
+                    <input type="email" name="demo-email" id="demo-email" value="" />
+                </div>
+                <div class="field">
+                    <label for="demo-name">Пароль</label>
+                    <input type="password" name="demo-name" id="demo-name" value="" />
+                </div>
             </div>
             <ul class="actions">
                 <li><input type="submit" asp-controller="Home" asp-action="Index" value="Войти" /></li>
