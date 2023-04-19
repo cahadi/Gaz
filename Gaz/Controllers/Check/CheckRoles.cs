@@ -21,6 +21,12 @@ namespace Gaz.Controllers.Check
             return user;
         }
 
+        public List<Role> GetRoles()
+        {
+            List<Role> roles = _context.Roles.ToList();
+            return roles;
+        }
+
         public List<UsersRole> GetRolesList(int id)
         {
             var user = GetUse(id);
@@ -29,6 +35,17 @@ namespace Gaz.Controllers.Check
                 .Include(u => u.User)
                 .ToList();
             return userRole;
+        }
+        public bool Admin(int userId)
+        {
+            var userRole = GetRolesList(userId);
+            if (userRole.Any(z => z.RoleId == 1 ||
+                z.RoleId == 2 ||
+                z.RoleId == 3))
+            {
+                return true;
+            }
+            return false;
         }
 
         public bool Discipline(int userId)
@@ -119,7 +136,7 @@ namespace Gaz.Controllers.Check
             z.RoleId == 2 ||
             z.RoleId == 3)  ||
             (user.TypeId == 1 &&
-            (indicId == null || userRole.Any(z => z.Role.IndicatorId == indicId))))
+             userRole.Any(z => z.Role.IndicatorId == indicId)))
             {
                 return true;
             }

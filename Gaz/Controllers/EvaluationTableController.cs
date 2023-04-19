@@ -49,11 +49,14 @@ namespace Gaz.Controllers
             var em10 = listForTable.GetListForTable(10);
             var em11 = listForTable.GetListForTable(11);
             var em12 = listForTable.GetListForTable(12);
+            var polls = await _context.Polls
+                .Where(p => p.Month == month && p.Year == year).ToListAsync();
 
             var viewModel = new SidebarModel
             {
                 User = user,
 				Users = users,
+                Admin = checkRoles.Admin(userId),
                 Discipline = checkRoles.Discipline(userId),
                 Side = checkRoles.Side(userId),
                 Dis = checkRoles.Dis(userId),
@@ -81,8 +84,9 @@ namespace Gaz.Controllers
 				EstimationsMarks9 = em9,
 				EstimationsMarks10 = em10,
 				EstimationsMarks11 = em11,
-				EstimationsMarks12 = em12
-			};
+				EstimationsMarks12 = em12,
+                Polls = polls
+            };
 			return View(viewModel);
         }
 
@@ -109,11 +113,14 @@ namespace Gaz.Controllers
             var em10 = listForTable.GetListForTable(10);
             var em11 = listForTable.GetListForTable(11);
             var em12 = listForTable.GetListForTable(12);
+            var polls = await _context.Polls
+                .Where(p => p.Month == month && p.Year == year).ToListAsync();
 
             var viewModel = new SidebarModel
             {
                 User = user,
                 Users = users,
+                Admin = checkRoles.Admin(userId),
                 Discipline = checkRoles.Discipline(userId),
                 Side = checkRoles.Side(userId),
                 Dis = checkRoles.Dis(userId),
@@ -141,7 +148,8 @@ namespace Gaz.Controllers
                 EstimationsMarks9 = em9,
                 EstimationsMarks10 = em10,
                 EstimationsMarks11 = em11,
-                EstimationsMarks12 = em12
+                EstimationsMarks12 = em12,
+                Polls = polls
             };
             return View(viewModel);
         }
@@ -169,11 +177,14 @@ namespace Gaz.Controllers
             var em10 = listForTable.GetListForTable(10);
             var em11 = listForTable.GetListForTable(11);
             var em12 = listForTable.GetListForTable(12);
+            var polls = await _context.Polls
+                .Where(p => p.Month == month && p.Year == year).ToListAsync();
 
             var viewModel = new SidebarModel
             {
                 User = user,
                 Users = users,
+                Admin = checkRoles.Admin(userId),
                 Discipline = checkRoles.Discipline(userId),
                 Side = checkRoles.Side(userId),
                 Dis = checkRoles.Dis(userId),
@@ -201,7 +212,8 @@ namespace Gaz.Controllers
                 EstimationsMarks9 = em9,
                 EstimationsMarks10 = em10,
                 EstimationsMarks11 = em11,
-                EstimationsMarks12 = em12
+                EstimationsMarks12 = em12,
+                Polls = polls
             };
             return View(viewModel);
         }
@@ -230,11 +242,14 @@ namespace Gaz.Controllers
             var em10 = listForTable.GetListForTable(10);
             var em11 = listForTable.GetListForTable(11);
             var em12 = listForTable.GetListForTable(12);
+            var polls = await _context.Polls
+                .Where(p => p.Month == month && p.Year == year).ToListAsync();
 
             var viewModel = new SidebarModel
             {
                 User = user,
                 Users = users,
+                Admin = checkRoles.Admin(userId),
                 Discipline = checkRoles.Discipline(userId),
                 Side = checkRoles.Side(userId),
                 Dis = checkRoles.Dis(userId),
@@ -262,7 +277,8 @@ namespace Gaz.Controllers
                 EstimationsMarks9 = em9,
                 EstimationsMarks10 = em10,
                 EstimationsMarks11 = em11,
-                EstimationsMarks12 = em12
+                EstimationsMarks12 = em12,
+                Polls = polls
             };
             return View(viewModel);
         }
@@ -291,11 +307,14 @@ namespace Gaz.Controllers
             var em10 = listForTable.GetListForTable(10);
             var em11 = listForTable.GetListForTable(11);
             var em12 = listForTable.GetListForTable(12);
+            var polls = await _context.Polls
+                .Where(p => p.Month == month && p.Year == year).ToListAsync();
 
             var viewModel = new SidebarModel
             {
                 User = user,
                 Users = users,
+                Admin = checkRoles.Admin(userId),
                 Discipline = checkRoles.Discipline(userId),
                 Side = checkRoles.Side(userId),
                 Dis = checkRoles.Dis(userId),
@@ -323,7 +342,8 @@ namespace Gaz.Controllers
                 EstimationsMarks9 = em9,
                 EstimationsMarks10 = em10,
                 EstimationsMarks11 = em11,
-                EstimationsMarks12 = em12
+                EstimationsMarks12 = em12,
+                Polls = polls
             };
             return View(viewModel);
         }
@@ -352,11 +372,14 @@ namespace Gaz.Controllers
             var em10 = listForTable.GetListForTable(10);
             var em11 = listForTable.GetListForTable(11);
             var em12 = listForTable.GetListForTable(12);
+            var polls = await _context.Polls
+                .Where(p => p.Month == month && p.Year == year).ToListAsync();
 
             var viewModel = new SidebarModel
             {
                 User = user,
                 Users = users,
+                Admin = checkRoles.Admin(userId),
                 Discipline = checkRoles.Discipline(userId),
                 Side = checkRoles.Side(userId),
                 Dis = checkRoles.Dis(userId),
@@ -384,7 +407,8 @@ namespace Gaz.Controllers
                 EstimationsMarks9 = em9,
                 EstimationsMarks10 = em10,
                 EstimationsMarks11 = em11,
-                EstimationsMarks12 = em12
+                EstimationsMarks12 = em12,
+                Polls = polls
             };
             return View(viewModel);
         }
@@ -413,11 +437,14 @@ namespace Gaz.Controllers
             var em10 = listForTable.GetListForTable(10);
             var em11 = listForTable.GetListForTable(11);
             var em12 = listForTable.GetListForTable(12);
+            var polls = await _context.Polls
+                .Where(p => p.Month == month && p.Year == year).ToListAsync();
 
             var viewModel = new SidebarModel
             {
                 User = user,
                 Users = users,
+                Admin = checkRoles.Admin(userId),
                 Discipline = checkRoles.Discipline(userId),
                 Side = checkRoles.Side(userId),
                 Dis = checkRoles.Dis(userId),
@@ -445,7 +472,8 @@ namespace Gaz.Controllers
                 EstimationsMarks9 = em9,
                 EstimationsMarks10 = em10,
                 EstimationsMarks11 = em11,
-                EstimationsMarks12 = em12
+                EstimationsMarks12 = em12,
+                Polls = polls
             };
             return View(viewModel);
         }
@@ -462,8 +490,6 @@ namespace Gaz.Controllers
             var ex = await _context.Explanations
                 .Where(e => e.Month == month && e.Year == year).ToListAsync();
 
-            List<Poll> polls = await _context.Polls.Where(z => z.Month == month && z.Year == year).ToListAsync();
-
             var em1 = listForTable.GetListForTable(1);
             var em2 = listForTable.GetListForTable(2);
             var em3 = listForTable.GetListForTable(3);
@@ -476,11 +502,14 @@ namespace Gaz.Controllers
             var em10 = listForTable.GetListForTable(10);
             var em11 = listForTable.GetListForTable(11);
             var em12 = listForTable.GetListForTable(12);
+            var polls = await _context.Polls
+                .Where(p => p.Month == month && p.Year == year).ToListAsync();
 
             var viewModel = new SidebarModel
             {
                 User = user,
                 Users = users,
+                Admin = checkRoles.Admin(userId),
                 Discipline = checkRoles.Discipline(userId),
                 Side = checkRoles.Side(userId),
                 Dis = checkRoles.Dis(userId),
@@ -508,7 +537,8 @@ namespace Gaz.Controllers
                 EstimationsMarks9 = em9,
                 EstimationsMarks10 = em10,
                 EstimationsMarks11 = em11,
-                EstimationsMarks12 = em12
+                EstimationsMarks12 = em12,
+                Polls = polls
             };
             return View(viewModel);
         }
@@ -537,11 +567,14 @@ namespace Gaz.Controllers
             var em10 = listForTable.GetListForTable(10);
             var em11 = listForTable.GetListForTable(11);
             var em12 = listForTable.GetListForTable(12);
+            var polls = await _context.Polls
+                .Where(p => p.Month == month && p.Year == year).ToListAsync();
 
             var viewModel = new SidebarModel
             {
                 User = user,
                 Users = users,
+                Admin = checkRoles.Admin(userId),
                 Discipline = checkRoles.Discipline(userId),
                 Side = checkRoles.Side(userId),
                 Dis = checkRoles.Dis(userId),
@@ -569,7 +602,8 @@ namespace Gaz.Controllers
                 EstimationsMarks9 = em9,
                 EstimationsMarks10 = em10,
                 EstimationsMarks11 = em11,
-                EstimationsMarks12 = em12
+                EstimationsMarks12 = em12,
+                Polls = polls
             };
             return View(viewModel);
         }
@@ -598,11 +632,14 @@ namespace Gaz.Controllers
             var em10 = listForTable.GetListForTable(10);
             var em11 = listForTable.GetListForTable(11);
             var em12 = listForTable.GetListForTable(12);
+            var polls = await _context.Polls
+                .Where(p => p.Month == month && p.Year == year).ToListAsync();
 
             var viewModel = new SidebarModel
             {
                 User = user,
                 Users = users,
+                Admin = checkRoles.Admin(userId),
                 Discipline = checkRoles.Discipline(userId),
                 Side = checkRoles.Side(userId),
                 Dis = checkRoles.Dis(userId),
@@ -630,7 +667,8 @@ namespace Gaz.Controllers
                 EstimationsMarks9 = em9,
                 EstimationsMarks10 = em10,
                 EstimationsMarks11 = em11,
-                EstimationsMarks12 = em12
+                EstimationsMarks12 = em12,
+                Polls = polls
             };
             return View(viewModel);
         }
@@ -659,11 +697,14 @@ namespace Gaz.Controllers
             var em10 = listForTable.GetListForTable(10);
             var em11 = listForTable.GetListForTable(11);
             var em12 = listForTable.GetListForTable(12);
+            var polls = await _context.Polls
+                .Where(p => p.Month == month && p.Year == year).ToListAsync();
 
             var viewModel = new SidebarModel
             {
                 User = user,
                 Users = users,
+                Admin = checkRoles.Admin(userId),
                 Discipline = checkRoles.Discipline(userId),
                 Side = checkRoles.Side(userId),
                 Dis = checkRoles.Dis(userId),
@@ -691,7 +732,8 @@ namespace Gaz.Controllers
                 EstimationsMarks9 = em9,
                 EstimationsMarks10 = em10,
                 EstimationsMarks11 = em11,
-                EstimationsMarks12 = em12
+                EstimationsMarks12 = em12,
+                Polls = polls
             };
             return View(viewModel);
         }
@@ -720,11 +762,14 @@ namespace Gaz.Controllers
             var em10 = listForTable.GetListForTable(10);
             var em11 = listForTable.GetListForTable(11);
             var em12 = listForTable.GetListForTable(12);
+            var polls = await _context.Polls
+                .Where(p => p.Month == month && p.Year == year).ToListAsync();
 
             var viewModel = new SidebarModel
             {
                 User = user,
                 Users = users,
+                Admin = checkRoles.Admin(userId),
                 Discipline = checkRoles.Discipline(userId),
                 Side = checkRoles.Side(userId),
                 Dis = checkRoles.Dis(userId),
@@ -752,7 +797,8 @@ namespace Gaz.Controllers
                 EstimationsMarks9 = em9,
                 EstimationsMarks10 = em10,
                 EstimationsMarks11 = em11,
-                EstimationsMarks12 = em12
+                EstimationsMarks12 = em12,
+                Polls = polls
             };
             return View(viewModel);
         }

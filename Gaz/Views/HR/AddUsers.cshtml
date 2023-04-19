@@ -37,8 +37,13 @@
                                             <option value="@type.Id">@type.TypeName</option>
                                         }
                                     </select><br><br>
-
-                                    <!-- Выбор нескольких ролей из списка -->
+                                    <select id="roles" name="Roles" multiple>
+                                        <option value=""></option>
+                                        @foreach (var role in Model.Roles)
+                                        {
+                                            <option value="@role.Id">@role.RoleName</option>
+                                        }
+                                    </select><br><br>
 
                                     <label for="email">Email:</label>
                                     <input type="email" id="email" name="User.Email"><br><br>

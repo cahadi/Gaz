@@ -37,7 +37,8 @@ namespace Gaz.Controllers
                 Dis = checkRoles.Discipline(userId),
                 Side = checkRoles.Side(userId),
                 User = user,
-                Types = types
+                Types = types,
+                Roles = checkRoles.GetRoles()
             };
             SidebarModel model = viewModel;
             return View(model);

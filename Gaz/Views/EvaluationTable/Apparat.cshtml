@@ -22,7 +22,22 @@
 
 			<!-- Main Content -->
             <div id="content">
-				<!-- Begin Page Content -->
+                @if(Model.Side == true)
+                {
+                    @if(Model.Admin == true)
+                    {
+                        <input type="email" id="email" name="User.Email"><br><br>
+                    }
+                    <select id="mark1" name="MarkId1">
+                        <option value=""></option>
+                        @foreach (var em in Model.EstimationsMarks1)
+                        {
+                            <option value="@em.Id">@em.Mark.YesNo</option>
+                        }
+                    </select><br><br>
+                    <input type="submit" value="Отправить">
+                }
+                <!-- Begin Page Content -->
 				<div class="container-fluid">
 					<!-- DataTales Example -->
 					<div class="card shadow mb-4">

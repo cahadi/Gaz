@@ -6,6 +6,7 @@ namespace Gaz.Models
 {
     public class SidebarModel
     {
+        public bool Admin { get; set; }
         public bool Discipline { get; set; }
         public bool Side { get; set; }
         public bool Dis { get; set; }
@@ -21,7 +22,7 @@ namespace Gaz.Models
         public bool Kult { get; set; }
         public bool Blag { get; set; }
 
-        public List<UsersRole> UsersRoles { get; set; }
+        public List<Role> Roles { get; set; }
         [Required]
         public User User { get; set; }
 
