@@ -1,0 +1,147 @@
+﻿@using Gaz.Models;
+@model SidebarModel
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <li class="nav-item active">
+        <a class="nav-link">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Статистика и динамика</span>
+        </a>
+    </li>
+    <hr class="sidebar-divider">
+
+    @if (Model.Dis == true)
+    {
+        <div class="sidebar-heading">
+            Логи
+        </div>
+        <li class="nav-item">
+            <a class="nav-link" asp-route-userId="@Model.User.Id">
+                <i class="fas fa-fw fa-user"></i>
+                <span>Собранные логи</span>
+            </a>
+        </li>
+        <hr class="sidebar-divider">
+    }
+
+    @if (Model.Side == true)
+    {
+        <div class="sidebar-heading">
+            Пользователи
+        </div>
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="HR" asp-action="AddUsers" asp-route-userId="@Model.User.Id">
+                <i class="fas fa-fw fa-user"></i>
+                <span>Добавление</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="HR" asp-action="ListUser" asp-route-userId="@Model.User.Id">
+                <i class="fas fa-fw fa-user"></i>
+                <span>Список пользователей</span>
+            </a>
+        </li>
+        <hr class="sidebar-divider">
+    }
+    <div class="sidebar-heading">
+        Оценки
+    </div>
+
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="Apparat" asp-route-userId="@Model.User.Id">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Аппарат</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="GIT" asp-route-userId="@Model.User.Id">
+            <i class="fas fa-fw fa-table"></i>
+            <span>ГИТ</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="GRS" asp-route-userId="@Model.User.Id">
+            <i class="fas fa-fw fa-table"></i>
+            <span>ГРС</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="DS" asp-route-userId="@Model.User.Id">
+            <i class="fas fa-fw fa-table"></i>
+            <span>ДС</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="KIPiA" asp-route-userId="@Model.User.Id">
+            <i class="fas fa-fw fa-table"></i>
+            <span>КИПиА</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="LES" asp-route-userId="@Model.User.Id">
+            <i class="fas fa-fw fa-table"></i>
+            <span>ЛЭС</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="MTS" asp-route-userId="@Model.User.Id">
+            <i class="fas fa-fw fa-table"></i>
+            <span>МТС</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="RSGEXY" asp-route-userId="@Model.User.Id">
+            <i class="fas fa-fw fa-table"></i>
+            <span>РСГЭХУ</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="STS" asp-route-userId="@Model.User.Id">
+            <i class="fas fa-fw fa-table"></i>
+            <span>СТС</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="TC" asp-route-userId="@Model.User.Id">
+            <i class="fas fa-fw fa-table"></i>
+            <span>ТЦ</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="EVS" asp-route-userId="@Model.User.Id">
+            <i class="fas fa-fw fa-table"></i>
+            <span>ЭВС</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="EXZ" asp-route-userId="@Model.User.Id">
+            <i class="fas fa-fw fa-table"></i>
+            <span>ЭХЗ</span>
+        </a>
+    </li>
+
+    <hr class="sidebar-divider">
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Home" asp-action="Change" asp-route-userId="@Model.User.Id">
+            <i class="fas fa-fw fa-user"></i>
+            <span>Сменить пароль</span>
+        </a>
+    </li>
+
+    <hr class="sidebar-divider d-none d-md-block">
+
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+
+</ul>

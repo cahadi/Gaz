@@ -1,0 +1,39 @@
+﻿@using Gaz.Models;
+@model SidebarModel
+@{
+    Layout = "_Layout";
+}
+<body class="bg-gradient-primary">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        @await Html.PartialAsync("SidebarPartial", Model)
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <div class="card shadow mb-4">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-4">Смена пароля</h1>
+                                    </div>
+                                <form asp-area="" asp-controller="Home" asp-action="Change" method="post">
+                                    <input type="hidden" id="email" name="User.Email" value="@Model.User.Email" />
+                                    <label for="oldpass">Старый пароль:</label>
+                                    <input type="password" id="oldpass" name="OldPass" required><br><br>
+                                    <label for="newpass">Новый пароль:</label>
+                                    <input type="password" id="newpass" name="NewPass" required><br><br>
+                                    <input type="submit" value="Сменить пароль">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @await Html.PartialAsync("JsPartial")
+
+</body>

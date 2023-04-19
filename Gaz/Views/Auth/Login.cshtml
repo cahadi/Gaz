@@ -1,0 +1,52 @@
+﻿@using Gaz.Models;
+@model LoginModel
+@{
+    Layout = "_Layout";
+}
+<body class="bg-gradient-primary">
+
+    <div class="container">
+
+        <!-- Outer Row -->
+        <div class="row justify-content-center">
+
+            <div class="col-xl-10 col-lg-12 col-md-9">
+
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-4">С возвращением!</h1>
+                                    </div>
+                                    <form asp-controller="Auth" asp-action="Login" method="post">
+                                        <div>
+                                            <label asp-for="Email"></label>
+                                            <input asp-for="Email" />
+                                            <span asp-validation-for="Email"></span>
+                                        </div>
+                                        <div>
+                                            <label asp-for="Password"></label>
+                                            <input asp-for="Password" />
+                                            <span asp-validation-for="Password"></span>
+                                        </div>
+                                        <div>
+                                            <input type="submit" value="Войти" />
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    @await Html.PartialAsync("JsPartial")
+
+</body>

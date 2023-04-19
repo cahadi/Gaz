@@ -1,0 +1,346 @@
+﻿@using Gaz.Domain.Entities;
+@using Gaz.Models;
+@model SidebarModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    @await Html.PartialAsync("MetaPartial")
+    @await Html.PartialAsync("CssTablePartial")
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        @await Html.PartialAsync("SidebarPartial", Model)
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <tbody>
+                                        <tr>
+                                            <td rowspan="3">ОЦЕНИВАЕМЫЕ</td>
+                                            <td rowspan="3">ПОЯСНЕНИЯ</td>
+                                            <td colspan="12">НАПРАВЛЕНИЕ ДЕЯТЕЛЬНОСТИ</td>
+                                            <td colspan="2" rowspan="2">БАЛЛЫ</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="6">Производственное</td>
+                                            <td colspan="2">Дополнительное производственное</td>
+                                            <td colspan="3">Социально-культурное</td>
+                                            <td>Доп. социокульт.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Дисциплина организации труда и качество выполняемых работ</td>
+                                            <td>Заполнение формы индентификации опасности в системе "СТОП-РИСК"</td>
+                                            <td>Рационализаторская деятельность</td>
+                                            <td>Внедрение предложений по системе "Бережливое производство"</td>
+                                            <td>Оценка руководителя (корректирующий коэффициент)</td>
+                                            <td>Положительный опыт, Оценка филиала</td>
+                                            <td>Наставничество</td>
+                                            <td>Участие в конкурсе профмастерства, Семинарах в качестве докладчика</td>
+                                            <td>Экология (участие в экологических акциях)</td>
+                                            <td>Спорт (участие в спортивных мероприятиях)</td>
+                                            <td>Культурно-массовые мероприятия</td>
+                                            <td>Благотворительные акции</td>
+                                            <td>За текущий месяц</td>
+                                            <td>Суммарный годовой (январь - декабрь)</td>
+                                        </tr>
+                                        <tr>
+                                            @foreach (User user in Model.Users)
+                                            {
+                                                <td>@user.Fio</td>
+                                                <td name="Explanation1">
+                                                    @foreach (var ex in Model.Explanations)
+                                                    {
+                                                        <a>@ex.Explanation1</a>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (Model.Dis == true)
+                                                    {
+                                                        <select id="mark1" name="MarkId1">
+                                                            <option value=""></option>
+                                                            @foreach (var em in Model.EstimationsMarks1)
+                                                            {
+                                                                <option value="@em.Id">@em.Mark.YesNo</option>
+                                                            }
+                                                        </select>
+                                                    }
+                                                    @if (Model.Dis == false)
+                                                    {
+                                                        @if (Model.Polls.Any(z => z.UserId == user.Id))
+                                                        {
+                                                            @foreach (var p in Model.Polls)
+                                                            {
+                                                                <a>@p.EstimationsMarks.Mark.YesNo</a>
+                                                            }
+                                                        }
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (Model.Stop == true)
+                                                    {
+                                                        <select id="mark2" name="MarkId2">
+                                                            <option value=""></option>
+                                                            @foreach (var em in Model.EstimationsMarks2)
+                                                            {
+                                                                <option value="@em.Id">@em.Mark.BigMark</option>
+                                                            }
+                                                        </select>
+
+                                                    }
+                                                    @if (Model.Stop == false)
+                                                    {
+                                                        @foreach (var p in Model.Polls)
+                                                        {
+                                                            <a>@p.EstimationsMarks.Mark.BigMark</a>
+                                                        }
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (Model.Rac == true)
+                                                    {
+                                                        <select id="mark3" name="MarkId3">
+                                                            <option value=""></option>
+                                                            @foreach (var em in Model.EstimationsMarks3)
+                                                            {
+                                                                <option value="@em.Id">@em.Mark.BigMark</option>
+                                                            }
+                                                        </select>
+                                                    }
+                                                    @if (Model.Rac == false)
+                                                    {
+                                                        @foreach (var p in Model.Polls)
+                                                        {
+                                                            <a>@p.EstimationsMarks.Mark.BigMark</a>
+                                                        }
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (Model.Ber == true)
+                                                    {
+                                                        <select id="mark4" name="MarkId4">
+                                                            <option value=""></option>
+                                                            @foreach (var em in Model.EstimationsMarks4)
+                                                            {
+                                                                <option value="@em.Id">@em.Mark.YesNo</option>
+                                                            }
+                                                        </select>
+                                                    }
+                                                    @if (Model.Ber == false)
+                                                    {
+                                                        @foreach (var p in Model.Polls)
+                                                        {
+                                                            <a>@p.EstimationsMarks.Mark.YesNo</a>
+                                                        }
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (Model.Ruk == true)
+                                                    {
+                                                        <select id="mark5" name="MarkId5">
+                                                            <option value=""></option>
+                                                            @foreach (var em in Model.EstimationsMarks5)
+                                                            {
+                                                                <option value="@em.Id">@em.Mark.LowMark</option>
+                                                            }
+                                                        </select>
+                                                    }
+                                                    @if (Model.Ruk == false)
+                                                    {
+                                                        @foreach (var p in Model.Polls)
+                                                        {
+                                                            <a>@p.EstimationsMarks.Mark.LowMark</a>
+                                                        }
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (Model.Pol == true)
+                                                    {
+                                                        <select id="mark6" name="MarkId6">
+                                                            <option value=""></option>
+                                                            @foreach (var em in Model.EstimationsMarks6)
+                                                            {
+                                                                <option value="@em.Id">@em.Mark.YesNo</option>
+                                                            }
+                                                        </select>
+                                                    }
+                                                    @if (Model.Pol == false)
+                                                    {
+                                                        @foreach (var p in Model.Polls)
+                                                        {
+                                                            <a>@p.EstimationsMarks.Mark.YesNo</a>
+                                                        }
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (Model.Nast == true)
+                                                    {
+                                                        <select id="mark7" name="MarkId7">
+                                                            <option value=""></option>
+                                                            @foreach (var em in Model.EstimationsMarks7)
+                                                            {
+                                                                <option value="@em.Id">@em.Mark.YesNo</option>
+                                                            }
+                                                        </select>
+                                                    }
+                                                    @if (Model.Nast == false)
+                                                    {
+                                                        @foreach (var p in Model.Polls)
+                                                        {
+                                                            <a>@p.EstimationsMarks.Mark.YesNo</a>
+                                                        }
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (Model.Prof == true)
+                                                    {
+                                                        <select id="mark8" name="MarkId8">
+                                                            <option value=""></option>
+                                                            @foreach (var em in Model.EstimationsMarks8)
+                                                            {
+                                                                <option value="@em.Id">@em.Mark.YesNo</option>
+                                                            }
+                                                        </select>
+                                                    }
+                                                    @if (Model.Prof == false)
+                                                    {
+                                                        @foreach (var p in Model.Polls)
+                                                        {
+                                                            <a>@p.EstimationsMarks.Mark.YesNo</a>
+                                                        }
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (Model.Ecolog == true)
+                                                    {
+                                                        <select id="mark9" name="MarkId9">
+                                                            <option value=""></option>
+                                                            @foreach (var em in Model.EstimationsMarks9)
+                                                            {
+                                                                <option value="@em.Id">@em.Mark.YesNo</option>
+                                                            }
+                                                        </select>
+                                                    }
+                                                    @if (Model.Ecolog == false)
+                                                    {
+                                                        @foreach (var p in Model.Polls)
+                                                        {
+                                                            <a>@p.EstimationsMarks.Mark.YesNo</a>
+                                                        }
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (Model.Sport == true)
+                                                    {
+                                                        <select id="mark10" name="MarkId10">
+                                                            <option value=""></option>
+                                                            @foreach (var em in Model.EstimationsMarks10)
+                                                            {
+                                                                <option value="@em.Id">@em.Mark.YesNo</option>
+                                                            }
+                                                        </select>
+                                                    }
+                                                    @if (Model.Sport == false)
+                                                    {
+                                                        @foreach (var p in Model.Polls)
+                                                        {
+                                                            <a>@p.EstimationsMarks.Mark.YesNo</a>
+                                                        }
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (Model.Kult == true)
+                                                    {
+                                                        <select id="mark11" name="MarkId11">
+                                                            <option value=""></option>
+                                                            @foreach (var em in Model.EstimationsMarks11)
+                                                            {
+                                                                <option value="@em.Id">@em.Mark.YesNo</option>
+                                                            }
+                                                        </select>
+                                                    }
+                                                    @if (Model.Kult == false)
+                                                    {
+                                                        @foreach (var p in Model.Polls)
+                                                        {
+                                                            <a>@p.EstimationsMarks.Mark.YesNo</a>
+                                                        }
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (Model.Blag == true)
+                                                    {
+                                                        <select id="mark12" name="MarkId12">
+                                                            <option value=""></option>
+                                                            @foreach (var em in Model.EstimationsMarks12)
+                                                            {
+                                                                <option value="@em.Id">@em.Mark.YesNo</option>
+                                                            }
+                                                        </select>
+                                                    }
+                                                    @if (Model.Blag == false)
+                                                    {
+                                                        @foreach (var p in Model.Polls)
+                                                        {
+                                                            <a>@p.EstimationsMarks.Mark.YesNo</a>
+                                                        }
+                                                    }
+                                                </td>
+
+                                                @*<td>
+                                            <select id="type" name="TypeId">
+                                            <option value=""></option>
+                                            @foreach (var type in Model.Types)
+                                            {
+                                            <option value="@type.Id">@type.TypeName</option>
+                                            }
+                                            </select>
+                                            </td>
+                                            <td>
+                                            <select id="type" name="TypeId">
+                                            <option value=""></option>
+                                            @foreach (var type in Model.Types)
+                                            {
+                                            <option value="@type.Id">@type.TypeName</option>
+                                            }
+                                            </select>
+                                            </td>*@
+                                            }
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    @await Html.PartialAsync("JsTablePartial")
+</body>
+
+</html>
