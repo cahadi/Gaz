@@ -1,11 +1,11 @@
 ﻿using Gaz.Domain.Entities;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Gaz.Models
 {
     public class SidebarModel
     {
+        public bool MainAdmin { get; set; }
         public bool Admin { get; set; }
         public bool Discipline { get; set; }
         public bool Side { get; set; }
@@ -22,9 +22,32 @@ namespace Gaz.Models
         public bool Kult { get; set; }
         public bool Blag { get; set; }
 
+        [Required]
+        public List<Score> Scores { get; set; }
+
+        public string Name { get; set; }
+        [Required]
         public List<Role> Roles { get; set; }
         [Required]
+        public int UserId { get; set; }
+        [Required]
         public User User { get; set; }
+
+        [Required]
+        public string Fio { get; set; }
+        [Required]
+        public string ServiceNumber { get; set; }
+        [Required]
+        public string Division { get; set; }
+        [Required]
+        public string Position { get; set; }
+
+        [Required]
+        public int EditUserId { get; set; }
+        [Required]
+        public User EditUser { get; set; }
+        [Required]
+        public string Email { get; set; }
 
         [Required]
         public string OldPass { get; set; }
@@ -34,10 +57,14 @@ namespace Gaz.Models
         [Required]
         public int? TypeId { get; set; }
         [Required]
+        public Onetype Type { get; set; }
+        [Required]
         public List<Onetype> Types { get; set; }
 
         [Required]
         public List<User> Users { get; set; }
+        [Required]
+        public List<User> AllUsers { get; set; }
         [Required]
         public List<Explanation> Explanations { get; set; }
         [Required]
@@ -67,5 +94,33 @@ namespace Gaz.Models
 
         [Required]
         public List<Poll> Polls { get; set; }
+
+        [Required]
+        public int MarkId1 { get; set; }
+        [Required]
+        public int MarkId2 { get; set; }
+        [Required]
+        public int MarkId3 { get; set; }
+        [Required]
+        public int MarkId4 { get; set; }
+        [Required]
+        public int MarkId5 { get; set; }
+        [Required]
+        public int MarkId6 { get; set; }
+        [Required]
+        public int MarkId7 { get; set; }
+        [Required]
+        public int MarkId8 { get; set; }
+        [Required]
+        public int MarkId9 { get; set; }
+        [Required]
+        public int MarkId10 { get; set; }
+        [Required]
+        public int MarkId11 { get; set; }
+        [Required]
+        public int MarkId12 { get; set; }
+
+        [Required]
+        public string Explanation { get; set; }
     }
 }

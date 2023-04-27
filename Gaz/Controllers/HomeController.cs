@@ -37,12 +37,12 @@ namespace Gaz.Controllers
         {
             var viewModel = new SidebarModel
             {
+                MainAdmin = checkRoles.MainAdmin(user.Id),
                 Dis = checkRoles.Discipline(user.Id),
                 Side = checkRoles.Side(user.Id),
                 User = user
             };
-            SidebarModel model = viewModel;
-            return View(model);
+            return View(viewModel);
         }
 
         [HttpGet]
@@ -55,6 +55,7 @@ namespace Gaz.Controllers
             }
             var viewModel = new SidebarModel
             {
+                MainAdmin = checkRoles.MainAdmin(userId),
                 Dis = checkRoles.Discipline(userId),
                 Side = checkRoles.Side(userId),
                 User = user
@@ -78,6 +79,7 @@ namespace Gaz.Controllers
             }
             var viewM = new SidebarModel
             {
+                MainAdmin = checkRoles.MainAdmin(user.Id),
                 Dis = checkRoles.Discipline(user.Id),
                 Side = checkRoles.Side(user.Id),
                 User = user

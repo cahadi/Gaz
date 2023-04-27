@@ -39,6 +39,12 @@ namespace SerGaz.Controllers
 			}
 		}
 
+		[HttpGet]
+		public async Task<List<Explanation>> GetExByUser(int userId)
+		{
+			return await _context.Explanations
+				.Include("User").Where(z => z.UserId == userId).ToListAsync();
+		}
 
 		[Authorize]
 		[HttpGet("GetExplanation/{id}")]
@@ -60,6 +66,24 @@ namespace SerGaz.Controllers
 			}
 		}
 
+        [HttpGet("GetExByDetail")]
+        public async Task<Explanation> GetExByDetail(int userId, 
+			int month, int year)
+        {
+            try
+            {
+                var explanation = await _context.Explanations
+                    .Include("User").FirstOrDefaultAsync(e => e.UserId == userId 
+					&& e.Month == month
+					&&e.Year == year);
+                return explanation;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
 
         [Authorize]
 		[HttpPost(nameof(PostExplanation))]
@@ -75,12 +99,12 @@ namespace SerGaz.Controllers
                     Explanation1 = explanation.Explanation1,
                     UserId = explanation.UserId,
                     User = await _context.Users
-                    .Include("Onetype").FirstOrDefaultAsync(u => u.Id == explanation.UserId),
+                    .FirstOrDefaultAsync(u => u.Id == explanation.UserId),
                     Month = month,
                     Year = year,
                     CreatedAt = DateTime.Today
                 };
-                _context.Explanations.Add(explanation);
+                _context.Explanations.Add(ex);
                 await _context.SaveChangesAsync();
                 return CreatedAtAction("GetExplanation", new { id = ex.Id }, ex);
             }

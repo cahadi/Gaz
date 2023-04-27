@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Gaz.Data;
 using Gaz.Domain.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace SerGaz.Controllers
 {
@@ -38,6 +39,22 @@ namespace SerGaz.Controllers
 			}
 		}
 
+        [HttpGet]
+        public async Task<List<UsersRole>> GetRolesByUser(int id)
+        {
+            try
+            {
+                return await _context.UsersRoles
+                    .Include("Role")
+                    .Include("User")
+                    .Where(z => z.UserId == id).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
 		[Authorize]
 		[HttpGet("GetUsersRole/{id}")]
         public async Task<ActionResult<UsersRole>> GetUsersRole(int id)
@@ -58,6 +75,23 @@ namespace SerGaz.Controllers
 				throw;
 			}
 		}
+
+        [HttpGet]
+        public async Task<UsersRole> GetUR(int userId, int roleId)
+        {
+            try
+            {
+                var ur = await _context.UsersRoles
+                    .Include("Role")
+                    .Include("User")
+                    .FirstOrDefaultAsync(z => z.UserId == userId && z.RoleId == roleId);
+                return ur;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
 
 		[Authorize]
 		[HttpPost(nameof(PostUsersRole))]

@@ -1,8 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Office2013.Word;
 using Gaz.Data;
 using Gaz.Domain.Entities;
 
@@ -19,9 +17,8 @@ namespace SerGaz.SendTable.Header
         public static void CreateHeader(WorkbookPart workbookPart, StringValue id, 
             User user, List<User> users,
 			Explanation ex, List<Explanation> explanations,
-            List<Poll> polls)
+            List<Poll> polls, Score score, List<Score> scores)
         {
-			List<Poll> polls1 = polls.Where(p => p.Month == int.Parse(id)).ToList(); 
             WorksheetPart worksheetPart = workbookPart.GetPartById(id) as WorksheetPart;
 
             Worksheet worksheet = new Worksheet();
@@ -499,61 +496,14 @@ namespace SerGaz.SendTable.Header
 				Cell cellP5 = new Cell();
 				cellP5.CellReference = $"P{i}";
 				cellP5.DataType = CellValues.SharedString;
-				cellP5.CellValue = new CellValue($"=((ЕСЛИ(И(D{i}=\"Да\";H{i}=1);15;0))+(ЕСЛИ(И(D{i}=\"Да\";НЕ(H{i}=1));H{i}*30;0))+ЕСЛИ(E{i}=\"Нет\";0;E{i}))+(ЕСЛИ(F{i}=\"Нет\";0;F5))+(ЕСЛИ(I{i}=\"Да\";10;0))+(ЕСЛИ(I{i}=\"Нет\";0))+(ЕСЛИ(G{i}=\"Да\";10;0))+(ЕСЛИ(J{i}=\"Да\";10;0))+(ЕСЛИ(K{i}=\"Да\";10;0))+(ЕСЛИ(L{i}=\"Да\";10;0))+(ЕСЛИ(СОВПАД(\"Да\";M{i});10;0))+(ЕСЛИ(СОВПАД(\"да\";M{i});5;0))+(ЕСЛИ(СОВПАД(\"Да\";N{i});10;0))+(ЕСЛИ(СОВПАД(\"да\";N{i});5;0))+(ЕСЛИ(СОВПАД(\"Да\";O{i});10;0))+(ЕСЛИ(СОВПАД(\"да\";O{i});5;0))");
+				cellP5.CellValue = new CellValue($"{score.MonthScore}");
                 row5.Append(cellP5);
 
 
 				Cell cellQ5 = new Cell();
 				cellQ5.CellReference = $"Q{i}";
 				cellQ5.DataType = CellValues.SharedString;
-				if (int.TryParse(id, out int idValue) && idValue == 1)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}");
-				}
-				else if(int.TryParse(id, out int idValue2) && idValue2 == 2)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}+Январь!Q{i}");
-				}
-				else if (int.TryParse(id, out int idValue3) && idValue3 == 3)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}+Февраль!Q{i}");
-				}
-				else if (int.TryParse(id, out int idValue4) && idValue4 == 4)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}+Март!Q{i}");
-				}
-				else if (int.TryParse(id, out int idValue5) && idValue5 == 5)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}+Апрель!Q{i}");
-				}
-				else if (int.TryParse(id, out int idValue6) && idValue6 == 6)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}+Май!Q{i}");
-				}
-				else if (int.TryParse(id, out int idValue7) && idValue7 == 7)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}+Июнь!Q{i}");
-				}
-				else if (int.TryParse(id, out int idValue8) && idValue8 == 8)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}+Июль!Q{i}");
-				}
-				else if (int.TryParse(id, out int idValue9) && idValue9 == 9)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}+Август!Q{i}");
-				}
-				else if (int.TryParse(id, out int idValue10) && idValue10 == 10)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}+Сентябрь!Q{i}");
-				}
-				else if (int.TryParse(id, out int idValue11) && idValue11 == 11)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}+Октябрь!Q{i}");
-				}
-				else if (int.TryParse(id, out int idValue12) && idValue12 == 12)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}+Ноябрь!Q{i}");
-				}
+                cellQ5.CellValue = new CellValue($"{score.FinalScore}");
 				row5.Append(cellQ5);
 
 
@@ -583,7 +533,7 @@ namespace SerGaz.SendTable.Header
                     Cell cellC5 = new Cell();
                     cellC5.CellReference = $"C{i}";
                     cellC5.DataType = CellValues.String;
-                    cellC5.CellValue = new CellValue($"{ex.Explanation1}");
+                    cellC5.CellValue = new CellValue($"{exp.Explanation1}");
                     dataRow.Append(cellC5);
                 }
                 else
@@ -595,10 +545,9 @@ namespace SerGaz.SendTable.Header
 					dataRow.Append(cellC5);
 				}
 
-				List<Poll> polls2 = polls.Where(p => p.UserId == us.Id).ToList();
+                var polls2 = polls.Where(p => p.UserId == us.Id).ToList();
 
-
-				Poll poll = polls2.FirstOrDefault(p => p.EstimationsMarks.EstimationId == 1);
+                Poll poll = polls2.FirstOrDefault(p => p.EstimationsMarks.EstimationId == 1);
                 
 				Cell cellD5 = new Cell();
 				cellD5.CellReference = $"D{i}";
@@ -745,66 +694,20 @@ namespace SerGaz.SendTable.Header
 					cellO5.CellValue = new CellValue($"{poll11.EstimationsMarks.Mark.YesNo}");
 				dataRow.Append(cellO5);
 
+                Score sc = scores.FirstOrDefault(s => s.UserId == us.Id) ?? new Score();
 
-				Cell cellP5 = new Cell();
-				cellP5.CellReference = $"P{i}";
-				cellP5.DataType = CellValues.String;
-				cellP5.CellValue = new CellValue($"=(ЕСЛИ((D{i}=\"Да\");H{i}*30;0)+ЕСЛИ(E{i}=\"Нет\";0;E{i}))+(ЕСЛИ(F{i}=\"Нет\";0;F{i}))+(ЕСЛИ(I{i}=\"Да\";10;0))+(ЕСЛИ(I{i}=\"Нет\";0))+(ЕСЛИ(G{i}=\"Да\";10;0))+(ЕСЛИ(J{i}=\"Да\";10;0))+(ЕСЛИ(K{i}=\"Да\";10;0))+(ЕСЛИ(L{i}=\"Да\";10;0))+(ЕСЛИ(СОВПАД(\"Да\";M{i});10;0))+(ЕСЛИ(СОВПАД(\"да\";M{i});5;0))+(ЕСЛИ(N{i}=\"Да\";10;0))+(ЕСЛИ(СОВПАД(\"Да\";O{i});10;0))+(ЕСЛИ(СОВПАД(\"да\";O{i});5;0))");
-				dataRow.Append(cellP5);
+                Cell cellP5 = new Cell();
+                cellP5.CellReference = $"P{i}";
+                cellP5.DataType = CellValues.SharedString;
+                cellP5.CellValue = new CellValue($"{sc.MonthScore}");
+                dataRow.Append(cellP5);
 
 
-				Cell cellQ5 = new Cell();
-				cellQ5.CellReference = $"Q{i}";
-				cellQ5.DataType = CellValues.String;
-				if (int.TryParse(id, out int idValue) && idValue == 1)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}");
-				}
-				else if (int.TryParse(id, out int idValue1) && idValue1 == 2)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}+Январь!Q{i}");
-				}
-				else if (int.TryParse(id, out int idValue2) && idValue2 == 3)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}+Февраль!Q{i}");
-				}
-				else if (int.TryParse(id, out int idValue3) && idValue3 == 4)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}+Март!Q{i}");
-				}
-				else if (int.TryParse(id, out int idValue4) && idValue4 == 5)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}+Апрель!Q{i}");
-				}
-				else if (int.TryParse(id, out int idValue5) && idValue5 == 6)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}+Май!Q{i}");
-				}
-				else if (int.TryParse(id, out int idValue6) && idValue6 == 7)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}+Июнь!Q{i}");
-				}
-				else if (int.TryParse(id, out int idValue7) && idValue7 == 8)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}+Июль!Q{i}");
-				}
-				else if (int.TryParse(id, out int idValue8) && idValue8 == 9)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}+Август!Q{i}");
-				}
-				else if (int.TryParse(id, out int idValue9) && idValue9 == 10)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}+Сентябрь!Q{i}");
-				}
-				else if (int.TryParse(id, out int idValue10) && idValue10 == 11)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}+Октябрь!Q{i}");
-				}
-				else if (int.TryParse(id, out int idValue11) && idValue11 == 12)
-				{
-					cellQ5.CellValue = new CellValue($"=P{i}+Ноябрь!Q{i}");
-				}
-				dataRow.Append(cellQ5);
+                Cell cellQ5 = new Cell();
+                cellQ5.CellReference = $"Q{i}";
+                cellQ5.DataType = CellValues.SharedString;
+                cellQ5.CellValue = new CellValue($"{sc.FinalScore}");
+                dataRow.Append(cellQ5);
 
 
 				sheetData.Append(dataRow);

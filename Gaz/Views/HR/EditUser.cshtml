@@ -1,0 +1,83 @@
+﻿@using Gaz.Models;
+@model SidebarModel
+@{
+    Layout = "_Layout";
+}
+<input type="hidden" name="User.Id" value="@Model.User.Id"/>
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        @await Html.PartialAsync("SidebarPartial", Model)
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <div class="card shadow mb-4">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <form class="user" asp-area="" asp-controller="HR"
+                                      asp-action="EditUser" method="post">
+                                    @if(Model.EditUserId == 0)
+                                    {
+                            <input type="hidden" name="User.Id" value="@Model.User.Id">
+                                        <label>Выберите</label>
+                                        <select id="user" name="EditUserId">
+                                            <option value=""></option>
+                                            @foreach (var user in Model.AllUsers)
+                                            {
+                                                <option value="@user.Id">@user.Fio</option>
+                                            }
+                                        </select><br><br>
+                                        <input class="btn btn-primary btn-user btn-block" type="submit" value="Выбрать" />                                    
+                                    }
+                                </form>
+                                    @if(Model.EditUserId != 0)
+                                    {
+                                <form class="user" asp-area="" asp-controller="HR"
+                                      asp-action="SaveEditUser" method="post">
+                                        <input type="hidden" name="User.Id" value="@Model.User.Id">
+                                        <input type="hidden" name="EditUser.Id" value="@Model.EditUser.Id"/>
+                                        <h1> </h1>
+                                        <label for="fio">ФИО:</label>
+                                        <input type="text" id="fio" name="Fio" value="@Model.Fio" required><br><br>
+                                        <label for="serviceNumber">Номер службы:</label>
+                                        <input type="text" id="serviceNumber" name="ServiceNumber" value="@Model.ServiceNumber"><br><br>
+                                        <label for="division">Подразделение:</label>
+                                        <input type="text" id="division" name="Division" value="@Model.Division"><br><br>
+                                        <label for="position">Должность:</label>
+                                        <input type="text" id="position" name="Position" value="@Model.Position"><br><br>
+                                        <select id="type" name="TypeId">
+                                            <option value=""></option>
+                                            @foreach (var type in Model.Types)
+                                            {
+                                                <option value="@type.Id">@type.TypeName</option>
+                                            }
+                                        </select><br><br>
+                                        <select id="roles" name="Roles" multiple>
+                                            <option value=""></option>
+                                            @foreach (var role in Model.Roles)
+                                            {
+                                                <option value="@role.Id">@role.RoleName</option>
+                                            }
+                                        </select><br><br>
+                                        <label for="email">Email:</label>
+                                        <input type="email" id="email" name="EditUser.Email" value="@Model.EditUser.Email"><br><br>
+                                        <input class="btn btn-primary btn-user btn-block" type="submit" value="Сохранить">                                    
+                                    </form>
+                                    }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    @await Html.PartialAsync("JsTablePartial")
+</body>

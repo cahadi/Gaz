@@ -16,6 +16,7 @@ namespace Gaz.Controllers.GetList
         {
             var em = _context.EstimationsMarks
                 .Where(e => e.EstimationId == id)
+                .Include("Estimation")
                 .Include("Mark").ToList();
             return em;
         }

@@ -37,6 +37,24 @@ namespace SerGaz.Controllers
 			}
 		}
 
+		[HttpGet(nameof(GetScoresByUser))]
+		public async Task<List<Score>> GetScoresByUser(int userId)
+        {
+            return await _context.Scores
+                .Include("User").Where(z=>z.UserId == userId)
+				.ToListAsync();
+        }
+
+		[HttpGet(nameof(GetScoreByDetail))]
+		public async Task<Score> GetScoreByDetail(int userId, int month, int year)
+		{
+			Score score = await _context.Scores.Include("User")
+				.FirstOrDefaultAsync(z => z.UserId == userId
+				&& z.Month == month
+				&& z.Year == year);
+			return score;
+		}
+
 		[Authorize]
 		[HttpGet("GetScore/{id}")]
         public async Task<ActionResult<Score>> GetScore(int id)
@@ -67,9 +85,11 @@ namespace SerGaz.Controllers
 				{
 					UserId = score.UserId,
 					User = await _context.Users
-					.Include("Onetype").FirstOrDefaultAsync(u=>u.Id==score.UserId),
+					.Include("Type").FirstOrDefaultAsync(u=>u.Id==score.UserId),
 					MonthScore = score.MonthScore,
 					FinalScore = score.FinalScore,
+					Month = score.Month,
+					Year = score.Year,
 					CreatedAt = DateTime.Today
 				};
 				_context.Scores.Add(sc); 
@@ -96,7 +116,7 @@ namespace SerGaz.Controllers
 					.Include("User").FirstOrDefaultAsync(s=>s.Id==id);
 				sc.UserId = score.UserId;
 				sc.User = await _context.Users
-					.Include("Oneytype").FirstOrDefaultAsync(u=>u.Id==score.UserId);
+					.Include("Type").FirstOrDefaultAsync(u=>u.Id==score.UserId);
 				sc.MonthScore = score.MonthScore;
 				sc.FinalScore = score.FinalScore;
 				sc.UpdatedAt = DateTime.Today;

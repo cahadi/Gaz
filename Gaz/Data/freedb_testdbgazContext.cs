@@ -37,7 +37,7 @@ namespace Gaz.Data
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseMySql("server=sql.freedb.tech;database=freedb_testdbgaz;user=freedb_cahadi;password=y8!pYtGQDyJx?9j", ServerVersion.Parse("8.0.28-mysql"));
+                optionsBuilder.UseMySql("server=pravo9k9.beget.tech;database=pravo9k9_yana_pe;user=pravo9k9_yana_pe;password=rq-A26ZIP", ServerVersion.Parse("8.0.28-mysql"));
             }
         }
 
@@ -380,6 +380,10 @@ namespace Gaz.Data
                 entity.Property(e => e.FinalScore).HasColumnName("final_score");
 
                 entity.Property(e => e.MonthScore).HasColumnName("month_score");
+
+                entity.Property(e => e.Month).HasColumnName("month");
+
+                entity.Property(e => e.Year).HasColumnName("year");
 
                 entity.Property(e => e.UpdatedAt)
                     .HasColumnType("datetime")

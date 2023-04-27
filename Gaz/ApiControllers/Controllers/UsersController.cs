@@ -24,12 +24,15 @@ namespace SerGaz.Controllers
 
 		[Authorize]
 		[HttpGet(nameof(GetUsers))]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<List<User>> GetUsers()
 		{
 			try
 			{
 				return await _context.Users
-					.Include("Type").ToListAsync();
+					.Include("Type")
+					.Include("UsersRoles")
+					.Include("UsersRoles.Role")
+					.ToListAsync();
 			}
 			catch (Exception ex)
 			{

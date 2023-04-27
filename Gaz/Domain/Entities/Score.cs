@@ -10,6 +10,8 @@ namespace Gaz.Domain.Entities
         public int UserId { get; set; }
         public int? MonthScore { get; set; }
         public int? FinalScore { get; set; }
+        public int Month { get; set; }
+        public int Year { get; set; }
         [JsonIgnore]
         public DateTime? CreatedAt { get; set; }
         [JsonIgnore]

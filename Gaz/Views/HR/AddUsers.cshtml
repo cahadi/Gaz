@@ -21,6 +21,7 @@
                             <div class="table-responsive">
                                 <form class="user" asp-area="" asp-controller="HR"
                                       asp-action="AddUsers" method="post">
+                                    <input type="hidden" name="User.Id" value="@Model.User.Id">
                                     <label for="fio">ФИО:</label>
                                     <input type="text" id="fio" name="User.Fio" required><br><br>
                                     <label for="serviceNumber">Номер службы:</label>
@@ -29,7 +30,6 @@
                                     <input type="text" id="division" name="User.Division"><br><br>
                                     <label for="position">Должность:</label>
                                     <input type="text" id="position" name="User.Position"><br><br>
-
                                     <select id="type" name="TypeId">      
                                         <option value=""></option>
                                         @foreach (var type in Model.Types)
@@ -44,11 +44,9 @@
                                             <option value="@role.Id">@role.RoleName</option>
                                         }
                                     </select><br><br>
-
                                     <label for="email">Email:</label>
                                     <input type="email" id="email" name="User.Email"><br><br>
-
-                                    <input type="submit" value="Добавить">
+                                    <input class="btn btn-primary btn-user btn-block" type="submit" value="Добавить">
                                 </form>
                             </div>
                         </div>

@@ -46,11 +46,35 @@ namespace Gaz.Controllers
             };
             User useR = viewModel.User;
             string token = authenticateController.Login(model).ToString();
-            if (token != null && useR != null)
+            switch (useR.Division)
             {
-                return RedirectToAction("Start", "Home", useR);
+                case "Аппарат":
+                    return RedirectToAction("Apparat", "EvaluationTable", new { userId = viewModel.User.Id });
+                case "ГИТ":
+                    return RedirectToAction("GIT", "EvaluationTable", new { userId = viewModel.User.Id });
+                case "ГРС":
+                    return RedirectToAction("GRS", "EvaluationTable", new { userId = viewModel.User.Id });
+                case "ДС":
+                    return RedirectToAction("DS", "EvaluationTable", new { userId = viewModel.User.Id });
+                case "КИПиА":
+                    return RedirectToAction("KIPiA", "EvaluationTable", new { userId = viewModel.User.Id });
+                case "ЛЭС":
+                    return RedirectToAction("LES", "EvaluationTable", new { userId = viewModel.User.Id });
+                case "МТС":
+                    return RedirectToAction("MTS", "EvaluationTable", new { userId = viewModel.User.Id });
+                case "РСГЭХУ":
+                    return RedirectToAction("RSGEXY", "EvaluationTable", new { userId = viewModel.User.Id });
+                case "СТС":
+                    return RedirectToAction("STS", "EvaluationTable", new { userId = viewModel.User.Id });
+                case "ТЦ":
+                    return RedirectToAction("TC", "EvaluationTable", new { userId = viewModel.User.Id });
+                case "ЭВС":
+                    return RedirectToAction("EVS", "EvaluationTable", new { userId = viewModel.User.Id });
+                case "ЭХЗ":
+                    return RedirectToAction("EXZ", "EvaluationTable", new { userId = viewModel.User.Id });
+                default: 
+                    return RedirectToAction("Start", "Home", useR);
             }
-            return View(model);
         }
     }
 }

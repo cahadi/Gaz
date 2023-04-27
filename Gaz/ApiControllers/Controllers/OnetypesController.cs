@@ -25,7 +25,7 @@ namespace SerGaz.Controllers
 
 		[Authorize]
 		[HttpGet(nameof(GetOnetypes))]
-        public async Task<ActionResult<IEnumerable<Onetype>>> GetOnetypes()
+        public async Task<List<Onetype>> GetOnetypes()
 		{
 			try
 			{
@@ -39,15 +39,11 @@ namespace SerGaz.Controllers
 
 		[Authorize]
 		[HttpGet("GetOnetype/{id}")]
-        public async Task<ActionResult<Onetype>> GetOnetype(int id)
+        public async Task<Onetype> GetOnetype(int? id)
 		{
 			try
 			{
                 var onetype = await _context.Onetypes.FindAsync(id);
-                if (onetype == null)
-                {
-                    return NotFound();
-                }
                 return onetype;
             }
 			catch (Exception ex)

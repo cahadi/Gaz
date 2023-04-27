@@ -38,6 +38,60 @@ namespace SerGaz.Controllers
 			}
 		}
 
+		[HttpGet(nameof(GetPollsByUser))]
+		public async Task<List<Poll>> GetPollsByUser(int userId)
+        {
+            return await _context.Polls
+            .Include("EstimationsMarks")
+            .Include("User").Where(z=>z.UserId == userId)
+			.ToListAsync();
+        }
+
+		[HttpGet(nameof(GetPollsByDetail))]
+		public async Task<List<Poll>> GetPollsByDetail(int userId, int month, int year)
+		{
+			var polls = await _context.Polls
+				.Include("User")
+				.Include("EstimationsMarks")
+				.Include("EstimationsMarks.Mark")
+				.Include("EstimationsMarks.Estimation")
+				.Where(z => z.UserId == userId && z.Month == month && z.Year == year)
+				.ToListAsync();
+			return polls;
+		}
+
+		[HttpGet(nameof(GetPollByMoreDetail))]
+		public async Task<Poll> GetPollByMoreDetail(int userId, 
+			int month, int year, int estiId)
+		{
+			var poll = await _context.Polls
+				.Include("User")
+				.Include("EstimationsMarks")
+				.Include("EstimationsMarks.Mark")
+				.Include("EstimationsMarks.Estimation")
+				.FirstOrDefaultAsync(p => p.UserId == userId
+				&& p.Month == month && p.Year == year
+				&& p.EstimationsMarks.EstimationId == estiId);
+			return poll;
+
+        }
+
+		[HttpGet(nameof(GetPollByOtherDetail))]
+		public async Task<Poll> GetPollByOtherDetail(int userId,
+            int month, int year, int emId)
+        {
+            var poll = await _context.Polls
+                .Include("User")
+                .Include("EstimationsMarks")
+                .Include("EstimationsMarks.Mark")
+                .Include("EstimationsMarks.Estimation")
+                .FirstOrDefaultAsync(p => p.UserId == userId
+                && p.Month == month && p.Year == year
+                && p.EstimationsMarksId == emId);
+            return poll;
+        }
+
+
 		[Authorize]
 		[HttpGet("GetPoll/{id}")]
         public async Task<ActionResult<Poll>> GetPoll(int id)
@@ -63,33 +117,25 @@ namespace SerGaz.Controllers
 		[HttpPost(nameof(PostPoll))]
 		public async Task<ActionResult<Poll>> PostPoll(Poll poll)
 		{
-			try
+			DateTime now = DateTime.Now;
+			int month = now.Month;
+			int year = now.Year;
+			var po = new Poll
 			{
-				DateTime now = DateTime.Now;
-				int month = now.Month;
-				int year = now.Year;
-				var po = new Poll
-				{
-					UserId = poll.UserId,
-					User = await _context.Users
-					.Include("Onetype").FirstOrDefaultAsync(u=>u.Id==poll.UserId),
-					EstimationsMarksId = poll.EstimationsMarksId,
-					EstimationsMarks = await _context.EstimationsMarks
-					.Include("Estimation")
-					.Include("Mark")
-					.FirstOrDefaultAsync(em=>em.Id==poll.EstimationsMarksId),
-					Month = month,
-					Year = year,
-					CreatedAt = DateTime.Today
-				};
-				_context.Polls.Add(po);
-				await _context.SaveChangesAsync();
-				return CreatedAtAction("GetPoll", new { id = po.Id }, po);
-			}
-			catch (Exception ex)
-			{
-				throw;
-			}
+				UserId = poll.UserId,
+				User = await _context.Users
+				.FirstOrDefaultAsync(u=>u.Id==poll.UserId),
+				EstimationsMarksId = poll.EstimationsMarksId,
+				EstimationsMarks = await _context.EstimationsMarks
+                .Include("Mark").Include("Estimation")
+                .FirstOrDefaultAsync(em=>em.Id==poll.EstimationsMarksId),
+				Month = month,
+				Year = year,
+				CreatedAt = DateTime.Today
+			};
+			_context.Polls.Add(po);
+			await _context.SaveChangesAsync();
+			return CreatedAtAction("GetPoll", new { id = po.Id }, po);
 		}
 
 

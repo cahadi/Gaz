@@ -55,12 +55,8 @@ namespace Gaz.ApiControllers.Auth.Controllers
         [HttpPost(nameof(Register)), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Register(User model)
+        public async Task<User> Register(User model)
         {
-            if (!IsValidEmail(model.Email))
-            {
-                return BadRequest();
-            }
             string password = GeneratePassword();
             model.Password = password;
             SendEmail(model.Email, model.Password);
@@ -82,15 +78,7 @@ namespace Gaz.ApiControllers.Auth.Controllers
             _dbContext.SaveChanges();
 
             var result = user;
-
-            if (result != null)
-            {
-                return Ok(user);
-            }
-            else
-            {
-                return BadRequest();
-            }
+            return user;
         }
 
         public static void SendEmail(string email, string password)

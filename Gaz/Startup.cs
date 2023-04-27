@@ -1,11 +1,5 @@
 ﻿using Gaz.Data;
 using Gaz.Domain;
-using Gaz.Domain.Repositories.Abstract;
-using Gaz.Domain.Repositories.Abstract.Auth;
-using Gaz.Domain.Repositories.Abstract.SendMessage;
-using Gaz.Domain.Repositories.EntityFramework;
-using Gaz.Domain.Repositories.EntityFramework.Auth;
-using Gaz.Domain.Repositories.EntityFramework.SendMessage;
 using Gaz.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -32,28 +26,6 @@ namespace Gaz
         {
             Configuration.Bind("Project", new Config());
             services.AddControllersWithViews().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0).AddSessionStateTempDataProvider();
-
-            services.AddScoped<DataManager>();
-
-            services.AddTransient<IEditTimesRepository, EFEditTimesRepository>();
-            services.AddTransient<IEstimationRepository, EFEstimationRepository>();
-            services.AddTransient<IEstimationsMarkRepository, EFEstimationsMarkRepository>();
-            services.AddTransient<IExplanationRepository, EFExplanationRepository>();
-            services.AddTransient<IIndicatorRepository, EFIndicatorRepository>();
-            services.AddTransient<ILawRepository, EFLawRepository>();
-            services.AddTransient<IMarkRepositpry, EFMarkRepositpry>();
-            services.AddTransient<IOnetypeRepository, EFOnetypeRepository>();
-            services.AddTransient<IPollRepository, EFPollRepository>();
-            services.AddTransient<IRoleRepository, EFRoleRepository>();
-            services.AddTransient<IRolesLawRepository, EFRolesLawRepository>();
-            services.AddTransient<IScoreRepository, EFScoreRepository>();
-            services.AddTransient<IUserRepository, EFUserRepository>();
-            services.AddTransient<IUsersRoleRepository, EFUsersRoleRepository>();
-            services.AddTransient<IAuthenticateRepository, EFAuthenticateRepository>();
-            services.AddTransient<IChangePasswordRepository, EFChangePasswordRepository>();
-            services.AddTransient<IRegisterRepository, EFRegisterRepository>();
-            services.AddTransient<ISendExselRepository, EFSendExselRepository>();
-            services.AddTransient<DataManager>();
 
             services.AddMvc();
 
@@ -150,19 +122,7 @@ namespace Gaz
                 opts.Password.RequireUppercase = false;
                 opts.Password.RequireDigit = false;
             }).AddEntityFrameworkStores<freedb_testdbgazContext>().AddDefaultTokenProviders();
-
-            //services.ConfigureApplicationCookie(options =>
-            //{
-            //    options.Cookie.Name = "myCompanyAuth";
-            //    options.Cookie.HttpOnly = true;
-            //    options.LoginPath = "/login";
-            //    options.AccessDeniedPath = "/account/accessdenied";
-            //    options.SlidingExpiration = true;
-            //});
-
         }
-
-
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -187,7 +147,6 @@ namespace Gaz
 
             app.UseEndpoints(endpoints =>
             {
-                //endpoints.MapControllerRoute("admin", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute
                 (
                     "default", 

@@ -32,6 +32,6 @@ namespace Gaz.Domain.Entities
         public virtual ICollection<Explanation> Explanations { get; set; }
         public virtual ICollection<Poll> Polls { get; set; }
         public virtual ICollection<Score> Scores { get; set; }
-        public virtual ICollection<UsersRole> UsersRoles { get; set; }
+        public virtual ICollection<UsersRole> UsersRoles { get; set; } = null!;
     }
 }

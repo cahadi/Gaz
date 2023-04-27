@@ -17,7 +17,8 @@ namespace Gaz.Controllers.Check
 
         public User GetUse(int id)
         {
-            User user = _context.Users.FirstOrDefault(u => u.Id == id);
+            User user = _context.Users
+                .Include("Type").FirstOrDefault(u => u.Id == id);
             return user;
         }
 
@@ -35,6 +36,15 @@ namespace Gaz.Controllers.Check
                 .Include(u => u.User)
                 .ToList();
             return userRole;
+        }
+        public bool MainAdmin(int userId)
+        {
+            var userRole = GetRolesList(userId);
+            if (userRole.Any(z => z.RoleId == 1))
+            {
+                return true;
+            }
+            return false;
         }
         public bool Admin(int userId)
         {
@@ -78,8 +88,7 @@ namespace Gaz.Controllers.Check
             var userRole = GetRolesList(userId);
             if (userRole.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
-                z.RoleId == 3 ||
-                z.UserId == userId))
+                z.RoleId == 3))
             {
                 return true;
             }
@@ -92,8 +101,7 @@ namespace Gaz.Controllers.Check
             if (userRole.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3 ||
-                z.RoleId == 5 ||
-                z.UserId == userId))
+                z.RoleId == 5))
             {
                 return true;
             }
@@ -106,8 +114,7 @@ namespace Gaz.Controllers.Check
             if (userRole.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3 ||
-                z.RoleId == 6 ||
-                z.UserId == userId))
+                z.RoleId == 6))
             {
                 return true;
             }
@@ -120,8 +127,7 @@ namespace Gaz.Controllers.Check
             if (userRole.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3 ||
-                z.RoleId == 7 ||
-                z.UserId == userId))
+                z.RoleId == 7))
             {
                 return true;
             }
@@ -149,8 +155,7 @@ namespace Gaz.Controllers.Check
             if (userRole.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3 ||
-                z.RoleId == 8 ||
-                z.UserId == userId))
+                z.RoleId == 8))
             {
                 return true;
             }
@@ -163,8 +168,7 @@ namespace Gaz.Controllers.Check
             if (userRole.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3 ||
-                z.RoleId == 9 ||
-                z.UserId == userId))
+                z.RoleId == 9))
             {
                 return true;
             }
@@ -177,8 +181,7 @@ namespace Gaz.Controllers.Check
             if (userRole.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3 ||
-                z.RoleId == 10 ||
-                z.UserId == userId))
+                z.RoleId == 10))
             {
                 return true;
             }
@@ -191,8 +194,7 @@ namespace Gaz.Controllers.Check
             if (userRole.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3 ||
-                z.RoleId == 11 ||
-                z.UserId == userId))
+                z.RoleId == 11))
             {
                 return true;
             }
@@ -205,8 +207,7 @@ namespace Gaz.Controllers.Check
             if (userRole.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3 ||
-                z.RoleId == 12 ||
-                z.UserId == userId))
+                z.RoleId == 12))
             {
                 return true;
             }
@@ -219,8 +220,7 @@ namespace Gaz.Controllers.Check
             if (userRole.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3 ||
-                z.RoleId == 13 ||
-                z.UserId == userId))
+                z.RoleId == 13))
             {
                 return true;
             }
@@ -233,8 +233,7 @@ namespace Gaz.Controllers.Check
             if (userRole.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3 ||
-                z.RoleId == 14 ||
-                z.UserId == userId))
+                z.RoleId == 14))
             {
                 return true;
             }
