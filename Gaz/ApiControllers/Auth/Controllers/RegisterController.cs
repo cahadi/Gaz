@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Gaz.Data;
 using Gaz.Domain.Entities;
+using static System.Net.WebRequestMethods;
 
 namespace Gaz.ApiControllers.Auth.Controllers
 {
@@ -97,7 +98,8 @@ namespace Gaz.ApiControllers.Auth.Controllers
                         + ". Ваш пароль: "
                         + password
                         + " . Пароль сгенерирован авторатически! " +
-                        "В целях безопасности Вашей учетной записи, пожалуйста, не раскрывайте ее никому и смените пароль!";
+                        "В целях безопасности Вашей учетной записи, пожалуйста, не раскрывайте ее никому и смените пароль! " + 
+                        $"http://nameee-001-site1.itempurl.com/AUTH/LOGIN";
 
                     using (var client = new SmtpClient(smtpServer, smtpPort))
                     {

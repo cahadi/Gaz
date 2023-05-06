@@ -2,7 +2,7 @@
 using Gaz.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Gaz.Controllers.GetElement
+namespace Gaz.HelpFolder.GetElement
 {
     public class GetEl
     {
@@ -16,7 +16,7 @@ namespace Gaz.Controllers.GetElement
         {
             EstimationsMark em = _context.EstimationsMarks
                 .Include("Mark").Include("Estimation")
-                .FirstOrDefault(p => p.Id == 
+                .FirstOrDefault(p => p.Id ==
                 emId);
             return em;
         }

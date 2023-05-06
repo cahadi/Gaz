@@ -24,22 +24,26 @@ namespace SerGaz.Controllers
             _context = context;
         }
 
+		List<Explanation> exs;
+
 		[Authorize]
 		[HttpGet(nameof(GetExplanations))]
-        public async Task<ActionResult<IEnumerable<Explanation>>> GetExplanations()
+        public async Task<List<Explanation>> GetExplanations()
 		{
-			try
-			{
-				return await _context.Explanations
-					.Include("User").ToListAsync();
-			}
-			catch (Exception ex)
-			{
-				throw;
-			}
-		}
+            exs = await _context.Explanations
+				.Include("User").ToListAsync();
+            return exs;
+        }
 
-		[HttpGet]
+        [HttpGet(nameof(GetExplanationsByMY))]
+        public async Task<List<Explanation>> GetExplanationsByMY(int month, int year)
+        {
+            return exs.Where(e => e.Month == month &&
+                e.Year == year).ToList();
+        }
+
+
+		[HttpGet(nameof(GetExByUser))]
 		public async Task<List<Explanation>> GetExByUser(int userId)
 		{
 			return await _context.Explanations

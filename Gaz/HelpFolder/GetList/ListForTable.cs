@@ -1,8 +1,9 @@
 ﻿using Gaz.Data;
 using Gaz.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using SerGaz.Controllers;
 
-namespace Gaz.Controllers.GetList
+namespace Gaz.HelpFolder.GetList
 {
     public class ListForTable
     {
@@ -12,13 +13,11 @@ namespace Gaz.Controllers.GetList
             _context = context;
         }
 
-        public List<EstimationsMark> GetListForTable(int id)
+        public List<Indicator> GetDivisions()
         {
-            var em = _context.EstimationsMarks
-                .Where(e => e.EstimationId == id)
-                .Include("Estimation")
-                .Include("Mark").ToList();
-            return em;
+            var divisions = _context.Indicators
+                .Where(i => i.Id > 9 && i.Id < 22).ToList();
+            return divisions;
         }
     }
 }

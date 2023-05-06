@@ -23,7 +23,7 @@
                                       asp-action="EditUser" method="post">
                                     @if(Model.EditUserId == 0)
                                     {
-                            <input type="hidden" name="User.Id" value="@Model.User.Id">
+                                        <input type="hidden" name="User.Id" value="@Model.User.Id">
                                         <label>Выберите</label>
                                         <select id="user" name="EditUserId">
                                             <option value=""></option>
@@ -47,11 +47,17 @@
                                         <label for="serviceNumber">Номер службы:</label>
                                         <input type="text" id="serviceNumber" name="ServiceNumber" value="@Model.ServiceNumber"><br><br>
                                         <label for="division">Подразделение:</label>
-                                        <input type="text" id="division" name="Division" value="@Model.Division"><br><br>
+                                        <select id="division" name="DivisionName">
+                                            <option value="">@Model.EditUser.Division</option>
+                                            @foreach(var div in Model.Divisions)
+                                            {
+                                                <option value="@div.Id">@div.IndicatorName</option>
+                                            }
+                                        </select><br><br>
                                         <label for="position">Должность:</label>
                                         <input type="text" id="position" name="Position" value="@Model.Position"><br><br>
                                         <select id="type" name="TypeId">
-                                            <option value=""></option>
+                                            <option value="">@Model.EditUser.Type.TypeName</option>
                                             @foreach (var type in Model.Types)
                                             {
                                                 <option value="@type.Id">@type.TypeName</option>

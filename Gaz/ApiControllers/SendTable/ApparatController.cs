@@ -24,11 +24,17 @@ namespace SerGaz.SendTable
     public class ApparatController : ControllerBase
 	{
 		private readonly freedb_testdbgazContext _context;
+		private readonly ExplanationsController explanationsController;
+		private readonly PollsController pollsController;
+		private readonly ScoresController scoresController;
 
 		public ApparatController(freedb_testdbgazContext context)
 		{
 			_context = context;
-		}
+			explanationsController = new ExplanationsController(_context);
+			pollsController = new PollsController(_context);
+			scoresController = new ScoresController(_context);
+        }
 
 		[HttpPost(nameof(Send))]
 		public async Task<IActionResult> Send(string name, string email)
@@ -98,6 +104,7 @@ namespace SerGaz.SendTable
             Explanation ex11 = ex.FirstOrDefault(e => e.Month == 11) ?? new Explanation();
             Explanation ex12 = ex.FirstOrDefault(e => e.Month == 12) ?? new Explanation();
 
+
             Score score1 = score.FirstOrDefault(e => e.Month == 1) ?? new Score();
             Score score2 = score.FirstOrDefault(e => e.Month == 2) ?? new Score();
             Score score3 = score.FirstOrDefault(e => e.Month == 3) ?? new Score();
@@ -111,105 +118,52 @@ namespace SerGaz.SendTable
             Score score11 = score.FirstOrDefault(e => e.Month == 11) ?? new Score();
             Score score12 = score.FirstOrDefault(e => e.Month == 12) ?? new Score();
 
-            List<Explanation> explanations1 = _context.Explanations
-				.Include("User").Where(e=>e.Month == 1 && 
-				e.Year == year).ToList();
-            List<Explanation> explanations2 = _context.Explanations
-                .Include("User").Where(e => e.Month == 2 &&
-                e.Year == year).ToList();
-            List<Explanation> explanations3 = _context.Explanations
-                .Include("User").Where(e => e.Month == 3 &&
-                e.Year == year).ToList();
-            List<Explanation> explanations4 = _context.Explanations
-                .Include("User").Where(e => e.Month == 4 &&
-                e.Year == year).ToList();
-            List<Explanation> explanations5 = _context.Explanations
-                .Include("User").Where(e => e.Month == 5 &&
-                e.Year == year).ToList();
-            List<Explanation> explanations6 = _context.Explanations
-                .Include("User").Where(e => e.Month == 6 &&
-                e.Year == year).ToList();
-            List<Explanation> explanations7 = _context.Explanations
-                .Include("User").Where(e => e.Month == 7 &&
-                e.Year == year).ToList();
-            List<Explanation> explanations8 = _context.Explanations
-                .Include("User").Where(e => e.Month == 8 &&
-                e.Year == year).ToList();
-            List<Explanation> explanations9 = _context.Explanations
-                .Include("User").Where(e => e.Month == 9 &&
-                e.Year == year).ToList();
-            List<Explanation> explanations10 = _context.Explanations
-                .Include("User").Where(e => e.Month == 10 &&
-                e.Year == year).ToList();
-            List<Explanation> explanations11 = _context.Explanations
-                .Include("User").Where(e => e.Month == 11 &&
-                e.Year == year).ToList();
-            List<Explanation> explanations12 = _context.Explanations
-                .Include("User").Where(e => e.Month == 12 &&
-                e.Year == year).ToList();
+
+			await explanationsController.GetExplanations();
+
+            List<Explanation> explanations1 = await explanationsController.GetExplanationsByMY(1, year);
+            List<Explanation> explanations2 = await explanationsController.GetExplanationsByMY(2, year);
+            List<Explanation> explanations3 = await explanationsController.GetExplanationsByMY(3, year);
+            List<Explanation> explanations4 = await explanationsController.GetExplanationsByMY(4, year);
+            List<Explanation> explanations5 = await explanationsController.GetExplanationsByMY(5, year);
+            List<Explanation> explanations6 = await explanationsController.GetExplanationsByMY(6, year);
+            List<Explanation> explanations7 = await explanationsController.GetExplanationsByMY(7, year);
+            List<Explanation> explanations8 = await explanationsController.GetExplanationsByMY(8, year);
+            List<Explanation> explanations9 = await explanationsController.GetExplanationsByMY(9, year);
+            List<Explanation> explanations10 = await explanationsController.GetExplanationsByMY(10, year);
+            List<Explanation> explanations11 = await explanationsController.GetExplanationsByMY(11, year);
+            List<Explanation> explanations12 = await explanationsController.GetExplanationsByMY(12, year);
 
 
-            List<Poll> polls1 = _context.Polls.Include("EstimationsMarks")
-				.Include("EstimationsMarks.Mark").Where(p=>p.Month == 1 && 
-				p.Year == year).ToList();
-            List<Poll> polls2 = _context.Polls.Include("EstimationsMarks")
-                .Include("EstimationsMarks.Mark").Where(p => p.Month == 2 &&
-                p.Year == year).ToList();
-            List<Poll> polls3 = _context.Polls.Include("EstimationsMarks")
-                .Include("EstimationsMarks.Mark").Where(p => p.Month == 3 &&
-                p.Year == year).ToList();
-            List<Poll> polls4 = _context.Polls.Include("EstimationsMarks")
-                .Include("EstimationsMarks.Mark").Where(p => p.Month == 4 &&
-                p.Year == year).ToList();
-            List<Poll> polls5 = _context.Polls.Include("EstimationsMarks")
-                .Include("EstimationsMarks.Mark").Where(p => p.Month == 5 &&
-                p.Year == year).ToList();
-            List<Poll> polls6 = _context.Polls.Include("EstimationsMarks")
-                .Include("EstimationsMarks.Mark").Where(p => p.Month == 6 &&
-                p.Year == year).ToList();
-            List<Poll> polls7 = _context.Polls.Include("EstimationsMarks")
-                .Include("EstimationsMarks.Mark").Where(p => p.Month == 7 &&
-                p.Year == year).ToList();
-            List<Poll> polls8 = _context.Polls.Include("EstimationsMarks")
-                .Include("EstimationsMarks.Mark").Where(p => p.Month == 8 &&
-                p.Year == year).ToList();
-            List<Poll> polls9 = _context.Polls.Include("EstimationsMarks")
-                .Include("EstimationsMarks.Mark").Where(p => p.Month == 9 &&
-                p.Year == year).ToList();
-            List<Poll> polls10 = _context.Polls.Include("EstimationsMarks")
-                .Include("EstimationsMarks.Mark").Where(p => p.Month == 10 &&
-                p.Year == year).ToList();
-            List<Poll> polls11 = _context.Polls.Include("EstimationsMarks")
-                .Include("EstimationsMarks.Mark").Where(p => p.Month == 11 &&
-                p.Year == year).ToList();
-            List<Poll> polls12 = _context.Polls.Include("EstimationsMarks")
-                .Include("EstimationsMarks.Mark").Where(p => p.Month == 12 &&
-                p.Year == year).ToList();
+			await pollsController.GetPolls();
 
-			List<Score> scores1 = _context.Scores.Include("User")
-				.Where(s => s.Month == 1 && s.Year == year).ToList();
-            List<Score> scores2 = _context.Scores.Include("User")
-                .Where(s => s.Month == 2 && s.Year == year).ToList();
-            List<Score> scores3 = _context.Scores.Include("User")
-                .Where(s => s.Month == 3 && s.Year == year).ToList();
-            List<Score> scores4 = _context.Scores.Include("User")
-                .Where(s => s.Month == 4 && s.Year == year).ToList();
-            List<Score> scores5 = _context.Scores.Include("User")
-                .Where(s => s.Month == 5 && s.Year == year).ToList();
-            List<Score> scores6 = _context.Scores.Include("User")
-                .Where(s => s.Month == 6 && s.Year == year).ToList();
-            List<Score> scores7 = _context.Scores.Include("User")
-                .Where(s => s.Month == 7 && s.Year == year).ToList();
-            List<Score> scores8 = _context.Scores.Include("User")
-                .Where(s => s.Month == 8 && s.Year == year).ToList();
-            List<Score> scores9 = _context.Scores.Include("User")
-                .Where(s => s.Month == 9 && s.Year == year).ToList();
-            List<Score> scores10 = _context.Scores.Include("User")
-                .Where(s => s.Month == 10 && s.Year == year).ToList();
-            List<Score> scores11 = _context.Scores.Include("User")
-                .Where(s => s.Month == 11 && s.Year == year).ToList();
-            List<Score> scores12 = _context.Scores.Include("User")
-                .Where(s => s.Month == 12 && s.Year == year).ToList();
+			List<Poll> polls1 = await pollsController.GetPollsByMY(1, year);
+            List<Poll> polls2 = await pollsController.GetPollsByMY(2, year);
+            List<Poll> polls3 = await pollsController.GetPollsByMY(3, year);
+            List<Poll> polls4 = await pollsController.GetPollsByMY(4, year);
+            List<Poll> polls5 = await pollsController.GetPollsByMY(5, year);
+            List<Poll> polls6 = await pollsController.GetPollsByMY(6, year);
+            List<Poll> polls7 = await pollsController.GetPollsByMY(7, year);
+            List<Poll> polls8 = await pollsController.GetPollsByMY(8, year);
+            List<Poll> polls9 = await pollsController.GetPollsByMY(9, year);
+            List<Poll> polls10 = await pollsController.GetPollsByMY(10, year);
+            List<Poll> polls11 = await pollsController.GetPollsByMY(11, year);
+            List<Poll> polls12 = await pollsController.GetPollsByMY(12, year);
+
+			await scoresController.GetScores();
+
+			List<Score> scores1 = await scoresController.GetScoreByMY(1, year);
+            List<Score> scores2 = await scoresController.GetScoreByMY(2, year);
+            List<Score> scores3 = await scoresController.GetScoreByMY(3, year);
+            List<Score> scores4 = await scoresController.GetScoreByMY(4, year);
+            List<Score> scores5 = await scoresController.GetScoreByMY(5, year);
+            List<Score> scores6 = await scoresController.GetScoreByMY(6, year);
+            List<Score> scores7 = await scoresController.GetScoreByMY(7, year);
+            List<Score> scores8 = await scoresController.GetScoreByMY(8, year);
+            List<Score> scores9 = await scoresController.GetScoreByMY(9, year);
+            List<Score> scores10 = await scoresController.GetScoreByMY(10, year);
+            List<Score> scores11 = await scoresController.GetScoreByMY(11, year);
+            List<Score> scores12 = await scoresController.GetScoreByMY(12, year);
 
             string filePath = $"Excel/{name}.xlsx";
             if (System.IO.File.Exists(filePath))

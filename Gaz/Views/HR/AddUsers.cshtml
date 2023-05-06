@@ -25,9 +25,14 @@
                                     <label for="fio">ФИО:</label>
                                     <input type="text" id="fio" name="User.Fio" required><br><br>
                                     <label for="serviceNumber">Номер службы:</label>
-                                    <input type="text" id="serviceNumber" name="User.ServiceNumber"><br><br>
-                                    <label for="division">Подразделение:</label>
-                                    <input type="text" id="division" name="User.Division"><br><br>
+                                    <input type="text" id="serviceNumber" name="User.ServiceNumber"><br><br> <label for="division">Подразделение:</label>
+                                    <select id="division" name="DivisionName">
+                                        <option value=""></option>
+                                        @foreach (var div in Model.Divisions)
+                                        {
+                                            <option value="@div.Id">@div.IndicatorName</option>
+                                        }
+                                    </select><br><br>
                                     <label for="position">Должность:</label>
                                     <input type="text" id="position" name="User.Position"><br><br>
                                     <select id="type" name="TypeId">      

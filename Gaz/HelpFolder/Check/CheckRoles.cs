@@ -4,7 +4,7 @@ using Gaz.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using SerGaz.Controllers;
 
-namespace Gaz.Controllers.Check
+namespace Gaz.HelpFolder.Check
 {
     public class CheckRoles
     {
@@ -14,11 +14,13 @@ namespace Gaz.Controllers.Check
         {
             _context = context;
         }
-
         public User GetUse(int id)
         {
             User user = _context.Users
-                .Include("Type").FirstOrDefault(u => u.Id == id);
+                .Include("Type")
+                .Include("UsersRoles")
+                .Include("UsersRoles.Role")
+                .FirstOrDefault(u => u.Id == id);
             return user;
         }
 
@@ -28,28 +30,34 @@ namespace Gaz.Controllers.Check
             return roles;
         }
 
-        public List<UsersRole> GetRolesList(int id)
+        public List<Role> GetOtherRoles()
+        {
+            List<Role> roles = _context.Roles.Where(r => r.RoleName != "Главный админисратор"
+            && r.RoleName != "Текущий администратор").ToList();
+            return roles;
+        }
+
+
+        List<UsersRole> roles;
+        public void GetRolesList(int id)
         {
             var user = GetUse(id);
-            List<UsersRole> userRole = _context.UsersRoles.Where(z => z.UserId == user.Id)
+            roles = _context.UsersRoles.Where(z => z.UserId == user.Id)
                 .Include(u => u.Role)
                 .Include(u => u.User)
                 .ToList();
-            return userRole;
         }
-        public bool MainAdmin(int userId)
+        public bool MainAdmin()
         {
-            var userRole = GetRolesList(userId);
-            if (userRole.Any(z => z.RoleId == 1))
+            if (roles.Any(z => z.RoleId == 1))
             {
                 return true;
             }
             return false;
         }
-        public bool Admin(int userId)
+        public bool Admin()
         {
-            var userRole = GetRolesList(userId);
-            if (userRole.Any(z => z.RoleId == 1 ||
+            if (roles.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3))
             {
@@ -57,11 +65,9 @@ namespace Gaz.Controllers.Check
             }
             return false;
         }
-
-        public bool Discipline(int userId)
+        public bool Discipline()
         {
-            var userRole = GetRolesList(userId);
-            if (userRole.Any(z => z.RoleId == 1 ||
+            if (roles.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3))
             {
@@ -69,11 +75,9 @@ namespace Gaz.Controllers.Check
             }
             return false;
         }
-
-        public bool Side(int userId)
+        public bool Side()
         {
-            var userRole = GetRolesList(userId);
-            if (userRole.Any(z => z.RoleId == 1 ||
+            if (roles.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3 ||
                 z.RoleId == 4))
@@ -82,11 +86,9 @@ namespace Gaz.Controllers.Check
             }
             return false;
         }
-
-        public bool Dis(int userId)
+        public bool Dis()
         {
-            var userRole = GetRolesList(userId);
-            if (userRole.Any(z => z.RoleId == 1 ||
+            if (roles.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3))
             {
@@ -94,11 +96,9 @@ namespace Gaz.Controllers.Check
             }
             return false;
         }
-
-        public bool Stop(int userId)
+        public bool Stop()
         {
-            var userRole = GetRolesList(userId);
-            if (userRole.Any(z => z.RoleId == 1 ||
+            if (roles.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3 ||
                 z.RoleId == 5))
@@ -107,11 +107,9 @@ namespace Gaz.Controllers.Check
             }
             return false;
         }
-
-        public bool Rac(int userId)
+        public bool Rac()
         {
-            var userRole = GetRolesList(userId);
-            if (userRole.Any(z => z.RoleId == 1 ||
+            if (roles.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3 ||
                 z.RoleId == 6))
@@ -120,11 +118,9 @@ namespace Gaz.Controllers.Check
             }
             return false;
         }
-
-        public bool Ber(int userId)
+        public bool Ber()
         {
-            var userRole = GetRolesList(userId);
-            if (userRole.Any(z => z.RoleId == 1 ||
+            if (roles.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3 ||
                 z.RoleId == 7))
@@ -133,26 +129,22 @@ namespace Gaz.Controllers.Check
             }
             return false;
         }
-
         public bool Ruk(int userId, int? indicId = null)
         {
             var user = GetUse(userId);
-            var userRole = GetRolesList(userId);
-            if (userRole.Any(z => z.RoleId == 1 ||
+            if (roles.Any(z => z.RoleId == 1 ||
             z.RoleId == 2 ||
-            z.RoleId == 3)  ||
-            (user.TypeId == 1 &&
-             userRole.Any(z => z.Role.IndicatorId == indicId)))
+            z.RoleId == 3) ||
+            user.TypeId == 1 &&
+             roles.Any(z => z.Role.IndicatorId == indicId))
             {
                 return true;
             }
             return false;
         }
-
-        public bool Pol(int userId)
+        public bool Pol()
         {
-            var userRole = GetRolesList(userId);
-            if (userRole.Any(z => z.RoleId == 1 ||
+            if (roles.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3 ||
                 z.RoleId == 8))
@@ -161,11 +153,9 @@ namespace Gaz.Controllers.Check
             }
             return false;
         }
-
-        public bool Nast(int userId)
+        public bool Nast()
         {
-            var userRole = GetRolesList(userId);
-            if (userRole.Any(z => z.RoleId == 1 ||
+            if (roles.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3 ||
                 z.RoleId == 9))
@@ -174,11 +164,9 @@ namespace Gaz.Controllers.Check
             }
             return false;
         }
-
-        public bool Prof(int userId)
+        public bool Prof()
         {
-            var userRole = GetRolesList(userId);
-            if (userRole.Any(z => z.RoleId == 1 ||
+            if (roles.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3 ||
                 z.RoleId == 10))
@@ -187,11 +175,9 @@ namespace Gaz.Controllers.Check
             }
             return false;
         }
-
-        public bool Ecolog(int userId)
+        public bool Ecolog()
         {
-            var userRole = GetRolesList(userId);
-            if (userRole.Any(z => z.RoleId == 1 ||
+            if (roles.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3 ||
                 z.RoleId == 11))
@@ -200,11 +186,9 @@ namespace Gaz.Controllers.Check
             }
             return false;
         }
-
-        public bool Sport(int userId)
+        public bool Sport()
         {
-            var userRole = GetRolesList(userId);
-            if (userRole.Any(z => z.RoleId == 1 ||
+            if (roles.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3 ||
                 z.RoleId == 12))
@@ -213,11 +197,9 @@ namespace Gaz.Controllers.Check
             }
             return false;
         }
-
-        public bool Kult(int userId)
+        public bool Kult()
         {
-            var userRole = GetRolesList(userId);
-            if (userRole.Any(z => z.RoleId == 1 ||
+            if (roles.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3 ||
                 z.RoleId == 13))
@@ -226,11 +208,9 @@ namespace Gaz.Controllers.Check
             }
             return false;
         }
-
-        public bool Blag(int userId)
+        public bool Blag()
         {
-            var userRole = GetRolesList(userId);
-            if (userRole.Any(z => z.RoleId == 1 ||
+            if (roles.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
                 z.RoleId == 3 ||
                 z.RoleId == 14))

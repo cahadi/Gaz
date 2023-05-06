@@ -21,21 +21,22 @@ namespace SerGaz.Controllers
         {
             _context = context;
         }
-
+		List<Score> scores;
 		[Authorize]
 		[HttpGet(nameof(GetScores))]
         public async Task<ActionResult<IEnumerable<Score>>> GetScores()
 		{
-			try
-			{
-                return await _context.Scores
-                    .Include("User").ToListAsync();
-			}
-			catch (Exception ex)
-			{
-				throw;
-			}
+			scores = await _context.Scores
+				.Include("User").ToListAsync();
+			return scores;
 		}
+
+		[HttpGet(nameof(GetScoreByMY))]
+		public async Task<List<Score>> GetScoreByMY(int month, int year)
+        {
+            return scores.Where(p => p.Month == month &&
+                p.Year == year).ToList();
+        }
 
 		[HttpGet(nameof(GetScoresByUser))]
 		public async Task<List<Score>> GetScoresByUser(int userId)

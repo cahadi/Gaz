@@ -3,7 +3,7 @@ using Gaz.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using SerGaz.Controllers;
 
-namespace Gaz.Controllers.GetList
+namespace Gaz.HelpFolder.GetList
 {
     public class ListUsersForTable
     {
@@ -25,6 +25,14 @@ namespace Gaz.Controllers.GetList
         public List<User> GetAllUsers()
         {
             var users = usersController.GetUsers().Result;
+            return users;
+        }
+
+        public List<User> GetUsers()
+        {
+            var users = _context.Users
+                .Where(u => u.UsersRoles.Any(r => r.Role.RoleName
+                != "Главный администратор")).ToList();
             return users;
         }
     }

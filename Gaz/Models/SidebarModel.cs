@@ -25,7 +25,15 @@ namespace Gaz.Models
         [Required]
         public List<Score> Scores { get; set; }
 
+        [Required]
+        public string DivisionName { get; set; }
+        [Required]
+        public Indicator Division { get; set; }
+        [Required]
+        public List<Indicator> Divisions { get; set; }
+
         public string Name { get; set; }
+
         [Required]
         public List<Role> Roles { get; set; }
         [Required]
@@ -37,8 +45,6 @@ namespace Gaz.Models
         public string Fio { get; set; }
         [Required]
         public string ServiceNumber { get; set; }
-        [Required]
-        public string Division { get; set; }
         [Required]
         public string Position { get; set; }
 
@@ -122,5 +128,12 @@ namespace Gaz.Models
 
         [Required]
         public string Explanation { get; set; }
+
+        public string TwoMonthsAgo { get; set; }
+        public int TMA { get; set; }
+        public string PreviousMonth { get; set; }
+        public int PM { get; set; }
+        public string CurrentMonth { get; set; }
+        public int CM { get; set; }
     }
 }

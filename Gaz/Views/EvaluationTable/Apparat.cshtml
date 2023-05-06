@@ -39,14 +39,45 @@
                                                 <option value="@user.Email">@user.Email</option>
                                             }
                                         </select><br><br>
-                                        <input class="btn btn-primary btn-user btn-block" type="submit" value="Отправить">
+                                        <input class="btn btn-primary btn-user btn-block" type="submit" value="Отправить"><br><br>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-                }
-
+                }    
+                <div class="container-fluid">
+                    <div class="card shadow mb-4">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <form class="user" asp-area="" asp-controller="EvaluationTable"
+                                asp-action="Apparat" asp-route-userId="@Model.User.Id"
+                                asp-route-param="@Model.Name">
+                                    <input type="hidden" name="UserId" value="@Model.User.Id">
+                                    <input type="hidden" name="Name" value="@Model.Name" />
+                                    <input class="btn btn-primary btn-user btn-block" type="submit" value="@Model.CurrentMonth" />                                
+                                </form>
+                                
+                                <form class="user" asp-area="" asp-controller="EvaluationTable"
+                                asp-action="PreviousMonths" asp-route-userId="@Model.User.Id"
+                                asp-route-param="@Model.Name" asp-route-month="@Model.PM">
+                                    <input type="hidden" name="UserId" value="@Model.User.Id">
+                                    <input type="hidden" name="Name" value="@Model.Name" />
+                                    <input class="btn btn-primary btn-user btn-block" type="submit" value="@Model.PreviousMonth" />                               
+                                </form>
+                                
+                                <form class="user" asp-area="" asp-controller="EvaluationTable"
+                                      asp-action="PreviousMonths" asp-route-userId="@Model.User.Id"
+                                asp-route-param="@Model.Name" asp-route-month="@Model.TMA">
+                                    <input type="hidden" name="UserId" value="@Model.User.Id">
+                                    <input type="hidden" name="Name" value="@Model.Name" />
+                                    <input class="btn btn-primary btn-user btn-block" type="submit" value="@Model.TwoMonthsAgo" />                                
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <form class="user" asp-area="" asp-controller="EvaluationTable"
                       asp-action="Save" method="post">
                       <input type="hidden" name="Name" value="@Model.Name"/>

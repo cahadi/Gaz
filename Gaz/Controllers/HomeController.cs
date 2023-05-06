@@ -8,8 +8,8 @@ using SerGaz.Controllers;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using DocumentFormat.OpenXml.Spreadsheet;
-using Gaz.Controllers.Check;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using Gaz.HelpFolder.Check;
 
 namespace Gaz.Controllers
 {
@@ -35,11 +35,12 @@ namespace Gaz.Controllers
 
         public IActionResult Start(User user)
         {
+            checkRoles.GetRolesList(user.Id);
             var viewModel = new SidebarModel
             {
-                MainAdmin = checkRoles.MainAdmin(user.Id),
-                Dis = checkRoles.Discipline(user.Id),
-                Side = checkRoles.Side(user.Id),
+                MainAdmin = checkRoles.MainAdmin(),
+                Dis = checkRoles.Discipline(),
+                Side = checkRoles.Side(),
                 User = user
             };
             return View(viewModel);
@@ -55,9 +56,9 @@ namespace Gaz.Controllers
             }
             var viewModel = new SidebarModel
             {
-                MainAdmin = checkRoles.MainAdmin(userId),
-                Dis = checkRoles.Discipline(userId),
-                Side = checkRoles.Side(userId),
+                MainAdmin = checkRoles.MainAdmin(),
+                Dis = checkRoles.Discipline(),
+                Side = checkRoles.Side(),
                 User = user
             };
             return View(viewModel);
@@ -79,9 +80,9 @@ namespace Gaz.Controllers
             }
             var viewM = new SidebarModel
             {
-                MainAdmin = checkRoles.MainAdmin(user.Id),
-                Dis = checkRoles.Discipline(user.Id),
-                Side = checkRoles.Side(user.Id),
+                MainAdmin = checkRoles.MainAdmin(),
+                Dis = checkRoles.Discipline(),
+                Side = checkRoles.Side(),
                 User = user
             };
             SidebarModel model = viewM;

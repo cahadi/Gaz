@@ -1,10 +1,10 @@
 ﻿using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Gaz.ApiControllers.Auth.Controllers;
-using Gaz.Controllers.Check;
-using Gaz.Controllers.GetList;
 using Gaz.Data;
 using Gaz.Domain.Entities;
+using Gaz.HelpFolder.Check;
+using Gaz.HelpFolder.GetList;
 using Gaz.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +24,7 @@ namespace Gaz.Controllers
         private readonly ExplanationsController explanationsController;
         private readonly PollsController pollsController;
         private readonly ScoresController scoresController;
+        private readonly ListForTable listForTable;
 
         public HRController(freedb_testdbgazContext context)
         {
@@ -37,20 +38,31 @@ namespace Gaz.Controllers
             explanationsController = new ExplanationsController(_context);
             pollsController = new PollsController(_context);
             scoresController = new ScoresController(_context);
+            listForTable = new ListForTable(_context);
         }
 
         public async Task<IActionResult> AddUsers(int userId)
         {
             var user = checkRoles.GetUse(userId);
             var types = await _context.Onetypes.ToListAsync();
+            var roles = new List<Role>();
+            if (user.UsersRoles.Any(u => u.Role.RoleName != "Главный администратор"))
+            {
+                roles = checkRoles.GetOtherRoles();
+            }
+            else if (user.UsersRoles.Any(u => u.Role.RoleName == "Главный администратор"))
+                roles = checkRoles.GetRoles();
+
+            checkRoles.GetRolesList(user.Id);
             var viewModel = new SidebarModel
             {
-                MainAdmin = checkRoles.MainAdmin(userId),
-                Dis = checkRoles.Discipline(userId),
-                Side = checkRoles.Side(userId),
+                MainAdmin = checkRoles.MainAdmin(),
+                Dis = checkRoles.Discipline(),
+                Side = checkRoles.Side(),
                 User = user,
                 Types = types,
-                Roles = checkRoles.GetRoles()
+                Roles = roles,
+                Divisions = listForTable.GetDivisions()
             };
             SidebarModel model = viewModel;
             return View(model);
@@ -67,13 +79,22 @@ namespace Gaz.Controllers
             }
             List<Role> roles = Request.Form["Roles"].Select(x => new Role { Id = int.Parse(x) }).ToList();
 
-            viewModel.MainAdmin = checkRoles.MainAdmin(id);
-            viewModel.Dis = checkRoles.Discipline(user.Id);
-            viewModel.Side = checkRoles.Side(user.Id);
+            var roless = new List<Role>();
+            if (user.UsersRoles.Any(u => u.Role.RoleName != "Главный администратор"))
+            {
+                roless = checkRoles.GetOtherRoles();
+            }
+            else if (user.UsersRoles.Any(u => u.Role.RoleName == "Главный администратор"))
+                roless = checkRoles.GetRoles();
+            viewModel.MainAdmin = checkRoles.MainAdmin();
+            viewModel.Dis = checkRoles.Discipline();
+            viewModel.Side = checkRoles.Side();
             viewModel.User.Password = "";
             viewModel.User.TypeId = viewModel.TypeId;
             viewModel.User.Type = await onetypesController.GetOnetype(viewModel.User.TypeId);
-            var us = registerController.Register(viewModel.User).Result; 
+            viewModel.User.Division = viewModel.Division.IndicatorName;
+            var us = registerController.Register(viewModel.User).Result;
+            checkRoles.GetRolesList(user.Id);
             foreach (var role in roles)
             {
                 UsersRole ur = new UsersRole();
@@ -81,6 +102,8 @@ namespace Gaz.Controllers
                 ur.RoleId = role.Id;
                 await usersRolesController.PostUsersRole(ur);
             }
+            viewModel.Roles = roless;
+            viewModel.Divisions = listForTable.GetDivisions();
             return View(viewModel);
         }
 
@@ -89,18 +112,26 @@ namespace Gaz.Controllers
         {
             var user = checkRoles.GetUse(userId);
             var types = await _context.Onetypes.ToListAsync();
+            var roles = new List<Role>();
+            if (user.UsersRoles.Any(u => u.Role.RoleName != "Главный администратор"))
+            {
+                roles = checkRoles.GetOtherRoles();
+            }
+            else if (user.UsersRoles.Any(u => u.Role.RoleName == "Главный администратор"))
+                roles = checkRoles.GetRoles();
+            checkRoles.GetRolesList(user.Id);
             var viewModel = new SidebarModel
             {
-                MainAdmin = checkRoles.MainAdmin(userId),
-                Dis = checkRoles.Discipline(userId),
-                Side = checkRoles.Side(userId),
+                MainAdmin = checkRoles.MainAdmin(),
+                Dis = checkRoles.Discipline(),
+                Side = checkRoles.Side(),
                 User = user,
                 Types = types,
-                Roles = checkRoles.GetRoles(),
-                AllUsers = listUsersForTable.GetAllUsers()
+                Roles = roles,
+                AllUsers = listUsersForTable.GetAllUsers(),
+                Divisions = listForTable.GetDivisions()
             };
-            SidebarModel model = viewModel;
-            return View(model);
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -108,28 +139,32 @@ namespace Gaz.Controllers
         {
             var id = viewModel.User.Id;
             var user = checkRoles.GetUse(id);
-            var types = await _context.Onetypes.ToListAsync();
-            viewModel = new SidebarModel
+            var roles = new List<Role>();
+            if (user.UsersRoles.Any(u => u.Role.RoleName != "Главный администратор"))
             {
-                MainAdmin = checkRoles.MainAdmin(id),
-                Dis = checkRoles.Discipline(id),
-                Side = checkRoles.Side(id),
-                User = user,
-                UserId = id,
-                EditUserId = viewModel.EditUserId,
-                EditUser = checkRoles.GetUse(viewModel.EditUserId),
-                Types = types,
-                Roles = checkRoles.GetRoles(),
-                AllUsers = listUsersForTable.GetAllUsers()
-            };
+                roles = checkRoles.GetOtherRoles();
+            }
+            else if (user.UsersRoles.Any(u => u.Role.RoleName == "Главный администратор"))
+                roles = checkRoles.GetRoles();
+
+            checkRoles.GetRolesList(user.Id);
+            viewModel.EditUser = checkRoles.GetUse(viewModel.EditUserId);
             viewModel.TypeId = viewModel.EditUser.TypeId;
             viewModel.Type = await onetypesController.GetOnetype(viewModel.TypeId);
             viewModel.Fio = viewModel.EditUser.Fio;
             viewModel.ServiceNumber = viewModel.EditUser.ServiceNumber;
-            viewModel.Division = viewModel.EditUser.Division;
+            viewModel.DivisionName = viewModel.EditUser.Division;
             viewModel.Position = viewModel.EditUser.Position;
-            SidebarModel model = viewModel;
-            return View(model);
+            viewModel.Divisions = listForTable.GetDivisions();
+            viewModel.Types = await onetypesController.GetOnetypes();
+            viewModel.AllUsers = listUsersForTable.GetAllUsers();
+            viewModel.Roles = roles;
+            viewModel.MainAdmin = checkRoles.MainAdmin();
+            viewModel.Dis = checkRoles.Discipline();
+            viewModel.Side = checkRoles.Side();
+            viewModel.User = user;
+            viewModel.UserId = id;
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -143,14 +178,16 @@ namespace Gaz.Controllers
 
             var fio = viewModel.Fio;
             var serNum = viewModel.ServiceNumber;
-            var div = viewModel.Division;
             var pos = viewModel.Position;
 
             List<Role> roles = Request.Form["Roles"].Select(x => new Role { Id = int.Parse(x) }).ToList();
             List<UsersRole> ur = await usersRolesController.GetRolesByUser(edId);
-            viewModel.MainAdmin = checkRoles.MainAdmin(id);
-            viewModel.Dis = checkRoles.Discipline(id);
-            viewModel.Side = checkRoles.Side(id);
+
+
+            checkRoles.GetRolesList(user.Id);
+            //viewModel.MainAdmin = checkRoles.MainAdmin();
+            //viewModel.Dis = checkRoles.Discipline();
+            //viewModel.Side = checkRoles.Side();
             viewModel.User = user;
             viewModel.UserId = id;
             viewModel.EditUserId = edId;
@@ -160,11 +197,15 @@ namespace Gaz.Controllers
             viewModel.AllUsers = listUsersForTable.GetAllUsers();
             viewModel.TypeId = viewModel.EditUser.TypeId;
             viewModel.Type = await onetypesController.GetOnetype(viewModel.TypeId);
+            viewModel.DivisionName = viewModel.EditUser.Division;
+            viewModel.Division = await _context.Indicators
+                .FirstOrDefaultAsync(i => i.IndicatorName == 
+                viewModel.DivisionName);
             viewModel.EditUser.TypeId = viewModel.TypeId;
             viewModel.EditUser.Type = viewModel.Type;
             viewModel.EditUser.Fio = fio;
             viewModel.EditUser.ServiceNumber = serNum;
-            viewModel.EditUser.Division = div;
+            viewModel.EditUser.Division = viewModel.Division.IndicatorName;
             viewModel.EditUser.Position = pos;
             foreach(var role in ur)
             {
@@ -175,7 +216,7 @@ namespace Gaz.Controllers
                 UsersRole urs = new UsersRole();
                 urs.UserId = viewModel.EditUserId;
                 urs.RoleId = role.Id;
-                if (ur.Any(z=>z.RoleId == urs.RoleId))
+                if (ur.Any(z=>z.RoleId == role.Id))
                 {
                     urs = await usersRolesController.GetUR(urs.UserId, urs.RoleId);
                     await usersRolesController.DeleteUsersRole(urs.Id);
@@ -183,6 +224,15 @@ namespace Gaz.Controllers
                 await usersRolesController.PostUsersRole(urs);
             }
             await usersController.PutUser(viewModel.EditUser.Id, viewModel.EditUser);
+            var roless = new List<Role>();
+            if (user.UsersRoles.Any(u => u.Role.RoleName != "Главный администратор"))
+            {
+                roless = checkRoles.GetOtherRoles();
+            }
+            else if (user.UsersRoles.Any(u => u.Role.RoleName == "Главный администратор"))
+                roless = checkRoles.GetRoles();
+            viewModel.Roles = roless;
+            viewModel.Divisions = listForTable.GetDivisions();
             return RedirectToAction("EditUser", "HR", viewModel);
         }
 
@@ -190,12 +240,14 @@ namespace Gaz.Controllers
         public async Task<ActionResult<IEnumerable<User>>> ListUser(int userId)
         {
             var user = checkRoles.GetUse(userId);
-            List<User> userList = await usersController.GetUsers();
+            List<User> userList = listUsersForTable.GetUsers();
+
+            checkRoles.GetRolesList(user.Id);
             var viewModel = new SidebarModel
             { 
-                MainAdmin = checkRoles.MainAdmin(userId),
-                Dis = checkRoles.Discipline(userId),
-                Side = checkRoles.Side(userId),
+                MainAdmin = checkRoles.MainAdmin(),
+                Dis = checkRoles.Discipline(),
+                Side = checkRoles.Side(),
                 User = user,
                 Users = userList
             };
@@ -208,11 +260,12 @@ namespace Gaz.Controllers
         {
             var user = checkRoles.GetUse(userId);
             var types = await _context.Onetypes.ToListAsync();
+            checkRoles.GetRolesList(user.Id);
             var viewModel = new SidebarModel
             {
-                MainAdmin = checkRoles.MainAdmin(userId),
-                Dis = checkRoles.Discipline(userId),
-                Side = checkRoles.Side(userId),
+                MainAdmin = checkRoles.MainAdmin(),
+                Dis = checkRoles.Discipline(),
+                Side = checkRoles.Side(),
                 User = user,
                 Types = types,
                 Roles = checkRoles.GetRoles(),
@@ -227,17 +280,25 @@ namespace Gaz.Controllers
         {
             var id = viewModel.User.Id;
             var user = checkRoles.GetUse(id);
+            var roless = new List<Role>();
+            if (user.UsersRoles.Any(u => u.Role.RoleName != "Главный администратор"))
+            {
+                roless = checkRoles.GetOtherRoles();
+            }
+            else
+                roless = checkRoles.GetRoles();
             var edId = viewModel.EditUserId;
+            checkRoles.GetRolesList(user.Id);
             viewModel = new SidebarModel
             {
-                MainAdmin = checkRoles.MainAdmin(id),
-                Dis = checkRoles.Discipline(id),
-                Side = checkRoles.Side(id),
+                MainAdmin = checkRoles.MainAdmin(),
+                Dis = checkRoles.Discipline(),
+                Side = checkRoles.Side(),
                 User = user,
                 UserId = id,
                 EditUserId = viewModel.EditUserId,
                 EditUser = checkRoles.GetUse(viewModel.EditUserId),
-                Roles = checkRoles.GetRoles(),
+                Roles = roless,
                 AllUsers = listUsersForTable.GetAllUsers()
             };
             List<UsersRole> ur = await usersRolesController.GetRolesByUser(edId);

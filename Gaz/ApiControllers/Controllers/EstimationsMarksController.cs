@@ -22,23 +22,27 @@ namespace SerGaz.Controllers
             _context = context;
         }
 
-		[Authorize]
+        List<EstimationsMark> estiMarks;
+
+        [Authorize]
 		[HttpGet(nameof(GetEstimationsMarks))]
-        public async Task<ActionResult<IEnumerable<EstimationsMark>>> GetEstimationsMarks()
+        public async Task<List<EstimationsMark>> GetEstimationsMarks()
 		{
-			try
-			{
-				return await _context.EstimationsMarks
+			estiMarks = await _context.EstimationsMarks
 				.Include("Estimation")
 				.Include("Mark").ToListAsync();
-			}
-			catch (Exception ex)
-			{
-				throw;
-			}
-		}
+			return estiMarks;
 
-		[Authorize]
+        }
+        [Authorize]
+        [HttpGet(nameof(GetListForTable))]
+        public List<EstimationsMark> GetListForTable(int id)
+        {
+			var em = estiMarks.Where(e => e.EstimationId == id).ToList();
+            return em;
+        }
+
+        [Authorize]
 		[HttpGet("GetEstimationsMark/{id}")]
         public async Task<ActionResult<EstimationsMark>> GetEstimationsMark(int id)
 		{

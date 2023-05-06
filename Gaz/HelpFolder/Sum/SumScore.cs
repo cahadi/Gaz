@@ -2,7 +2,7 @@
 using Gaz.Domain.Entities;
 using SerGaz.Controllers;
 
-namespace Gaz.Controllers.Sum
+namespace Gaz.HelpFolder.Sum
 {
     public class SumScore
     {
@@ -38,18 +38,18 @@ namespace Gaz.Controllers.Sum
                 List<Poll> polls = await pollsController.GetPollsByDetail(userId, month, year);
                 if (polls.Count() != 0)
                 {
-                    var poll1 = await pollsController.GetPollByMoreDetail(userId, month, year, 1);
-                    var poll2 = await pollsController.GetPollByMoreDetail(userId, month, year, 2);
-                    var poll3 = await pollsController.GetPollByMoreDetail(userId, month, year, 3);
-                    var poll4 = await pollsController.GetPollByMoreDetail(userId, month, year, 4);
-                    var poll5 = await pollsController.GetPollByMoreDetail(userId, month, year, 5);
-                    var poll6 = await pollsController.GetPollByMoreDetail(userId, month, year, 6);
-                    var poll7 = await pollsController.GetPollByMoreDetail(userId, month, year, 7);
-                    var poll8 = await pollsController.GetPollByMoreDetail(userId, month, year, 8);
-                    var poll9 = await pollsController.GetPollByMoreDetail(userId, month, year, 9);
-                    var poll10 = await pollsController.GetPollByMoreDetail(userId, month, year, 10);
-                    var poll11 = await pollsController.GetPollByMoreDetail(userId, month, year, 11);
-                    var poll12 = await pollsController.GetPollByMoreDetail(userId, month, year, 12);
+                    var poll1 = await pollsController.GetPollByMoreDetail(1);
+                    var poll2 = await pollsController.GetPollByMoreDetail(2);
+                    var poll3 = await pollsController.GetPollByMoreDetail(3);
+                    var poll4 = await pollsController.GetPollByMoreDetail(4);
+                    var poll5 = await pollsController.GetPollByMoreDetail(5);
+                    var poll6 = await pollsController.GetPollByMoreDetail(6);
+                    var poll7 = await pollsController.GetPollByMoreDetail(7);
+                    var poll8 = await pollsController.GetPollByMoreDetail(8);
+                    var poll9 = await pollsController.GetPollByMoreDetail(9);
+                    var poll10 = await pollsController.GetPollByMoreDetail(10);
+                    var poll11 = await pollsController.GetPollByMoreDetail(11);
+                    var poll12 = await pollsController.GetPollByMoreDetail(12);
                     if (poll1 != null && poll5 != null && poll1.EstimationsMarks.Mark.YesNo == "Да" && poll5.EstimationsMarks.Mark.LowMark == 1)
                     {
                         monthScore = monthScore + 15;

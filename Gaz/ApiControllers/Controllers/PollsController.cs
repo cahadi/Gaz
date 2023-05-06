@@ -22,22 +22,26 @@ namespace SerGaz.Controllers
             _context = context;
         }
 
+		List<Poll> polls;
+
 		[Authorize]
 		[HttpGet(nameof(GetPolls))]
-        public async Task<ActionResult<IEnumerable<Poll>>> GetPolls()
+        public async Task<List<Poll>> GetPolls()
 		{
-			try
-			{
-				return await _context.Polls
+			polls = await _context.Polls
 				.Include("EstimationsMarks")
-				.Include("User").ToListAsync();
-			}
-			catch (Exception ex)
-			{
-				throw;
-			}
+				.Include("User")
+				.Include("EstimationsMarks.Mark")
+				.Include("EstimationsMarks.Estimation").ToListAsync();
+			return polls;
 		}
 
+		[HttpGet(nameof(GetPollsByMY))]
+		public async Task<List<Poll>> GetPollsByMY(int month, int year)
+		{
+			return polls.Where(p => p.Month == month &&
+                p.Year == year).ToList();
+        }
 		[HttpGet(nameof(GetPollsByUser))]
 		public async Task<List<Poll>> GetPollsByUser(int userId)
         {
@@ -47,8 +51,11 @@ namespace SerGaz.Controllers
 			.ToListAsync();
         }
 
+		List<Poll> pollsList;
+
 		[HttpGet(nameof(GetPollsByDetail))]
-		public async Task<List<Poll>> GetPollsByDetail(int userId, int month, int year)
+		public async Task<List<Poll>> GetPollsByDetail(int userId, int month, 
+			int year)
 		{
 			var polls = await _context.Polls
 				.Include("User")
@@ -57,21 +64,15 @@ namespace SerGaz.Controllers
 				.Include("EstimationsMarks.Estimation")
 				.Where(z => z.UserId == userId && z.Month == month && z.Year == year)
 				.ToListAsync();
-			return polls;
+			pollsList = polls;
+			return pollsList;
 		}
 
 		[HttpGet(nameof(GetPollByMoreDetail))]
-		public async Task<Poll> GetPollByMoreDetail(int userId, 
-			int month, int year, int estiId)
+		public async Task<Poll> GetPollByMoreDetail(int estiId)
 		{
-			var poll = await _context.Polls
-				.Include("User")
-				.Include("EstimationsMarks")
-				.Include("EstimationsMarks.Mark")
-				.Include("EstimationsMarks.Estimation")
-				.FirstOrDefaultAsync(p => p.UserId == userId
-				&& p.Month == month && p.Year == year
-				&& p.EstimationsMarks.EstimationId == estiId);
+			var poll = pollsList
+                .FirstOrDefault(p =>  p.EstimationsMarks.EstimationId == estiId);
 			return poll;
 
         }

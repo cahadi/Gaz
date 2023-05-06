@@ -22,39 +22,44 @@
         </li>
         <hr class="sidebar-divider">
     }
-    @if(Model.MainAdmin == true)
-    {
-        <li class="nav-item">
-            <a class="nav-link" asp-controller="HR" asp-action="DeleteUser" asp-route-userId="@Model.User.Id">
-                <i class="fas fa-fw fa-user"></i>
-                <span>Удаление</span>
-            </a>
-        </li>
-    }
 
     @if (Model.Side == true)
     {
         <div class="sidebar-heading">
             Пользователи
         </div>
+
         <li class="nav-item">
             <a class="nav-link" asp-controller="HR" asp-action="AddUsers" asp-route-userId="@Model.User.Id">
                 <i class="fas fa-fw fa-user"></i>
                 <span>Добавление</span>
             </a>
         </li>
+
         <li class="nav-item">
             <a class="nav-link" asp-controller="HR" asp-action="EditUser" asp-route-userId="@Model.User.Id">
                 <i class="fas fa-fw fa-user"></i>
                 <span>Редактирование</span>
             </a>
         </li>
+
+        @if (Model.MainAdmin == true)
+        {
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="HR" asp-action="DeleteUser" asp-route-userId="@Model.User.Id">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span>Удаление</span>
+                </a>
+            </li>
+        }
+
         <li class="nav-item">
             <a class="nav-link" asp-controller="HR" asp-action="ListUser" asp-route-userId="@Model.User.Id">
                 <i class="fas fa-fw fa-user"></i>
                 <span>Список пользователей</span>
             </a>
         </li>
+
         <hr class="sidebar-divider">
     }
     <div class="sidebar-heading">
@@ -62,84 +67,96 @@
     </div>
 
     <li class="nav-item">
-        <a class="nav-link" asp-controller="EvaluationTable" asp-action="Apparat" asp-route-userId="@Model.User.Id">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="Apparat" 
+        asp-route-userId="@Model.User.Id" asp-route-param="Аппарат">
             <i class="fas fa-fw fa-table"></i>
             <span>Аппарат</span>
         </a>
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" asp-controller="EvaluationTable" asp-action="GIT" asp-route-userId="@Model.User.Id">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="Apparat"
+           asp-route-userId="@Model.User.Id" asp-route-param="ГИТ">
             <i class="fas fa-fw fa-table"></i>
             <span>ГИТ</span>
         </a>
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" asp-controller="EvaluationTable" asp-action="GRS" asp-route-userId="@Model.User.Id">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="Apparat"
+           asp-route-userId="@Model.User.Id" asp-route-param="ГРС">
             <i class="fas fa-fw fa-table"></i>
             <span>ГРС</span>
         </a>
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" asp-controller="EvaluationTable" asp-action="DS" asp-route-userId="@Model.User.Id">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="Apparat"
+           asp-route-userId="@Model.User.Id" asp-route-param="ДС">
             <i class="fas fa-fw fa-table"></i>
             <span>ДС</span>
         </a>
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" asp-controller="EvaluationTable" asp-action="KIPiA" asp-route-userId="@Model.User.Id">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="Apparat"
+           asp-route-userId="@Model.User.Id" asp-route-param="КИПиА">
             <i class="fas fa-fw fa-table"></i>
             <span>КИПиА</span>
         </a>
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" asp-controller="EvaluationTable" asp-action="LES" asp-route-userId="@Model.User.Id">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="Apparat"
+           asp-route-userId="@Model.User.Id" asp-route-param="ЛЭС">
             <i class="fas fa-fw fa-table"></i>
             <span>ЛЭС</span>
         </a>
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" asp-controller="EvaluationTable" asp-action="MTS" asp-route-userId="@Model.User.Id">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="Apparat"
+           asp-route-userId="@Model.User.Id" asp-route-param="МТС">
             <i class="fas fa-fw fa-table"></i>
             <span>МТС</span>
         </a>
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" asp-controller="EvaluationTable" asp-action="RSGEXY" asp-route-userId="@Model.User.Id">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="Apparat"
+           asp-route-userId="@Model.User.Id" asp-route-param="РСГЭХУ">
             <i class="fas fa-fw fa-table"></i>
             <span>РСГЭХУ</span>
         </a>
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" asp-controller="EvaluationTable" asp-action="STS" asp-route-userId="@Model.User.Id">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="Apparat"
+           asp-route-userId="@Model.User.Id" asp-route-param="СТС">
             <i class="fas fa-fw fa-table"></i>
             <span>СТС</span>
         </a>
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" asp-controller="EvaluationTable" asp-action="TC" asp-route-userId="@Model.User.Id">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="Apparat"
+           asp-route-userId="@Model.User.Id" asp-route-param="ТЦ">
             <i class="fas fa-fw fa-table"></i>
             <span>ТЦ</span>
         </a>
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" asp-controller="EvaluationTable" asp-action="EVS" asp-route-userId="@Model.User.Id">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="Apparat"
+           asp-route-userId="@Model.User.Id" asp-route-param="ЭВС">
             <i class="fas fa-fw fa-table"></i>
             <span>ЭВС</span>
         </a>
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" asp-controller="EvaluationTable" asp-action="EXZ" asp-route-userId="@Model.User.Id">
+        <a class="nav-link" asp-controller="EvaluationTable" asp-action="Apparat"
+           asp-route-userId="@Model.User.Id" asp-route-param="ЭХЗ">
             <i class="fas fa-fw fa-table"></i>
             <span>ЭХЗ</span>
         </a>
