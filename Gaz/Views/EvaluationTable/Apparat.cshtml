@@ -123,18 +123,21 @@
                                                       <input type="hidden" name="EditUserId" value="@user.Id"/>
                                                       <td>@user.Fio</td>
                                                       <td name="Explanation1">
-                                                          @if (Model.Dis == true || Model.User.Id == user.Id)
+                                                          @if (Model.Dis == true || (Model.User.Id == user.Id && Model.CanEdit == true))
                                                           {
                                                               @if (Model.Explanations.Where(z => z.UserId == user.Id).Count() == 0)
                                                               {
                                                                   <input type="text" id="explanation" name="Explanation" value="" required><br><br>
                                                               }
-                                                              @foreach(var ex in Model.Explanations.Where(z => z.UserId == user.Id))
+                                                              else
                                                               {
-                                                                  <input type="text" id="explanation" name="Explanation" value="@ex.Explanation1" required><br><br>
+                                                                  @foreach (var ex in Model.Explanations.Where(z => z.UserId == user.Id))
+                                                                  {
+                                                                      <input type="text" id="explanation" name="Explanation" value="@ex.Explanation1" required><br><br>
+                                                                  }
                                                               }
                                                           }
-                                                          @if (Model.User.Id != user.Id)
+                                                        else if (Model.User.Id != user.Id || Model.CanEdit == false)
                                                           {
                                                               @foreach (var ex in Model.Explanations.Where(z => z.UserId == user.Id))
                                                               {
@@ -143,7 +146,7 @@
                                                           }
                                                       </td>
                                                       <td>
-                                                          @if (Model.Dis == true || Model.User.Id == user.Id)
+                                                        @if (Model.Dis == true || (Model.User.Id == user.Id && Model.CanEdit == true))
                                                           {
                                                             @foreach(var po in Model.Polls.Where(p=>p.UserId == user.Id && p.EstimationsMarks.EstimationId == 1))
                                                             {
@@ -158,7 +161,7 @@
                                                             @if(Model.Polls.Where(p=>p.UserId == user.Id && p.EstimationsMarks.EstimationId == 1).Count() == 0)
                                                             {
                                                                 <select id="mark1" name="MarkId1">
-                                                                    <option>Нет</option>
+                                                                    <option></option>
                                                                     @foreach (var em in Model.EstimationsMarks1)
                                                                     {
                                                                         <option value="@em.Id">@em.Mark.YesNo</option>
@@ -166,7 +169,7 @@
                                                                 </select>
                                                             }
                                                         }
-                                                          @if(Model.Dis == false || Model.User.Id != user.Id)
+                                                        else if (Model.Dis == false || Model.User.Id != user.Id || Model.CanEdit == false)
                                                         {
                                                             @foreach (var p in Model.Polls.Where(p => p.UserId == user.Id))
                                                               {
@@ -175,7 +178,7 @@
                                                           }
                                                       </td>
                                                       <td>
-                                                          @if (Model.Stop == true || Model.User.Id == user.Id)
+                                                        @if (Model.Stop == true || (Model.User.Id == user.Id && Model.CanEdit == true))
                                                           {
                                                             @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 2))
                                                             {
@@ -190,7 +193,7 @@
                                                             @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 2).Count() == 0)
                                                             {
                                                                 <select id="mark2" name="MarkId2">
-                                                                    <option>0</option>
+                                                                    <option></option>
                                                                     @foreach (var em in Model.EstimationsMarks2)
                                                                     {
                                                                         <option value="@em.Id">@em.Mark.BigMark</option>
@@ -198,7 +201,7 @@
                                                                 </select>
                                                             }
                                                           }
-                                                          @if (Model.Stop == false || Model.User.Id != user.Id)
+                                                          else if (Model.Stop == false || Model.User.Id != user.Id || Model.CanEdit == false)
                                                           {
                                                               @foreach (var p in Model.Polls.Where(p => p.UserId == user.Id))
                                                               {
@@ -207,7 +210,7 @@
                                                           }
                                                       </td>
                                                       <td>
-                                                          @if (Model.Rac == true || Model.User.Id == user.Id)
+                                                        @if (Model.Rac == true || (Model.User.Id == user.Id && Model.CanEdit == true))
                                                           {
                                                               @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 3))
                                                               {
@@ -222,7 +225,7 @@
                                                               @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 3).Count() == 0)
                                                               {
                                                                   <select id="mark3" name="MarkId3">
-                                                                      <option>0</option>
+                                                                      <option></option>
                                                                       @foreach (var em in Model.EstimationsMarks3)
                                                                       {
                                                                           <option value="@em.Id">@em.Mark.BigMark</option>
@@ -230,7 +233,7 @@
                                                                   </select>
                                                               }
                                                           }
-                                                          @if (Model.Rac == false || Model.User.Id != user.Id)
+                                                        else if (Model.Rac == false || Model.User.Id != user.Id || Model.CanEdit == false)
                                                           {
                                                         @foreach (var p in Model.Polls.Where(p => p.UserId == user.Id))
                                                               {
@@ -239,7 +242,7 @@
                                                           }
                                                       </td>
                                                       <td>
-                                                          @if (Model.Ber == true || Model.User.Id == user.Id)
+                                                        @if (Model.Ber == true || (Model.User.Id == user.Id && Model.CanEdit == true))
                                                           {
                                                             @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 4))
                                                             {
@@ -254,7 +257,7 @@
                                                             @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 4).Count() == 0)
                                                             {
                                                                 <select id="mark4" name="MarkId4">
-                                                                    <option>Нет</option>
+                                                                    <option></option>
                                                                     @foreach (var em in Model.EstimationsMarks4)
                                                                     {
                                                                         <option value="@em.Id">@em.Mark.YesNo</option>
@@ -262,7 +265,7 @@
                                                                 </select>
                                                             }
                                                           }
-                                                          @if (Model.Ber == false || Model.User.Id != user.Id)
+                                                        else if (Model.Ber == false || Model.User.Id != user.Id || Model.CanEdit == false)
                                                           {
                                                         @foreach (var p in Model.Polls.Where(p => p.UserId == user.Id))
                                                               {
@@ -271,7 +274,7 @@
                                                           }
                                                       </td>
                                                       <td>
-                                                          @if (Model.Ruk == true || Model.User.Id == user.Id)
+                                                        @if (Model.Ruk == true || (Model.User.Id == user.Id && Model.CanEdit == true))
                                                           {
                                                             @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 5))
                                                             {
@@ -286,7 +289,7 @@
                                                             @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 5).Count() == 0)
                                                             {
                                                                 <select id="mark5" name="MarkId5">
-                                                                    <option>0</option>
+                                                                    <option></option>
                                                                     @foreach (var em in Model.EstimationsMarks5)
                                                                     {
                                                                         <option value="@em.Id">@em.Mark.LowMark</option>
@@ -294,7 +297,7 @@
                                                                 </select>
                                                             }
                                                           }
-                                                          @if (Model.Ruk == false || Model.User.Id != user.Id)
+                                                        else if (Model.Ruk == false || Model.User.Id != user.Id || Model.CanEdit == false)
                                                           {
                                                         @foreach (var p in Model.Polls.Where(p => p.UserId == user.Id))
                                                               {
@@ -303,7 +306,7 @@
                                                           }
                                                       </td>
                                                       <td>
-                                                          @if (Model.Pol == true || Model.User.Id == user.Id)
+                                                        @if (Model.Pol == true || (Model.User.Id == user.Id && Model.CanEdit == true))
                                                           {
                                                             @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 6))
                                                             {
@@ -318,7 +321,7 @@
                                                             @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 6).Count() == 0)
                                                             {
                                                                 <select id="mark6" name="MarkId6">
-                                                                    <option>Нет</option>
+                                                                    <option></option>
                                                                     @foreach (var em in Model.EstimationsMarks6)
                                                                     {
                                                                         <option value="@em.Id">@em.Mark.YesNo</option>
@@ -326,7 +329,7 @@
                                                                 </select>
                                                             }
                                                           }
-                                                          @if (Model.Pol == false || Model.User.Id != user.Id)
+                                                          else if (Model.Pol == false || Model.User.Id != user.Id || Model.CanEdit == false)
                                                           {
                                                         @foreach (var p in Model.Polls.Where(p => p.UserId == user.Id))
                                                               {
@@ -335,7 +338,7 @@
                                                           }
                                                        </td>
                                                       <td>
-                                                          @if (Model.Nast == true || Model.User.Id == user.Id)
+                                                        @if (Model.Nast == true || (Model.User.Id == user.Id && Model.CanEdit == true))
                                                           {
                                                             @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 7))
                                                             {
@@ -350,7 +353,7 @@
                                                             @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 7).Count() == 0)
                                                             {
                                                                 <select id="mark7" name="MarkId7">
-                                                                    <option>Нет</option>
+                                                                    <option></option>
                                                                     @foreach (var em in Model.EstimationsMarks7)
                                                                     {
                                                                         <option value="@em.Id">@em.Mark.YesNo</option>
@@ -358,7 +361,7 @@
                                                                 </select>
                                                             }
                                                           }
-                                                          @if (Model.Nast == false || Model.User.Id != user.Id)
+                                                        else if (Model.Nast == false || Model.User.Id != user.Id || Model.CanEdit == false)
                                                           {
                                                         @foreach (var p in Model.Polls.Where(p => p.UserId == user.Id))
                                                               {
@@ -367,7 +370,7 @@
                                                           }
                                                       </td>
                                                       <td>
-                                                          @if (Model.Prof == true || Model.User.Id == user.Id)
+                                                        @if (Model.Prof == true || (Model.User.Id == user.Id && Model.CanEdit == true))
                                                           {
                                                             @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 8))
                                                             {
@@ -382,7 +385,7 @@
                                                             @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 8).Count() == 0)
                                                             {
                                                                 <select id="mark8" name="MarkId8">
-                                                                    <option>Нет</option>
+                                                                    <option></option>
                                                                     @foreach (var em in Model.EstimationsMarks8)
                                                                     {
                                                                         <option value="@em.Id">@em.Mark.YesNo</option>
@@ -390,7 +393,7 @@
                                                                 </select>
                                                             }
                                                           }
-                                                          @if (Model.Prof == false || Model.User.Id != user.Id)
+                                                        else if (Model.Prof == false || Model.User.Id != user.Id || Model.CanEdit == false)
                                                           {
                                                         @foreach (var p in Model.Polls.Where(p => p.UserId == user.Id))
                                                               {
@@ -399,7 +402,7 @@
                                                           }
                                                           </td>
                                                 <td>
-                                                    @if (Model.Ecolog == true || Model.User.Id == user.Id)
+                                                        @if (Model.Ecolog == true || (Model.User.Id == user.Id && Model.CanEdit == true))
                                                     {
                                                             @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 9))
                                                             {
@@ -414,7 +417,7 @@
                                                             @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 9).Count() == 0)
                                                             {
                                                                 <select id="mark9" name="MarkId9">
-                                                                    <option>Нет</option>
+                                                                    <option></option>
                                                                     @foreach (var em in Model.EstimationsMarks9)
                                                                     {
                                                                         <option value="@em.Id">@em.Mark.YesNo</option>
@@ -422,7 +425,7 @@
                                                                 </select>
                                                             }
                                                     }
-                                                    @if (Model.Ecolog == false || Model.User.Id != user.Id)
+                                                        else if (Model.Ecolog == false || Model.User.Id != user.Id || Model.CanEdit == false)
                                                     {
                                                         @foreach (var p in Model.Polls.Where(p => p.UserId == user.Id))
                                                         {
@@ -431,7 +434,7 @@
                                                     }
                                                 </td>
                                                 <td>
-                                                    @if (Model.Sport == true || Model.User.Id == user.Id)
+                                                        @if (Model.Sport == true || (Model.User.Id == user.Id) && Model.CanEdit == true)
                                                     {
                                                             @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 10))
                                                             {
@@ -446,7 +449,7 @@
                                                             @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 10).Count() == 0)
                                                             {
                                                                 <select id="mark10" name="MarkId10">
-                                                                    <option>Нет</option>
+                                                                    <option></option>
                                                                     @foreach (var em in Model.EstimationsMarks10)
                                                                     {
                                                                         <option value="@em.Id">@em.Mark.YesNo</option>
@@ -454,7 +457,7 @@
                                                                 </select>
                                                             }
                                                     }
-                                                    @if (Model.Sport == false || Model.User.Id != user.Id)
+                                                        else if (Model.Sport == false || Model.User.Id != user.Id || Model.CanEdit == false)
                                                     {
                                                         @foreach (var p in Model.Polls.Where(p => p.UserId == user.Id))
                                                         {
@@ -463,7 +466,7 @@
                                                     }
                                                 </td>
                                                 <td>
-                                                    @if (Model.Kult == true || Model.User.Id == user.Id)
+                                                        @if (Model.Kult == true || (Model.User.Id == user.Id && Model.CanEdit == true))
                                                     {
                                                             @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 11))
                                                             {
@@ -478,7 +481,7 @@
                                                             @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 11).Count() == 0)
                                                             {
                                                                 <select id="mark11" name="MarkId11">
-                                                                    <option>Нет</option>
+                                                                    <option></option>
                                                                     @foreach (var em in Model.EstimationsMarks11)
                                                                     {
                                                                         <option value="@em.Id">@em.Mark.YesNo</option>
@@ -486,7 +489,7 @@
                                                                 </select>
                                                             }
                                                     }
-                                                    @if (Model.Kult == false || Model.User.Id != user.Id)
+                                                    else if (Model.Kult == false || Model.User.Id != user.Id || Model.CanEdit == false)
                                                     {
                                                         @foreach (var p in Model.Polls.Where(p => p.UserId == user.Id))
                                                         {
@@ -495,7 +498,7 @@
                                                     }
                                                 </td>
                                                 <td>
-                                                    @if (Model.Blag == true || Model.User.Id == user.Id)
+                                                        @if (Model.Blag == true || (Model.User.Id == user.Id && Model.CanEdit == true))
                                                     {
                                                             @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 12))
                                                             {
@@ -510,7 +513,7 @@
                                                             @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 12).Count() == 0)
                                                             {
                                                                 <select id="mark12" name="MarkId12">
-                                                                    <option>Нет</option>
+                                                                    <option></option>
                                                                     @foreach (var em in Model.EstimationsMarks12)
                                                                     {
                                                                         <option value="@em.Id">@em.Mark.YesNo</option>
@@ -518,7 +521,7 @@
                                                                 </select>
                                                             }
                                                     }
-                                                    @if (Model.Blag == false || Model.User.Id != user.Id)
+                                                        else if (Model.Blag == false || (Model.User.Id != user.Id && Model.CanEdit == false))
                                                         {
                                                             @foreach (var p in Model.Polls.Where(p => p.UserId == user.Id))
                                                         {

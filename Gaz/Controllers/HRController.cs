@@ -64,8 +64,7 @@ namespace Gaz.Controllers
                 Roles = roles,
                 Divisions = listForTable.GetDivisions()
             };
-            SidebarModel model = viewModel;
-            return View(model);
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -86,14 +85,13 @@ namespace Gaz.Controllers
             }
             else if (user.UsersRoles.Any(u => u.Role.RoleName == "Главный администратор"))
                 roless = checkRoles.GetRoles();
-            viewModel.MainAdmin = checkRoles.MainAdmin();
-            viewModel.Dis = checkRoles.Discipline();
-            viewModel.Side = checkRoles.Side();
+
             viewModel.User.Password = "";
             viewModel.User.TypeId = viewModel.TypeId;
             viewModel.User.Type = await onetypesController.GetOnetype(viewModel.User.TypeId);
             viewModel.User.Division = viewModel.Division.IndicatorName;
             var us = registerController.Register(viewModel.User).Result;
+
             checkRoles.GetRolesList(user.Id);
             foreach (var role in roles)
             {
@@ -102,9 +100,8 @@ namespace Gaz.Controllers
                 ur.RoleId = role.Id;
                 await usersRolesController.PostUsersRole(ur);
             }
-            viewModel.Roles = roless;
-            viewModel.Divisions = listForTable.GetDivisions();
-            return View(viewModel);
+
+            return RedirectToAction("AddUsers", "HR", new { userId = id });
         }
 
 
@@ -119,6 +116,7 @@ namespace Gaz.Controllers
             }
             else if (user.UsersRoles.Any(u => u.Role.RoleName == "Главный администратор"))
                 roles = checkRoles.GetRoles();
+
             checkRoles.GetRolesList(user.Id);
             var viewModel = new SidebarModel
             {
@@ -128,7 +126,7 @@ namespace Gaz.Controllers
                 User = user,
                 Types = types,
                 Roles = roles,
-                AllUsers = listUsersForTable.GetAllUsers(),
+                AllUsers = listUsersForTable.GetUsers(),
                 Divisions = listForTable.GetDivisions()
             };
             return View(viewModel);
@@ -157,7 +155,7 @@ namespace Gaz.Controllers
             viewModel.Position = viewModel.EditUser.Position;
             viewModel.Divisions = listForTable.GetDivisions();
             viewModel.Types = await onetypesController.GetOnetypes();
-            viewModel.AllUsers = listUsersForTable.GetAllUsers();
+            viewModel.AllUsers = listUsersForTable.GetUsers();
             viewModel.Roles = roles;
             viewModel.MainAdmin = checkRoles.MainAdmin();
             viewModel.Dis = checkRoles.Discipline();
@@ -183,18 +181,8 @@ namespace Gaz.Controllers
             List<Role> roles = Request.Form["Roles"].Select(x => new Role { Id = int.Parse(x) }).ToList();
             List<UsersRole> ur = await usersRolesController.GetRolesByUser(edId);
 
-
-            checkRoles.GetRolesList(user.Id);
-            //viewModel.MainAdmin = checkRoles.MainAdmin();
-            //viewModel.Dis = checkRoles.Discipline();
-            //viewModel.Side = checkRoles.Side();
-            viewModel.User = user;
-            viewModel.UserId = id;
             viewModel.EditUserId = edId;
             viewModel.EditUser = checkRoles.GetUse(edId);
-            viewModel.Types = types;
-            viewModel.Roles = checkRoles.GetRoles();
-            viewModel.AllUsers = listUsersForTable.GetAllUsers();
             viewModel.TypeId = viewModel.EditUser.TypeId;
             viewModel.Type = await onetypesController.GetOnetype(viewModel.TypeId);
             viewModel.DivisionName = viewModel.EditUser.Division;
@@ -207,20 +195,16 @@ namespace Gaz.Controllers
             viewModel.EditUser.ServiceNumber = serNum;
             viewModel.EditUser.Division = viewModel.Division.IndicatorName;
             viewModel.EditUser.Position = pos;
-            foreach(var role in ur)
-            {
-                await usersRolesController.DeleteUsersRole(role.Id);
-            }
             foreach (var role in roles)
             {
                 UsersRole urs = new UsersRole();
-                urs.UserId = viewModel.EditUserId;
-                urs.RoleId = role.Id;
-                if (ur.Any(z=>z.RoleId == role.Id))
+                if (ur.Any(z => z.RoleId == role.Id))
                 {
-                    urs = await usersRolesController.GetUR(urs.UserId, urs.RoleId);
+                    urs = await usersRolesController.GetUR(viewModel.EditUserId, role.Id);
                     await usersRolesController.DeleteUsersRole(urs.Id);
                 }
+                urs.UserId = viewModel.EditUserId;
+                urs.RoleId = role.Id;
                 await usersRolesController.PostUsersRole(urs);
             }
             await usersController.PutUser(viewModel.EditUser.Id, viewModel.EditUser);
@@ -233,7 +217,7 @@ namespace Gaz.Controllers
                 roless = checkRoles.GetRoles();
             viewModel.Roles = roless;
             viewModel.Divisions = listForTable.GetDivisions();
-            return RedirectToAction("EditUser", "HR", viewModel);
+            return RedirectToAction("EditUser", "HR", new { userId = id });
         }
 
 
@@ -269,7 +253,7 @@ namespace Gaz.Controllers
                 User = user,
                 Types = types,
                 Roles = checkRoles.GetRoles(),
-                AllUsers = listUsersForTable.GetAllUsers()
+                AllUsers = listUsersForTable.GetUsers()
             };
             SidebarModel model = viewModel;
             return View(model);
@@ -299,7 +283,7 @@ namespace Gaz.Controllers
                 EditUserId = viewModel.EditUserId,
                 EditUser = checkRoles.GetUse(viewModel.EditUserId),
                 Roles = roless,
-                AllUsers = listUsersForTable.GetAllUsers()
+                AllUsers = listUsersForTable.GetUsers()
             };
             List<UsersRole> ur = await usersRolesController.GetRolesByUser(edId);
             foreach (var role in ur)
@@ -323,9 +307,6 @@ namespace Gaz.Controllers
             {
                 await explanationsController.DeleteExplanation(sc.Id);
             }
-
-
-
             await usersController.DeleteUser(viewModel.EditUserId);
             SidebarModel model = viewModel;
             return View(model);

@@ -27,13 +27,15 @@ namespace SerGaz.SendTable
 		private readonly ExplanationsController explanationsController;
 		private readonly PollsController pollsController;
 		private readonly ScoresController scoresController;
+		private readonly QuarterHeaderTable quarterHeaderTable;
 
-		public ApparatController(freedb_testdbgazContext context)
+        public ApparatController(freedb_testdbgazContext context)
 		{
 			_context = context;
 			explanationsController = new ExplanationsController(_context);
 			pollsController = new PollsController(_context);
 			scoresController = new ScoresController(_context);
+			quarterHeaderTable = new QuarterHeaderTable(_context);
         }
 
 		[HttpPost(nameof(Send))]
@@ -334,14 +336,14 @@ namespace SerGaz.SendTable
 				HeaderTable.CreateHeader(workbookPart, month10.Id, user, users, ex10, explanations10, polls10, score10, scores1);
 				HeaderTable.CreateHeader(workbookPart, month11.Id, user, users, ex11, explanations11, polls11, score11, scores1);
 				HeaderTable.CreateHeader(workbookPart, month12.Id, user, users, ex12, explanations12, polls12, score12, scores1);
-				#endregion
+                #endregion
 
-				#region Кварталы
-				QuarterHeaderTable.CreateHeader(workbookPart, quarter1.Id, user, users);
-				QuarterHeaderTable.CreateHeader(workbookPart, quarter2.Id, user, users);
-				QuarterHeaderTable.CreateHeader(workbookPart, quarter3.Id, user, users);
-				QuarterHeaderTable.CreateHeader(workbookPart, quarter4.Id, user, users);
-				QuarterHeaderTable.CreateHeader(workbookPart, yearS.Id, user, users);
+                #region Кварталы
+                quarterHeaderTable.CreateHeader(workbookPart, quarter1.Id, user, users);
+                quarterHeaderTable.CreateHeader(workbookPart, quarter2.Id, user, users);
+                quarterHeaderTable.CreateHeader(workbookPart, quarter3.Id, user, users);
+                quarterHeaderTable.CreateHeader(workbookPart, quarter4.Id, user, users);
+                quarterHeaderTable.CreateHeader(workbookPart, yearS.Id, user, users);
 				#endregion
 
 				spreadsheetDocument.WorkbookPart.Workbook.Save(); 

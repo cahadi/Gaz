@@ -32,7 +32,14 @@ namespace Gaz.HelpFolder.GetList
         {
             var users = _context.Users
                 .Where(u => u.UsersRoles.Any(r => r.Role.RoleName
-                != "Главный администратор")).ToList();
+                != "Главный администратор"))
+                .Include("Type")
+                .Include("Explanations")
+                .Include("Polls")
+                .Include("Scores")
+                .Include("UsersRoles")
+                .Include("UsersRoles.Role")
+                .ToList();
             return users;
         }
     }

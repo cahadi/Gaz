@@ -2,17 +2,35 @@
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Gaz.Domain.Entities;
+using Gaz.Data;
+using SerGaz.Controllers;
+using Gaz.HelpFolder.Sum;
 
 namespace SerGaz.SendTable.Header
 {
 	//Поменять формулы
     public class QuarterHeaderTable
     {
-        public static void CreateHeader(WorkbookPart workbookPart, StringValue id, 
+		private readonly freedb_testdbgazContext _context;
+		private readonly PollsController pollsController;
+		private readonly ScoresController scoresController;
+		private readonly SumExcel sumExcel;
+
+        public QuarterHeaderTable(freedb_testdbgazContext context)
+        {
+			_context = context;
+			pollsController = new PollsController(_context);
+			scoresController = new ScoresController(_context);
+        }
+
+        public async void CreateHeader(WorkbookPart workbookPart, StringValue id, 
             User user, List<User> users)
         {
+			DateTime now = DateTime.Now;
+			int year = now.Year;
+			sumExcel.GetListsForSumExcel();
 
-			WorksheetPart worksheetPart = workbookPart.GetPartById(id) as WorksheetPart;
+            WorksheetPart worksheetPart = workbookPart.GetPartById(id) as WorksheetPart;
 
             Worksheet worksheet = new Worksheet();
             SheetData sheetData = worksheet.AppendChild(new SheetData());
@@ -341,11 +359,54 @@ namespace SerGaz.SendTable.Header
             cell17.CellValue = new CellValue("Суммарный годовой\n (январь - декабрь)");
             row4.Append(cell17);
 
-			#endregion
+            #endregion
 
-			#region Списки
+            #region Переменные для ячеек
+            int score1 = 0;
+            int score2 = 0;
+            int score3 = 0;
+            int score4 = 0;
+            int score5 = 0;
+            int score6 = 0;
+            int score7 = 0;
+            int score8 = 0;
+            int score9 = 0;
+            int score10 = 0;
+            int score11 = 0;
+            int score12 = 0;
+            int score13 = 0;
+            int score14 = 0;
+            int score15 = 0;
+            int score16 = 0;
+            int score17 = 0;
+            int score18 = 0;
+            int score19 = 0;
+            int score20 = 0;
+            int score21 = 0;
+            int score22 = 0;
+            int score23 = 0;
+            int score24 = 0;
+            int score25 = 0;
+            int score26 = 0;
+            int score27 = 0;
+            int score28 = 0;
+            int score29 = 0;
+            int score30 = 0;
+            int score31 = 0;
+            int score32 = 0;
+            int score33 = 0;
+            int score34 = 0;
+            int score35 = 0;
+            int score36 = 0;
+            int score37 = 0;
+            int score38 = 0;
+            int score39 = 0;
+            int score40 = 0;
+            #endregion
 
-			int i = 5;
+            #region Списки
+
+            int i = 5;
 
 			if (user != null)
 			{
@@ -360,349 +421,423 @@ namespace SerGaz.SendTable.Header
 
 
 				if (int.TryParse(id, out int idValue12) && idValue12 == 13)
-				{
-					Cell cellE5 = new Cell();
+                {
+					score1 = sumExcel.GetSumE(user.Id, 1);
+                    Cell cellE5 = new Cell();
 					cellE5.CellReference = $"E{i}";
-					cellE5.DataType = CellValues.SharedString;
-					cellE5.CellValue = new CellValue($"=(ЕСЛИ(Январь!E{i}=5;1;0)+ЕСЛИ(Январь!E{i}=10;2;0)+ЕСЛИ(Январь!E{i}=15;3;0)+ЕСЛИ(Январь!E{i}=20;4;0))+(ЕСЛИ(Февраль!E{i}=5;1;0)+ЕСЛИ(Февраль!E{i}=10;2;0)+ЕСЛИ(Февраль!E{i}=15;3;0)+ЕСЛИ(Февраль!E{i}=20;4;0))+(ЕСЛИ(Март!E{i}=5;1;0)+ЕСЛИ(Март!E{i}=10;2;0)+ЕСЛИ(Март!E{i}=15;3;0)+ЕСЛИ(Март!E{i}=20;4;0))");
+					cellE5.DataType = CellValues.Number;
+					cellE5.CellValue = new CellValue(score1.ToString());
 					row5.Append(cellE5);
 
-
-					Cell cellF5 = new Cell();
+					score2 = sumExcel.GetSumF(user.Id, 1);
+                    Cell cellF5 = new Cell();
 					cellF5.CellReference = $"F{i}";
-					cellF5.DataType = CellValues.String;
-					cellF5.CellValue = new CellValue($"=(ЕСЛИ(Январь!F{i}=5;0,5;0)+ЕСЛИ(Январь!F{i}=10;1;0)+ЕСЛИ(Январь!F{i}=20;2;0))+(ЕСЛИ(Февраль!F{i}=5;0,5;0)+ЕСЛИ(Февраль!F{i}=10;1;0)+ЕСЛИ(Февраль!F{i}=20;2;0))+(ЕСЛИ(Март!F{i}=5;0,5;0)+ЕСЛИ(Март!F{i}=10;1;0)+ЕСЛИ(Март!F{i}=20;2;0))");
+					cellF5.DataType = CellValues.Number;
+					cellF5.CellValue = new CellValue(score2.ToString());
 					row5.Append(cellF5);
 
+					score3 = sumExcel.GetSumG(user.Id, 1);
 					Cell cellG5 = new Cell();
 					cellG5.CellReference = $"G{i}";
-					cellG5.DataType = CellValues.String;
-					cellG5.CellValue = new CellValue($"=ЕСЛИ(Январь!G{i}=\"Да\";1;0)+ЕСЛИ(Февраль!G{i}=\"Да\";1;0)+ЕСЛИ(Март!G{i}=\"Да\";1;0)");
+					cellG5.DataType = CellValues.Number;
+					cellG5.CellValue = new CellValue(score3.ToString());
 					row5.Append(cellG5);
 
-					Cell cellI5 = new Cell();
+                    score4 = sumExcel.GetSumI(user.Id, 1);
+                    Cell cellI5 = new Cell();
 					cellI5.CellReference = $"I{i}";
-					cellI5.DataType = CellValues.String;
-					cellI5.CellValue = new CellValue($"=ЕСЛИ(Январь!I{i}=\"Да\";1;0)+ЕСЛИ(Февраль!I{i}=\"Да\";1;0)+ЕСЛИ(Март!I{i}=\"Да\";1;0)");
+					cellI5.DataType = CellValues.Number;
+					cellI5.CellValue = new CellValue(score4.ToString());
 					row5.Append(cellI5);
 
-					Cell cellJ5 = new Cell();
+                    score5 = sumExcel.GetSumJ(user.Id, 1);
+                    Cell cellJ5 = new Cell();
 					cellJ5.CellReference = $"J{i}";
-					cellJ5.DataType = CellValues.String;
-					cellJ5.CellValue = new CellValue($"=ЕСЛИ(Январь!J{i}=\"Да\";1;0)+ЕСЛИ(Февраль!J{i}=\"Да\";1;0)+ЕСЛИ(Март!J{i}=\"Да\";1;0)");
+					cellJ5.DataType = CellValues.Number;
+					cellJ5.CellValue = new CellValue(score5.ToString());
 					row5.Append(cellJ5);
 
-					Cell cellK5 = new Cell();
+                    score6 = sumExcel.GetSumK(user.Id, 1);
+                    Cell cellK5 = new Cell();
 					cellK5.CellReference = $"K{i}";
-					cellK5.DataType = CellValues.String;
-					cellK5.CellValue = new CellValue($"=ЕСЛИ(Январь!K{i}=\"Да\";1;0)+ЕСЛИ(Февраль!K{i}=\"Да\";1;0)+ЕСЛИ(Март!K{i}=\"Да\";1;0)");
+					cellK5.DataType = CellValues.Number;
+					cellK5.CellValue = new CellValue(score6.ToString());
 					row5.Append(cellK5);
 
-					Cell cellL5 = new Cell();
+                    score7 = sumExcel.GetSumL(user.Id, 1);
+                    Cell cellL5 = new Cell();
 					cellL5.CellReference = $"L{i}";
-					cellL5.DataType = CellValues.String;
-					cellL5.CellValue = new CellValue($"=ЕСЛИ(Январь!L{i}=\"Да\";1;0)+ЕСЛИ(Февраль!L{i}=\"Да\";1;0)+ЕСЛИ(Март!L{i}=\"Да\";1;0)");
+					cellL5.DataType = CellValues.Number;
+					cellL5.CellValue = new CellValue(score7.ToString());
 					row5.Append(cellL5);
 
-					Cell cellM5 = new Cell();
+                    score8 = sumExcel.GetSumM(user.Id, 1);
+                    Cell cellM5 = new Cell();
 					cellM5.CellReference = $"M{i}";
-					cellM5.DataType = CellValues.String;
-					cellM5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Январь!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Январь!M{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Февраль!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Февраль!M{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Март!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Март!M{i};\"Да\");1;0)");
+					cellM5.DataType = CellValues.Number;
+					cellM5.CellValue = new CellValue(score8.ToString());
 					row5.Append(cellM5);
 
-					Cell cellN5 = new Cell();
+                    score9 = sumExcel.GetSumN(user.Id, 1);
+                    Cell cellN5 = new Cell();
 					cellN5.CellReference = $"N{i}";
 					cellN5.DataType = CellValues.String;
-					cellN5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Январь!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Январь!N{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Февраль!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Февраль!N{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Март!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Март!N{i};\"Да\");1;0)");
+					cellN5.CellValue = new CellValue(score9.ToString());
 					row5.Append(cellN5);
 
-					Cell cellO5 = new Cell();
+                    score10 = sumExcel.GetSumO(user.Id, 1);
+                    Cell cellO5 = new Cell();
 					cellO5.CellReference = $"O{i}";
 					cellO5.DataType = CellValues.String;
-					cellO5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Январь!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Январь!O{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Февраль!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Февраль!O{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Март!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Март!O{i};\"Да\");1;0)");
+					cellO5.CellValue = new CellValue(score10.ToString());
 					row5.Append(cellO5);
 
-					Cell cellQ5 = new Cell();
-					cellQ5.CellReference = $"Q{i}";
-					cellQ5.DataType = CellValues.String;
-					cellQ5.CellValue = new CellValue($"=Март!Q{i}");
-					row5.Append(cellQ5);
+                    var score = await scoresController.GetScoreByDetail(user.Id, 3, year);
+
+                    Cell cellQ5 = new Cell()
+                    {
+                        CellReference = $"Q{i}",
+                        DataType = CellValues.Number,
+                        CellValue = new CellValue(score.FinalScore.ToString())
+                    };
+                    row5.Append(cellQ5);
 				}
 				else if (int.TryParse(id, out int idValue13) && idValue13 == 14)
-				{
-					Cell cellE5 = new Cell();
-					cellE5.CellReference = $"E{i}";
-					cellE5.DataType = CellValues.String;
-					cellE5.CellValue = new CellValue($"=(ЕСЛИ(Апрель!E{i}=5;1;0)+ЕСЛИ(Апрель!E{i}=10;2;0)+ЕСЛИ(Апрель!E{i}=15;3;0)+ЕСЛИ(Апрель!E{i}=4;2;0))+(ЕСЛИ(Май!E{i}=5;1;0)+ЕСЛИ(Май!E{i}=10;2;0)+ЕСЛИ(Май!E{i}=15;3;0)+ЕСЛИ(Май!E{i}=20;4;0))+(ЕСЛИ(Июнь!E{i}=5;1;0)+ЕСЛИ(Июнь!E{i}=10;2;0)+ЕСЛИ(Июнь!E{i}=15;3;0)+ЕСЛИ(Июнь!E{i}=20;4;0))");
-					row5.Append(cellE5);
+                {
+                    score11 = sumExcel.GetSumE(user.Id, 2);
+                    Cell cellE5 = new Cell();
+                    cellE5.CellReference = $"E{i}";
+                    cellE5.DataType = CellValues.Number;
+                    cellE5.CellValue = new CellValue(score11.ToString());
+                    row5.Append(cellE5);
 
+                    score12 = sumExcel.GetSumF(user.Id, 2);
+                    Cell cellF5 = new Cell();
+                    cellF5.CellReference = $"F{i}";
+                    cellF5.DataType = CellValues.Number;
+                    cellF5.CellValue = new CellValue(score12.ToString());
+                    row5.Append(cellF5);
 
-					Cell cellF5 = new Cell();
-					cellF5.CellReference = $"F{i}";
-					cellF5.DataType = CellValues.String;
-					cellF5.CellValue = new CellValue($"=(ЕСЛИ(Апрель!F{i}=5;0,5;0)+ЕСЛИ(Апрель!F{i}=10;1;0)+ЕСЛИ(Апрель!F{i}=20;2;0))+(ЕСЛИ(Май!F{i}=5;0,5;0)+ЕСЛИ(Май!F{i}=10;1;0)+ЕСЛИ(Май!F{i}=20;2;0))+(ЕСЛИ(Июнь!F{i}=5;0,5;0)+ЕСЛИ(Июнь!F{i}=10;1;0)+ЕСЛИ(Июнь!F{i}=20;2;0))");
-					row5.Append(cellF5);
+                    score13 = sumExcel.GetSumG(user.Id, 2);
+                    Cell cellG5 = new Cell();
+                    cellG5.CellReference = $"G{i}";
+                    cellG5.DataType = CellValues.Number;
+                    cellG5.CellValue = new CellValue(score13.ToString());
+                    row5.Append(cellG5);
 
-					Cell cellG5 = new Cell();
-					cellG5.CellReference = $"G{i}";
-					cellG5.DataType = CellValues.String;
-					cellG5.CellValue = new CellValue($"=ЕСЛИ(Апрель!G{i}=\"Да\";1;0)+ЕСЛИ(Май!G{i}=\"Да\";1;0)+ЕСЛИ(Июнь!G{i}=\"Да\";1;0)");
-					row5.Append(cellG5);
+                    score14 = sumExcel.GetSumI(user.Id, 2);
+                    Cell cellI5 = new Cell();
+                    cellI5.CellReference = $"I{i}";
+                    cellI5.DataType = CellValues.Number;
+                    cellI5.CellValue = new CellValue(score14.ToString());
+                    row5.Append(cellI5);
 
-					Cell cellI5 = new Cell();
-					cellI5.CellReference = $"I{i}";
-					cellI5.DataType = CellValues.String;
-					cellI5.CellValue = new CellValue($"=ЕСЛИ(Апрель!I{i}=\"Да\";1;0)+ЕСЛИ(Май!I{i}=\"Да\";1;0)+ЕСЛИ(Июнь!I{i}=\"Да\";1;0)");
-					row5.Append(cellI5);
+                    score15 = sumExcel.GetSumJ(user.Id, 2);
+                    Cell cellJ5 = new Cell();
+                    cellJ5.CellReference = $"J{i}";
+                    cellJ5.DataType = CellValues.Number;
+                    cellJ5.CellValue = new CellValue(score15.ToString());
+                    row5.Append(cellJ5);
 
-					Cell cellJ5 = new Cell();
-					cellJ5.CellReference = $"J{i}";
-					cellJ5.DataType = CellValues.String;
-					cellJ5.CellValue = new CellValue($"=ЕСЛИ(Апрель!J{i}=\"Да\";1;0)+ЕСЛИ(Май!J{i}=\"Да\";1;0)+ЕСЛИ(Июнь!J{i}=\"Да\";1;0)");
-					row5.Append(cellJ5);
+                    score16 = sumExcel.GetSumK(user.Id, 2);
+                    Cell cellK5 = new Cell();
+                    cellK5.CellReference = $"K{i}";
+                    cellK5.DataType = CellValues.Number;
+                    cellK5.CellValue = new CellValue(score16.ToString());
+                    row5.Append(cellK5);
 
-					Cell cellK5 = new Cell();
-					cellK5.CellReference = $"K{i}";
-					cellK5.DataType = CellValues.String;
-					cellK5.CellValue = new CellValue($"=ЕСЛИ(Апрель!K{i}=\"Да\";1;0)+ЕСЛИ(Май!K{i}=\"Да\";1;0)+ЕСЛИ(Июнь!K{i}=\"Да\";1;0)");
-					row5.Append(cellK5);
+                    score17 = sumExcel.GetSumL(user.Id, 2);
+                    Cell cellL5 = new Cell();
+                    cellL5.CellReference = $"L{i}";
+                    cellL5.DataType = CellValues.Number;
+                    cellL5.CellValue = new CellValue(score17.ToString());
+                    row5.Append(cellL5);
 
-					Cell cellL5 = new Cell();
-					cellL5.CellReference = $"L{i}";
-					cellL5.DataType = CellValues.String;
-					cellL5.CellValue = new CellValue($"=ЕСЛИ(Апрель!L{i}=\"Да\";1;0)+ЕСЛИ(Май!L{i}=\"Да\";1;0)+ЕСЛИ(Июнь!L{i}=\"Да\";1;0)");
-					row5.Append(cellL5);
+                    score18 = sumExcel.GetSumM(user.Id, 2);
+                    Cell cellM5 = new Cell();
+                    cellM5.CellReference = $"M{i}";
+                    cellM5.DataType = CellValues.Number;
+                    cellM5.CellValue = new CellValue(score18.ToString());
+                    row5.Append(cellM5);
 
-					Cell cellM5 = new Cell();
-					cellM5.CellReference = $"M{i}";
-					cellM5.DataType = CellValues.String;
-					cellM5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Апрель!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Апрель!M{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Май!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Май!M{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Июнь!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Июнь!M{i};\"Да\");1;0)");
-					row5.Append(cellM5);
+                    score19 = sumExcel.GetSumN(user.Id, 2);
+                    Cell cellN5 = new Cell();
+                    cellN5.CellReference = $"N{i}";
+                    cellN5.DataType = CellValues.String;
+                    cellN5.CellValue = new CellValue(score19.ToString());
+                    row5.Append(cellN5);
 
-					Cell cellN5 = new Cell();
-					cellN5.CellReference = $"N{i}";
-					cellN5.DataType = CellValues.String;
-					cellN5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Апрель!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Апрель!N{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Май!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Май!N{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Июнь!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Июнь!N{i};\"Да\");1;0)");
-					row5.Append(cellN5);
+                    score20 = sumExcel.GetSumO(user.Id, 2);
+                    Cell cellO5 = new Cell();
+                    cellO5.CellReference = $"O{i}";
+                    cellO5.DataType = CellValues.String;
+                    cellO5.CellValue = new CellValue(score20.ToString());
+                    row5.Append(cellO5);
 
-					Cell cellO5 = new Cell();
-					cellO5.CellReference = $"O{i}";
-					cellO5.DataType = CellValues.String;
-					cellO5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Апрель!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Апрель!O{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Май!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Май!O{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Июнь!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Июнь!O{i};\"Да\");1;0)");
-					row5.Append(cellO5);
+                    var score = await scoresController.GetScoreByDetail(user.Id, 6, year);
 
-					Cell cellQ5 = new Cell();
-					cellQ5.CellReference = $"Q{i}";
-					cellQ5.DataType = CellValues.String;
-					cellQ5.CellValue = new CellValue($"=Июнь!Q{i}");
-					row5.Append(cellQ5);
-				}
+                    Cell cellQ5 = new Cell()
+                    {
+                        CellReference = $"Q{i}",
+                        DataType = CellValues.Number,
+                        CellValue = new CellValue(score.FinalScore.ToString())
+                    };
+                    row5.Append(cellQ5);
+                }
 				else if (int.TryParse(id, out int idValue14) && idValue14 == 15)
-				{
-					Cell cellE5 = new Cell();
-					cellE5.CellReference = $"E{i}";
-					cellE5.DataType = CellValues.String;
-					cellE5.CellValue = new CellValue($"=(ЕСЛИ(Июль!E{i}=5;1;0)+ЕСЛИ(Июль!E{i}=10;2;0)+ЕСЛИ(Июль!E{i}=15;3;0)+ЕСЛИ(Июль!E{i}=20;4;0))+(ЕСЛИ(Август!E{i}=5;1;0)+ЕСЛИ(Август!E{i}=10;2;0)+ЕСЛИ(Август!E{i}=15;3;0)+ЕСЛИ(Август!E{i}=20;4;0))+(ЕСЛИ(Сентябрь!E{i}=5;1;0)+ЕСЛИ(Сентябрь!E{i}=10;2;0)+ЕСЛИ(Сентябрь!E{i}=15;3;0)+ЕСЛИ(Сентябрь!E{i}=20;4;0))");
-					row5.Append(cellE5);
+                {
+                    score21 = sumExcel.GetSumE(user.Id, 3);
+                    Cell cellE5 = new Cell();
+                    cellE5.CellReference = $"E{i}";
+                    cellE5.DataType = CellValues.Number;
+                    cellE5.CellValue = new CellValue(score21.ToString());
+                    row5.Append(cellE5);
 
+                    score22 = sumExcel.GetSumF(user.Id, 3);
+                    Cell cellF5 = new Cell();
+                    cellF5.CellReference = $"F{i}";
+                    cellF5.DataType = CellValues.Number;
+                    cellF5.CellValue = new CellValue(score22.ToString());
+                    row5.Append(cellF5);
 
-					Cell cellF5 = new Cell();
-					cellF5.CellReference = $"F{i}";
-					cellF5.DataType = CellValues.String;
-					cellF5.CellValue = new CellValue($"=(ЕСЛИ(Июль!F{i}=5;0,5;0)+ЕСЛИ(Июль!F{i}=10;1;0)+ЕСЛИ(Июль!F{i}=20;2;0))+(ЕСЛИ(Август!F{i}=5;0,5;0)+ЕСЛИ(Август!F{i}=10;1;0)+ЕСЛИ(Август!F{i}=20;2;0))+(ЕСЛИ(Сентябрь!F{i}=5;0,5;0)+ЕСЛИ(Сентябрь!F{i}=10;1;0)+ЕСЛИ(Сентябрь!F{i}=20;2;0))");
-					row5.Append(cellF5);
+                    score23 = sumExcel.GetSumG(user.Id, 3);
+                    Cell cellG5 = new Cell();
+                    cellG5.CellReference = $"G{i}";
+                    cellG5.DataType = CellValues.Number;
+                    cellG5.CellValue = new CellValue(score23.ToString());
+                    row5.Append(cellG5);
 
-					Cell cellG5 = new Cell();
-					cellG5.CellReference = $"G{i}";
-					cellG5.DataType = CellValues.String;
-					cellG5.CellValue = new CellValue($"=ЕСЛИ(Июль!G{i}=\"Да\";1;0)+ЕСЛИ(Август!G{i}=\"Да\";1;0)+ЕСЛИ(Сентябрь!G{i}=\"Да\";1;0)");
-					row5.Append(cellG5);
+                    score24 = sumExcel.GetSumI(user.Id, 3);
+                    Cell cellI5 = new Cell();
+                    cellI5.CellReference = $"I{i}";
+                    cellI5.DataType = CellValues.Number;
+                    cellI5.CellValue = new CellValue(score24.ToString());
+                    row5.Append(cellI5);
 
-					Cell cellI5 = new Cell();
-					cellI5.CellReference = $"I{i}";
-					cellI5.DataType = CellValues.String;
-					cellI5.CellValue = new CellValue($"=ЕСЛИ(Июль!I{i}=\"Да\";1;0)+ЕСЛИ(Август!I{i}=\"Да\";1;0)+ЕСЛИ(Сентябрь!I{i}=\"Да\";1;0)"); 
-					row5.Append(cellI5);
+                    score25 = sumExcel.GetSumJ(user.Id, 3);
+                    Cell cellJ5 = new Cell();
+                    cellJ5.CellReference = $"J{i}";
+                    cellJ5.DataType = CellValues.Number;
+                    cellJ5.CellValue = new CellValue(score25.ToString());
+                    row5.Append(cellJ5);
 
-					Cell cellJ5 = new Cell();
-					cellJ5.CellReference = $"J{i}";
-					cellJ5.DataType = CellValues.String;
-					cellJ5.CellValue = new CellValue($"=ЕСЛИ(Июль!J{i}=\"Да\";1;0)+ЕСЛИ(Август!J{i}=\"Да\";1;0)+ЕСЛИ(Сентябрь!J{i}=\"Да\";1;0)");
-					row5.Append(cellJ5);
+                    score26 = sumExcel.GetSumK(user.Id, 3);
+                    Cell cellK5 = new Cell();
+                    cellK5.CellReference = $"K{i}";
+                    cellK5.DataType = CellValues.Number;
+                    cellK5.CellValue = new CellValue(score26.ToString());
+                    row5.Append(cellK5);
 
-					Cell cellK5 = new Cell();
-					cellK5.CellReference = $"K{i}";
-					cellK5.DataType = CellValues.String;
-					cellK5.CellValue = new CellValue($"=ЕСЛИ(Июль!K{i}=\"Да\";1;0)+ЕСЛИ(Август!K{i}=\"Да\";1;0)+ЕСЛИ(Сентябрь!K{i}=\"Да\";1;0)");
-					row5.Append(cellK5);
+                    score27 = sumExcel.GetSumL(user.Id, 3);
+                    Cell cellL5 = new Cell();
+                    cellL5.CellReference = $"L{i}";
+                    cellL5.DataType = CellValues.Number;
+                    cellL5.CellValue = new CellValue(score27.ToString());
+                    row5.Append(cellL5);
 
-					Cell cellL5 = new Cell();
-					cellL5.CellReference = $"L{i}";
-					cellL5.DataType = CellValues.String;
-					cellL5.CellValue = new CellValue($"=ЕСЛИ(Июль!L{i}=\"Да\";1;0)+ЕСЛИ(Август!L{i}=\"Да\";1;0)+ЕСЛИ(Сентябрь!L{i}=\"Да\";1;0)");
-					row5.Append(cellL5);
+                    score28 = sumExcel.GetSumM(user.Id, 3);
+                    Cell cellM5 = new Cell();
+                    cellM5.CellReference = $"M{i}";
+                    cellM5.DataType = CellValues.Number;
+                    cellM5.CellValue = new CellValue(score28.ToString());
+                    row5.Append(cellM5);
 
-					Cell cellM5 = new Cell();
-					cellM5.CellReference = $"M{i}";
-					cellM5.DataType = CellValues.String;
-					cellM5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Июль!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Июль!M{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Август!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Август!M{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Сентябрь!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Сентябрь!M{i};\"Да\");1;0)");
-					row5.Append(cellM5);
+                    score29 = sumExcel.GetSumN(user.Id, 3);
+                    Cell cellN5 = new Cell();
+                    cellN5.CellReference = $"N{i}";
+                    cellN5.DataType = CellValues.String;
+                    cellN5.CellValue = new CellValue(score29.ToString());
+                    row5.Append(cellN5);
 
-					Cell cellN5 = new Cell();
-					cellN5.CellReference = $"N{i}";
-					cellN5.DataType = CellValues.String;
-					cellN5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Июль!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Июль!N{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Август!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Август!N{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Сентябрь!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Сентябрь!N{i};\"Да\");1;0)");
-					row5.Append(cellN5);
+                    score30 = sumExcel.GetSumO(user.Id, 3);
+                    Cell cellO5 = new Cell();
+                    cellO5.CellReference = $"O{i}";
+                    cellO5.DataType = CellValues.String;
+                    cellO5.CellValue = new CellValue(score30.ToString());
+                    row5.Append(cellO5);
 
-					Cell cellO5 = new Cell();
-					cellO5.CellReference = $"O{i}";
-					cellO5.DataType = CellValues.String;
-					cellO5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Июль!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Июль!O{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Август!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Август!O{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Сентябрь!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Сентябрь!O{i};\"Да\");1;0)");
-					row5.Append(cellO5);
+                    var score = await scoresController.GetScoreByDetail(user.Id, 9, year);
 
-					Cell cellQ5 = new Cell();
-					cellQ5.CellReference = $"Q{i}";
-					cellQ5.DataType = CellValues.String;
-					cellQ5.CellValue = new CellValue($"=Сентябрь!Q{i}");
-					row5.Append(cellQ5);
-				}
+                    Cell cellQ5 = new Cell()
+                    {
+                        CellReference = $"Q{i}",
+                        DataType = CellValues.Number,
+                        CellValue = new CellValue(score.FinalScore.ToString())
+                    };
+                    row5.Append(cellQ5);
+                }
 				else if (int.TryParse(id, out int idValue15) && idValue15 == 16)
-				{
-					Cell cellE5 = new Cell();
-					cellE5.CellReference = $"E{i}";
-					cellE5.DataType = CellValues.String;
-					cellE5.CellValue = new CellValue($"=(ЕСЛИ(Октябрь!E{i}=5;1;0)+ЕСЛИ(Октябрь!E{i}=10;2;0)+ЕСЛИ(Октябрь!E{i}=15;3;0)+ЕСЛИ(Октябрь!E{i}=20;4;0))+(ЕСЛИ(Ноябрь!E{i}=5;1;0)+ЕСЛИ(Ноябрь!E{i}=10;2;0)+ЕСЛИ(Ноябрь!E{i}=15;3;0)+ЕСЛИ(Ноябрь!E{i}=20;4;0))+(ЕСЛИ(Декабрь!E{i}=5;1;0)+ЕСЛИ(Декабрь!E{i}=10;2;0)+ЕСЛИ(Декабрь!E{i}=15;3;0)+ЕСЛИ(Декабрь!E{i}=20;4;0))");
-					row5.Append(cellE5);
+                {
+                    score31 = sumExcel.GetSumE(user.Id, 4);
+                    Cell cellE5 = new Cell();
+                    cellE5.CellReference = $"E{i}";
+                    cellE5.DataType = CellValues.Number;
+                    cellE5.CellValue = new CellValue(score31.ToString());
+                    row5.Append(cellE5);
 
+                    score32 = sumExcel.GetSumF(user.Id, 4);
+                    Cell cellF5 = new Cell();
+                    cellF5.CellReference = $"F{i}";
+                    cellF5.DataType = CellValues.Number;
+                    cellF5.CellValue = new CellValue(score32.ToString());
+                    row5.Append(cellF5);
 
-					Cell cellF5 = new Cell();
-					cellF5.CellReference = $"F{i}";
-					cellF5.DataType = CellValues.String;
-					cellF5.CellValue = new CellValue($"=(ЕСЛИ(Октябрь!F{i}=5;0,5;0)+ЕСЛИ(Октябрь!F{i}=10;1;0)+ЕСЛИ(Октябрь!F{i}=20;2;0))+(ЕСЛИ(Ноябрь!F{i}=5;0,5;0)+ЕСЛИ(Ноябрь!F{i}=10;1;0)+ЕСЛИ(Ноябрь!F{i}=20;2;0))+(ЕСЛИ(Декабрь!F{i}=5;0,5;0)+ЕСЛИ(Декабрь!F{i}=10;1;0)+ЕСЛИ(Декабрь!F{i}=20;2;0))");
-					row5.Append(cellF5);
+                    score33 = sumExcel.GetSumG(user.Id, 4);
+                    Cell cellG5 = new Cell();
+                    cellG5.CellReference = $"G{i}";
+                    cellG5.DataType = CellValues.Number;
+                    cellG5.CellValue = new CellValue(score33.ToString());
+                    row5.Append(cellG5);
 
-					Cell cellG5 = new Cell();
-					cellG5.CellReference = $"G{i}";
-					cellG5.DataType = CellValues.String;
-					cellG5.CellValue = new CellValue($"=ЕСЛИ(Октябрь!G{i}=\"Да\";1;0)+ЕСЛИ(Ноябрь!G{i}=\"Да\";1;0)+ЕСЛИ(Декабрь!G{i}=\"Да\";1;0)");
-					row5.Append(cellG5);
+                    score34 = sumExcel.GetSumI(user.Id, 4);
+                    Cell cellI5 = new Cell();
+                    cellI5.CellReference = $"I{i}";
+                    cellI5.DataType = CellValues.Number;
+                    cellI5.CellValue = new CellValue(score34.ToString());
+                    row5.Append(cellI5);
 
-					Cell cellI5 = new Cell();
-					cellI5.CellReference = $"I{i}";
-					cellI5.DataType = CellValues.String;
-					cellI5.CellValue = new CellValue($"=ЕСЛИ(Октябрь!I{i}=\"Да\";1;0)+ЕСЛИ(Ноябрь!I{i}=\"Да\";1;0)+ЕСЛИ(Декабрь!I{i}=\"Да\";1;0)");
-					row5.Append(cellI5);
+                    score35 = sumExcel.GetSumJ(user.Id, 4);
+                    Cell cellJ5 = new Cell();
+                    cellJ5.CellReference = $"J{i}";
+                    cellJ5.DataType = CellValues.Number;
+                    cellJ5.CellValue = new CellValue(score35.ToString());
+                    row5.Append(cellJ5);
 
-					Cell cellJ5 = new Cell();
-					cellJ5.CellReference = $"J{i}";
-					cellJ5.DataType = CellValues.String;
-					cellJ5.CellValue = new CellValue($"=ЕСЛИ(Октябрь!J{i}=\"Да\";1;0)+ЕСЛИ(Ноябрь!J{i}=\"Да\";1;0)+ЕСЛИ(Декабрь!J{i}=\"Да\";1;0)");
-					row5.Append(cellJ5);
+                    score36 = sumExcel.GetSumK(user.Id, 4);
+                    Cell cellK5 = new Cell();
+                    cellK5.CellReference = $"K{i}";
+                    cellK5.DataType = CellValues.Number;
+                    cellK5.CellValue = new CellValue(score36.ToString());
+                    row5.Append(cellK5);
 
-					Cell cellK5 = new Cell();
-					cellK5.CellReference = $"K{i}";
-					cellK5.DataType = CellValues.String;
-					cellK5.CellValue = new CellValue($"=ЕСЛИ(Октябрь!K{i}=\"Да\";1;0)+ЕСЛИ(Ноябрь!K{i}=\"Да\";1;0)+ЕСЛИ(Декабрь!K{i}=\"Да\";1;0)");
-					row5.Append(cellK5);
+                    score37 = sumExcel.GetSumL(user.Id, 4);
+                    Cell cellL5 = new Cell();
+                    cellL5.CellReference = $"L{i}";
+                    cellL5.DataType = CellValues.Number;
+                    cellL5.CellValue = new CellValue(score37.ToString());
+                    row5.Append(cellL5);
 
-					Cell cellL5 = new Cell();
-					cellL5.CellReference = $"L{i}";
-					cellL5.DataType = CellValues.String;
-					cellL5.CellValue = new CellValue($"=ЕСЛИ(Октябрь!L{i}=\"Да\";1;0)+ЕСЛИ(Ноябрь!L{i}=\"Да\";1;0)+ЕСЛИ(Декабрь!L{i}=\"Да\";1;0)");
-					row5.Append(cellL5);
+                    score38 = sumExcel.GetSumM(user.Id, 4);
+                    Cell cellM5 = new Cell();
+                    cellM5.CellReference = $"M{i}";
+                    cellM5.DataType = CellValues.Number;
+                    cellM5.CellValue = new CellValue(score38.ToString());
+                    row5.Append(cellM5);
 
-					Cell cellM5 = new Cell();
-					cellM5.CellReference = $"M{i}";
-					cellM5.DataType = CellValues.String;
-					cellM5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Октябрь!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Октябрь!M{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Ноябрь!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Ноябрь!M{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Декабрь!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Декабрь!M{i};\"Да\");1;0)");
-					row5.Append(cellM5);
+                    score39 = sumExcel.GetSumN(user.Id, 4);
+                    Cell cellN5 = new Cell();
+                    cellN5.CellReference = $"N{i}";
+                    cellN5.DataType = CellValues.String;
+                    cellN5.CellValue = new CellValue(score39.ToString());
+                    row5.Append(cellN5);
 
-					Cell cellN5 = new Cell();
-					cellN5.CellReference = $"N{i}";
-					cellN5.DataType = CellValues.String;
-					cellN5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Октябрь!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Октябрь!N{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Ноябрь!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Ноябрь!N{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Декабрь!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Декабрь!N{i};\"Да\");1;0)");
-					row5.Append(cellN5);
+                    score40 = sumExcel.GetSumO(user.Id, 4);
+                    Cell cellO5 = new Cell();
+                    cellO5.CellReference = $"O{i}";
+                    cellO5.DataType = CellValues.String;
+                    cellO5.CellValue = new CellValue(score40.ToString());
+                    row5.Append(cellO5);
 
-					Cell cellO5 = new Cell();
-					cellO5.CellReference = $"O{i}";
-					cellO5.DataType = CellValues.String;
-					cellO5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Октябрь!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Октябрь!O{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Ноябрь!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Ноябрь!O{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Декабрь!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Декабрь!O{i};\"Да\");1;0)");
-					row5.Append(cellO5);
+                    var score = await scoresController.GetScoreByDetail(user.Id, 12, year);
 
-					Cell cellQ5 = new Cell();
-					cellQ5.CellReference = $"Q{i}";
-					cellQ5.DataType = CellValues.String;
-					cellQ5.CellValue = new CellValue($"=Декабрь!Q{i}");
-					row5.Append(cellQ5);
-				}
+                    Cell cellQ5 = new Cell()
+                    {
+                        CellReference = $"Q{i}",
+                        DataType = CellValues.Number,
+                        CellValue = new CellValue(score.FinalScore.ToString())
+                    };
+                    row5.Append(cellQ5);
+                }
 				else if (int.TryParse(id, out int idValue16) && idValue16 == 17)
 				{
+                    int sc = score1 + score11 + score21 + score31;
 					Cell cellE5 = new Cell();
 					cellE5.CellReference = $"E{i}";
-					cellE5.DataType = CellValues.String;
-					cellE5.CellValue = new CellValue($"='1 квартал'!E{i}+'2 квартал'!E{i}+'3 квартал'!E{i}+'4 квартал'!E{i}");
+					cellE5.DataType = CellValues.Number;
+					cellE5.CellValue = new CellValue(sc.ToString());
 					row5.Append(cellE5);
 
 
-					Cell cellF5 = new Cell();
+                    int sc1 = score2 + score12 + score22 + score32;
+                    Cell cellF5 = new Cell();
 					cellF5.CellReference = $"F{i}";
 					cellF5.DataType = CellValues.String;
-					cellF5.CellValue = new CellValue($"='1 квартал'!F{i}+'2 квартал'!F{i}+'3 квартал'!F{i}+'4 квартал'!F{i}");
+					cellF5.CellValue = new CellValue(sc1.ToString());
 					row5.Append(cellF5);
 
-					Cell cellG5 = new Cell();
+
+                    int sc2 = score3 + score13 + score23 + score33;
+                    Cell cellG5 = new Cell();
 					cellG5.CellReference = $"G{i}";
 					cellG5.DataType = CellValues.String;
-					cellG5.CellValue = new CellValue($"='1 квартал'!G{i}+'2 квартал'!G{i}+'3 квартал'!G{i}+'4 квартал'!G{i}");
+					cellG5.CellValue = new CellValue(sc2.ToString());
 					row5.Append(cellG5);
 
-					Cell cellI5 = new Cell();
+
+                    int sc3 = score4 + score14 + score24 + score34;
+                    Cell cellI5 = new Cell();
 					cellI5.CellReference = $"I{i}";
 					cellI5.DataType = CellValues.String;
-					cellI5.CellValue = new CellValue($"='1 квартал'!I{i}+'2 квартал'!I{i}+'3 квартал'!I{i}+'4 квартал'!I{i}");
+					cellI5.CellValue = new CellValue(sc3.ToString());
 					row5.Append(cellI5);
 
-					Cell cellJ5 = new Cell();
+
+                    int sc4 = score5 + score15 + score25 + score35;
+                    Cell cellJ5 = new Cell();
 					cellJ5.CellReference = $"J{i}";
 					cellJ5.DataType = CellValues.String;
-					cellJ5.CellValue = new CellValue($"='1 квартал'!J{i}+'2 квартал'!J{i}+'3 квартал'!J{i}+'4 квартал'!J{i}");
+					cellJ5.CellValue = new CellValue(sc4.ToString());
 					row5.Append(cellJ5);
 
-					Cell cellK5 = new Cell();
+
+                    int sc5 = score6 + score16 + score26 + score36;
+                    Cell cellK5 = new Cell();
 					cellK5.CellReference = $"K{i}";
 					cellK5.DataType = CellValues.String;
-					cellK5.CellValue = new CellValue($"='1 квартал'!K{i}+'2 квартал'!K{i}+'3 квартал'!K{i}+'4 квартал'!K{i}");
+					cellK5.CellValue = new CellValue(sc5.ToString());
 					row5.Append(cellK5);
 
-					Cell cellL5 = new Cell();
+
+                    int sc6 = score7 + score17 + score27 + score37;
+                    Cell cellL5 = new Cell();
 					cellL5.CellReference = $"L{i}";
 					cellL5.DataType = CellValues.String;
-					cellL5.CellValue = new CellValue($"='1 квартал'!L{i}+'2 квартал'!L{i}+'3 квартал'!L{i}+'4 квартал'!L{i}");
+					cellL5.CellValue = new CellValue(sc6.ToString());
 					row5.Append(cellL5);
 
-					Cell cellM5 = new Cell();
+
+                    int sc7 = score8 + score18 + score28 + score38;
+                    Cell cellM5 = new Cell();
 					cellM5.CellReference = $"M{i}";
 					cellM5.DataType = CellValues.String;
-					cellM5.CellValue = new CellValue($"='1 квартал'!M{i}+'2 квартал'!M{i}+'3 квартал'!M{i}+'4 квартал'!M{i}");
+					cellM5.CellValue = new CellValue(sc7.ToString());
 					row5.Append(cellM5);
 
-					Cell cellN5 = new Cell();
+
+                    int sc8 = score9 + score19 + score29 + score39;
+                    Cell cellN5 = new Cell();
 					cellN5.CellReference = $"N{i}";
 					cellN5.DataType = CellValues.String;
-					cellN5.CellValue = new CellValue($"='1 квартал'!N{i}+'2 квартал'!N{i}+'3 квартал'!N{i}+'4 квартал'!N{i}");
+					cellN5.CellValue = new CellValue(sc8.ToString());
 					row5.Append(cellN5);
 
-					Cell cellO5 = new Cell();
+
+                    int sc9 = score10 + score20 + score30 + score40;
+                    Cell cellO5 = new Cell();
 					cellO5.CellReference = $"O{i}";
 					cellO5.DataType = CellValues.String;
-					cellO5.CellValue = new CellValue($"='1 квартал'!O{i}+'2 квартал'!O{i}+'3 квартал'!O{i}+'4 квартал'!O{i}");
+					cellO5.CellValue = new CellValue(sc9.ToString());
 					row5.Append(cellO5);
 
-					Cell cellQ5 = new Cell();
-					cellQ5.CellReference = $"Q{i}";
-					cellQ5.DataType = CellValues.String;
-					cellQ5.CellValue = new CellValue($"='4 квартал'!Q{i}");
-					row5.Append(cellQ5);
+                    var score = await scoresController.GetScoreByDetail(user.Id, 12, year);
+
+                    Cell cellQ5 = new Cell()
+                    {
+                        CellReference = $"Q{i}",
+                        DataType = CellValues.Number,
+                        CellValue = new CellValue(score.FinalScore.ToString())
+                    };
+                    row5.Append(cellQ5);
 				}
 
 
@@ -727,350 +862,424 @@ namespace SerGaz.SendTable.Header
 
 
 				if (int.TryParse(id, out int idValue12) && idValue12 == 13)
-				{
-					Cell cellE5 = new Cell();
-					cellE5.CellReference = $"E{i}";
-					cellE5.DataType = CellValues.String;
-					cellE5.CellValue = new CellValue($"=(ЕСЛИ(Январь!E{i}=5;1;0)+ЕСЛИ(Январь!E{i}=10;2;0)+ЕСЛИ(Январь!E{i}=15;3;0)+ЕСЛИ(Январь!E{i}=20;4;0))+(ЕСЛИ(Февраль!E{i}=5;1;0)+ЕСЛИ(Февраль!E{i}=10;2;0)+ЕСЛИ(Февраль!E{i}=15;3;0)+ЕСЛИ(Февраль!E{i}=20;4;0))+(ЕСЛИ(Март!E{i}=5;1;0)+ЕСЛИ(Март!E{i}=10;2;0)+ЕСЛИ(Март!E{i}=15;3;0)+ЕСЛИ(Март!E{i}=20;4;0))");
-					dataRow.Append(cellE5);
+                {
+                    score1 = sumExcel.GetSumE(us.Id, 1);
+                    Cell cellE5 = new Cell();
+                    cellE5.CellReference = $"E{i}";
+                    cellE5.DataType = CellValues.Number;
+                    cellE5.CellValue = new CellValue(score1.ToString());
+                    dataRow.Append(cellE5);
 
+                    score2 = sumExcel.GetSumF(us.Id, 1);
+                    Cell cellF5 = new Cell();
+                    cellF5.CellReference = $"F{i}";
+                    cellF5.DataType = CellValues.Number;
+                    cellF5.CellValue = new CellValue(score2.ToString());
+                    dataRow.Append(cellF5);
 
-					Cell cellF5 = new Cell();
-					cellF5.CellReference = $"F{i}";
-					cellF5.DataType = CellValues.String;
-					cellF5.CellValue = new CellValue($"=(ЕСЛИ(Январь!F{i}=5;0,5;0)+ЕСЛИ(Январь!F{i}=10;1;0)+ЕСЛИ(Январь!F{i}=20;2;0))+(ЕСЛИ(Февраль!F{i}=5;0,5;0)+ЕСЛИ(Февраль!F{i}=10;1;0)+ЕСЛИ(Февраль!F{i}=20;2;0))+(ЕСЛИ(Март!F{i}=5;0,5;0)+ЕСЛИ(Март!F{i}=10;1;0)+ЕСЛИ(Март!F{i}=20;2;0))");
-					dataRow.Append(cellF5);
+                    score3 = sumExcel.GetSumG(us.Id, 1);
+                    Cell cellG5 = new Cell();
+                    cellG5.CellReference = $"G{i}";
+                    cellG5.DataType = CellValues.Number;
+                    cellG5.CellValue = new CellValue(score3.ToString());
+                    dataRow.Append(cellG5);
 
-					Cell cellG5 = new Cell();
-					cellG5.CellReference = $"G{i}";
-					cellG5.DataType = CellValues.String;
-					cellG5.CellValue = new CellValue($"=ЕСЛИ(Январь!G{i}=\"Да\";1;0)+ЕСЛИ(Февраль!G{i}=\"Да\";1;0)+ЕСЛИ(Март!G{i}=\"Да\";1;0)");
-					dataRow.Append(cellG5);
+                    score4 = sumExcel.GetSumI(us.Id, 1);
+                    Cell cellI5 = new Cell();
+                    cellI5.CellReference = $"I{i}";
+                    cellI5.DataType = CellValues.Number;
+                    cellI5.CellValue = new CellValue(score4.ToString());
+                    dataRow.Append(cellI5);
 
-					Cell cellI5 = new Cell();
-					cellI5.CellReference = $"I{i}";
-					cellI5.DataType = CellValues.String;
-					cellI5.CellValue = new CellValue($"=ЕСЛИ(Январь!I{i}=\"Да\";1;0)+ЕСЛИ(Февраль!I{i}=\"Да\";1;0)+ЕСЛИ(Март!I{i}=\"Да\";1;0)");
-					dataRow.Append(cellI5);
+                    score5 = sumExcel.GetSumJ(us.Id, 1);
+                    Cell cellJ5 = new Cell();
+                    cellJ5.CellReference = $"J{i}";
+                    cellJ5.DataType = CellValues.Number;
+                    cellJ5.CellValue = new CellValue(score5.ToString());
+                    dataRow.Append(cellJ5);
 
-					Cell cellJ5 = new Cell();
-					cellJ5.CellReference = $"J{i}";
-					cellJ5.DataType = CellValues.String;
-					cellJ5.CellValue = new CellValue($"=ЕСЛИ(Январь!J{i}=\"Да\";1;0)+ЕСЛИ(Февраль!J{i}=\"Да\";1;0)+ЕСЛИ(Март!J{i}=\"Да\";1;0)");
-					dataRow.Append(cellJ5);
+                    score6 = sumExcel.GetSumK(us.Id, 1);
+                    Cell cellK5 = new Cell();
+                    cellK5.CellReference = $"K{i}";
+                    cellK5.DataType = CellValues.Number;
+                    cellK5.CellValue = new CellValue(score6.ToString());
+                    dataRow.Append(cellK5);
 
-					Cell cellK5 = new Cell();
-					cellK5.CellReference = $"K{i}";
-					cellK5.DataType = CellValues.String;
-					cellK5.CellValue = new CellValue($"=ЕСЛИ(Январь!K{i}=\"Да\";1;0)+ЕСЛИ(Февраль!K{i}=\"Да\";1;0)+ЕСЛИ(Март!K{i}=\"Да\";1;0)");
-					dataRow.Append(cellK5);
+                    score7 = sumExcel.GetSumL(us.Id, 1);
+                    Cell cellL5 = new Cell();
+                    cellL5.CellReference = $"L{i}";
+                    cellL5.DataType = CellValues.Number;
+                    cellL5.CellValue = new CellValue(score7.ToString());
+                    dataRow.Append(cellL5);
 
-					Cell cellL5 = new Cell();
-					cellL5.CellReference = $"L{i}";
-					cellL5.DataType = CellValues.String;
-					cellL5.CellValue = new CellValue($"=ЕСЛИ(Январь!L{i}=\"Да\";1;0)+ЕСЛИ(Февраль!L{i}=\"Да\";1;0)+ЕСЛИ(Март!L{i}=\"Да\";1;0)");
-					dataRow.Append(cellL5);
+                    score8 = sumExcel.GetSumM(us.Id, 1);
+                    Cell cellM5 = new Cell();
+                    cellM5.CellReference = $"M{i}";
+                    cellM5.DataType = CellValues.Number;
+                    cellM5.CellValue = new CellValue(score8.ToString());
+                    dataRow.Append(cellM5);
 
-					Cell cellM5 = new Cell();
-					cellM5.CellReference = $"M{i}";
-					cellM5.DataType = CellValues.String;
-					cellM5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Январь!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Январь!M{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Февраль!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Февраль!M{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Март!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Март!M{i};\"Да\");1;0)");
-					dataRow.Append(cellM5);
+                    score9 = sumExcel.GetSumN(us.Id, 1);
+                    Cell cellN5 = new Cell();
+                    cellN5.CellReference = $"N{i}";
+                    cellN5.DataType = CellValues.String;
+                    cellN5.CellValue = new CellValue(score9.ToString());
+                    dataRow.Append(cellN5);
 
-					Cell cellN5 = new Cell();
-					cellN5.CellReference = $"N{i}";
-					cellN5.DataType = CellValues.String;
-					cellN5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Январь!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Январь!N{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Февраль!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Февраль!N{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Март!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Март!N{i};\"Да\");1;0)");
-					dataRow.Append(cellN5);
+                    score10 = sumExcel.GetSumO(us.Id, 1);
+                    Cell cellO5 = new Cell();
+                    cellO5.CellReference = $"O{i}";
+                    cellO5.DataType = CellValues.String;
+                    cellO5.CellValue = new CellValue(score10.ToString());
+                    dataRow.Append(cellO5);
 
-					Cell cellO5 = new Cell();
-					cellO5.CellReference = $"O{i}";
-					cellO5.DataType = CellValues.String;
-					cellO5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Январь!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Январь!O{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Февраль!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Февраль!O{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Март!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Март!O{i};\"Да\");1;0)");
-					dataRow.Append(cellO5);
+                    var score = await scoresController.GetScoreByDetail(us.Id, 3, year);
 
-					Cell cellQ5 = new Cell();
-					cellQ5.CellReference = $"Q{i}";
-					cellQ5.DataType = CellValues.String;
-					cellQ5.CellValue = new CellValue($"=Март!Q{i}");
-					dataRow.Append(cellQ5);
-				}
+                    Cell cellQ5 = new Cell()
+                    {
+                        CellReference = $"Q{i}",
+                        DataType = CellValues.Number,
+                        CellValue = new CellValue(score.FinalScore.ToString())
+                    };
+                    dataRow.Append(cellQ5);
+                }
 				else if (int.TryParse(id, out int idValue13) && idValue13 == 14)
-				{
-					Cell cellE5 = new Cell();
-					cellE5.CellReference = $"E{i}";
-					cellE5.DataType = CellValues.String;
-					cellE5.CellValue = new CellValue($"=(ЕСЛИ(Апрель!E{i}=5;1;0)+ЕСЛИ(Апрель!E{i}=10;2;0)+ЕСЛИ(Апрель!E{i}=15;3;0)+ЕСЛИ(Апрель!E{i}=4;2;0))+(ЕСЛИ(Май!E{i}=5;1;0)+ЕСЛИ(Май!E{i}=10;2;0)+ЕСЛИ(Май!E{i}=15;3;0)+ЕСЛИ(Май!E{i}=20;4;0))+(ЕСЛИ(Июнь!E{i}=5;1;0)+ЕСЛИ(Июнь!E{i}=10;2;0)+ЕСЛИ(Июнь!E{i}=15;3;0)+ЕСЛИ(Июнь!E{i}=20;4;0))");
-					dataRow.Append(cellE5);
+                {
+                    score11 = sumExcel.GetSumE(us.Id, 2);
+                    Cell cellE5 = new Cell();
+                    cellE5.CellReference = $"E{i}";
+                    cellE5.DataType = CellValues.Number;
+                    cellE5.CellValue = new CellValue(score11.ToString());
+                    dataRow.Append(cellE5);
 
+                    score12 = sumExcel.GetSumF(us.Id, 2);
+                    Cell cellF5 = new Cell();
+                    cellF5.CellReference = $"F{i}";
+                    cellF5.DataType = CellValues.Number;
+                    cellF5.CellValue = new CellValue(score12.ToString());
+                    dataRow.Append(cellF5);
 
-					Cell cellF5 = new Cell();
-					cellF5.CellReference = $"F{i}";
-					cellF5.DataType = CellValues.String;
-					cellF5.CellValue = new CellValue($"=(ЕСЛИ(Апрель!F{i}=5;0,5;0)+ЕСЛИ(Апрель!F{i}=10;1;0)+ЕСЛИ(Апрель!F{i}=20;2;0))+(ЕСЛИ(Май!F{i}=5;0,5;0)+ЕСЛИ(Май!F{i}=10;1;0)+ЕСЛИ(Май!F{i}=20;2;0))+(ЕСЛИ(Июнь!F{i}=5;0,5;0)+ЕСЛИ(Июнь!F{i}=10;1;0)+ЕСЛИ(Июнь!F{i}=20;2;0))");
-					dataRow.Append(cellF5);
+                    score13 = sumExcel.GetSumG(us.Id, 2);
+                    Cell cellG5 = new Cell();
+                    cellG5.CellReference = $"G{i}";
+                    cellG5.DataType = CellValues.Number;
+                    cellG5.CellValue = new CellValue(score13.ToString());
+                    dataRow.Append(cellG5);
 
-					Cell cellG5 = new Cell();
-					cellG5.CellReference = $"G{i}";
-					cellG5.DataType = CellValues.String;
-					cellG5.CellValue = new CellValue($"=ЕСЛИ(Апрель!G{i}=\"Да\";1;0)+ЕСЛИ(Май!G{i}=\"Да\";1;0)+ЕСЛИ(Июнь!G{i}=\"Да\";1;0)");
-					dataRow.Append(cellG5);
+                    score14 = sumExcel.GetSumI(us.Id, 2);
+                    Cell cellI5 = new Cell();
+                    cellI5.CellReference = $"I{i}";
+                    cellI5.DataType = CellValues.Number;
+                    cellI5.CellValue = new CellValue(score14.ToString());
+                    dataRow.Append(cellI5);
 
-					Cell cellI5 = new Cell();
-					cellI5.CellReference = $"I{i}";
-					cellI5.DataType = CellValues.String;
-					cellI5.CellValue = new CellValue($"=ЕСЛИ(Апрель!I{i}=\"Да\";1;0)+ЕСЛИ(Май!I{i}=\"Да\";1;0)+ЕСЛИ(Июнь!I{i}=\"Да\";1;0)");
-					dataRow.Append(cellI5);
+                    score15 = sumExcel.GetSumJ(us.Id, 2);
+                    Cell cellJ5 = new Cell();
+                    cellJ5.CellReference = $"J{i}";
+                    cellJ5.DataType = CellValues.Number;
+                    cellJ5.CellValue = new CellValue(score15.ToString());
+                    dataRow.Append(cellJ5);
 
-					Cell cellJ5 = new Cell();
-					cellJ5.CellReference = $"J{i}";
-					cellJ5.DataType = CellValues.String;
-					cellJ5.CellValue = new CellValue($"=ЕСЛИ(Апрель!J{i}=\"Да\";1;0)+ЕСЛИ(Май!J{i}=\"Да\";1;0)+ЕСЛИ(Июнь!J{i}=\"Да\";1;0)");
-					dataRow.Append(cellJ5);
+                    score16 = sumExcel.GetSumK(us.Id, 2);
+                    Cell cellK5 = new Cell();
+                    cellK5.CellReference = $"K{i}";
+                    cellK5.DataType = CellValues.Number;
+                    cellK5.CellValue = new CellValue(score16.ToString());
+                    dataRow.Append(cellK5);
 
-					Cell cellK5 = new Cell();
-					cellK5.CellReference = $"K{i}";
-					cellK5.DataType = CellValues.String;
-					cellK5.CellValue = new CellValue($"=ЕСЛИ(Апрель!K{i}=\"Да\";1;0)+ЕСЛИ(Май!K{i}=\"Да\";1;0)+ЕСЛИ(Июнь!K{i}=\"Да\";1;0)");
-					dataRow.Append(cellK5);
+                    score17 = sumExcel.GetSumL(us.Id, 2);
+                    Cell cellL5 = new Cell();
+                    cellL5.CellReference = $"L{i}";
+                    cellL5.DataType = CellValues.Number;
+                    cellL5.CellValue = new CellValue(score17.ToString());
+                    dataRow.Append(cellL5);
 
-					Cell cellL5 = new Cell();
-					cellL5.CellReference = $"L{i}";
-					cellL5.DataType = CellValues.String;
-					cellL5.CellValue = new CellValue($"=ЕСЛИ(Апрель!L{i}=\"Да\";1;0)+ЕСЛИ(Май!L{i}=\"Да\";1;0)+ЕСЛИ(Июнь!L{i}=\"Да\";1;0)");
-					dataRow.Append(cellL5);
+                    score18 = sumExcel.GetSumM(us.Id, 2);
+                    Cell cellM5 = new Cell();
+                    cellM5.CellReference = $"M{i}";
+                    cellM5.DataType = CellValues.Number;
+                    cellM5.CellValue = new CellValue(score18.ToString());
+                    dataRow.Append(cellM5);
 
-					Cell cellM5 = new Cell();
-					cellM5.CellReference = $"M{i}";
-					cellM5.DataType = CellValues.String;
-					cellM5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Апрель!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Апрель!M{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Май!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Май!M{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Июнь!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Июнь!M{i};\"Да\");1;0)");
-					dataRow.Append(cellM5);
+                    score19 = sumExcel.GetSumN(us.Id, 2);
+                    Cell cellN5 = new Cell();
+                    cellN5.CellReference = $"N{i}";
+                    cellN5.DataType = CellValues.String;
+                    cellN5.CellValue = new CellValue(score19.ToString());
+                    dataRow.Append(cellN5);
 
-					Cell cellN5 = new Cell();
-					cellN5.CellReference = $"N{i}";
-					cellN5.DataType = CellValues.String;
-					cellN5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Апрель!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Апрель!N{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Май!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Май!N{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Июнь!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Июнь!N{i};\"Да\");1;0)");
-					dataRow.Append(cellN5);
+                    score20 = sumExcel.GetSumO(us.Id, 2);
+                    Cell cellO5 = new Cell();
+                    cellO5.CellReference = $"O{i}";
+                    cellO5.DataType = CellValues.String;
+                    cellO5.CellValue = new CellValue(score20.ToString());
+                    dataRow.Append(cellO5);
 
-					Cell cellO5 = new Cell();
-					cellO5.CellReference = $"O{i}";
-					cellO5.DataType = CellValues.String;
-					cellO5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Апрель!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Апрель!O{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Май!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Май!O{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Июнь!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Июнь!O{i};\"Да\");1;0)");
-					dataRow.Append(cellO5);
+                    var score = await scoresController.GetScoreByDetail(us.Id, 6, year);
 
-					Cell cellQ5 = new Cell();
-					cellQ5.CellReference = $"Q{i}";
-					cellQ5.DataType = CellValues.String;
-					cellQ5.CellValue = new CellValue($"=Июнь!Q{i}");
-					dataRow.Append(cellQ5);
-				}
+                    Cell cellQ5 = new Cell()
+                    {
+                        CellReference = $"Q{i}",
+                        DataType = CellValues.Number,
+                        CellValue = new CellValue(score.FinalScore.ToString())
+                    };
+                    dataRow.Append(cellQ5);
+                }
 				else if (int.TryParse(id, out int idValue14) && idValue14 == 15)
-				{
-					Cell cellE5 = new Cell();
-					cellE5.CellReference = $"E{i}";
-					cellE5.DataType = CellValues.String;
-					cellE5.CellValue = new CellValue($"=(ЕСЛИ(Июль!E{i}=5;1;0)+ЕСЛИ(Июль!E{i}=10;2;0)+ЕСЛИ(Июль!E{i}=15;3;0)+ЕСЛИ(Июль!E{i}=20;4;0))+(ЕСЛИ(Август!E{i}=5;1;0)+ЕСЛИ(Август!E{i}=10;2;0)+ЕСЛИ(Август!E{i}=15;3;0)+ЕСЛИ(Август!E{i}=20;4;0))+(ЕСЛИ(Сентябрь!E{i}=5;1;0)+ЕСЛИ(Сентябрь!E{i}=10;2;0)+ЕСЛИ(Сентябрь!E{i}=15;3;0)+ЕСЛИ(Сентябрь!E{i}=20;4;0))");
-					dataRow.Append(cellE5);
+                {
+                    score21 = sumExcel.GetSumE(us.Id, 3);
+                    Cell cellE5 = new Cell();
+                    cellE5.CellReference = $"E{i}";
+                    cellE5.DataType = CellValues.Number;
+                    cellE5.CellValue = new CellValue(score21.ToString());
+                    dataRow.Append(cellE5);
 
+                    score22 = sumExcel.GetSumF(us.Id, 3);
+                    Cell cellF5 = new Cell();
+                    cellF5.CellReference = $"F{i}";
+                    cellF5.DataType = CellValues.Number;
+                    cellF5.CellValue = new CellValue(score22.ToString());
+                    dataRow.Append(cellF5);
 
-					Cell cellF5 = new Cell();
-					cellF5.CellReference = $"F{i}";
-					cellF5.DataType = CellValues.String;
-					cellF5.CellValue = new CellValue($"=(ЕСЛИ(Июль!F{i}=5;0,5;0)+ЕСЛИ(Июль!F{i}=10;1;0)+ЕСЛИ(Июль!F{i}=20;2;0))+(ЕСЛИ(Август!F{i}=5;0,5;0)+ЕСЛИ(Август!F{i}=10;1;0)+ЕСЛИ(Август!F{i}=20;2;0))+(ЕСЛИ(Сентябрь!F{i}=5;0,5;0)+ЕСЛИ(Сентябрь!F{i}=10;1;0)+ЕСЛИ(Сентябрь!F{i}=20;2;0))");
-					dataRow.Append(cellF5);
+                    score23 = sumExcel.GetSumG(us.Id, 3);
+                    Cell cellG5 = new Cell();
+                    cellG5.CellReference = $"G{i}";
+                    cellG5.DataType = CellValues.Number;
+                    cellG5.CellValue = new CellValue(score23.ToString());
+                    dataRow.Append(cellG5);
 
-					Cell cellG5 = new Cell();
-					cellG5.CellReference = $"G{i}";
-					cellG5.DataType = CellValues.String;
-					cellG5.CellValue = new CellValue($"=ЕСЛИ(Июль!G{i}=\"Да\";1;0)+ЕСЛИ(Август!G{i}=\"Да\";1;0)+ЕСЛИ(Сентябрь!G{i}=\"Да\";1;0)");
-					dataRow.Append(cellG5);
+                    score24 = sumExcel.GetSumI(us.Id, 3);
+                    Cell cellI5 = new Cell();
+                    cellI5.CellReference = $"I{i}";
+                    cellI5.DataType = CellValues.Number;
+                    cellI5.CellValue = new CellValue(score24.ToString());
+                    dataRow.Append(cellI5);
 
-					Cell cellI5 = new Cell();
-					cellI5.CellReference = $"I{i}";
-					cellI5.DataType = CellValues.String;
-					cellI5.CellValue = new CellValue($"=ЕСЛИ(Июль!I{i}=\"Да\";1;0)+ЕСЛИ(Август!I{i}=\"Да\";1;0)+ЕСЛИ(Сентябрь!I{i}=\"Да\";1;0)");
-					dataRow.Append(cellI5);
+                    score25 = sumExcel.GetSumJ(us.Id, 3);
+                    Cell cellJ5 = new Cell();
+                    cellJ5.CellReference = $"J{i}";
+                    cellJ5.DataType = CellValues.Number;
+                    cellJ5.CellValue = new CellValue(score25.ToString());
+                    dataRow.Append(cellJ5);
 
-					Cell cellJ5 = new Cell();
-					cellJ5.CellReference = $"J{i}";
-					cellJ5.DataType = CellValues.String;
-					cellJ5.CellValue = new CellValue($"=ЕСЛИ(Июль!J{i}=\"Да\";1;0)+ЕСЛИ(Август!J{i}=\"Да\";1;0)+ЕСЛИ(Сентябрь!J{i}=\"Да\";1;0)");
-					dataRow.Append(cellJ5);
+                    score26 = sumExcel.GetSumK(us.Id, 3);
+                    Cell cellK5 = new Cell();
+                    cellK5.CellReference = $"K{i}";
+                    cellK5.DataType = CellValues.Number;
+                    cellK5.CellValue = new CellValue(score26.ToString());
+                    dataRow.Append(cellK5);
 
-					Cell cellK5 = new Cell();
-					cellK5.CellReference = $"K{i}";
-					cellK5.DataType = CellValues.String;
-					cellK5.CellValue = new CellValue($"=ЕСЛИ(Июль!K{i}=\"Да\";1;0)+ЕСЛИ(Август!K{i}=\"Да\";1;0)+ЕСЛИ(Сентябрь!K{i}=\"Да\";1;0)");
-					dataRow.Append(cellK5);
+                    score27 = sumExcel.GetSumL(us.Id, 3);
+                    Cell cellL5 = new Cell();
+                    cellL5.CellReference = $"L{i}";
+                    cellL5.DataType = CellValues.Number;
+                    cellL5.CellValue = new CellValue(score27.ToString());
+                    dataRow.Append(cellL5);
 
-					Cell cellL5 = new Cell();
-					cellL5.CellReference = $"L{i}";
-					cellL5.DataType = CellValues.String;
-					cellL5.CellValue = new CellValue($"=ЕСЛИ(Июль!L{i}=\"Да\";1;0)+ЕСЛИ(Август!L{i}=\"Да\";1;0)+ЕСЛИ(Сентябрь!L{i}=\"Да\";1;0)");
-					dataRow.Append(cellL5);
+                    score28 = sumExcel.GetSumM(us.Id, 3);
+                    Cell cellM5 = new Cell();
+                    cellM5.CellReference = $"M{i}";
+                    cellM5.DataType = CellValues.Number;
+                    cellM5.CellValue = new CellValue(score28.ToString());
+                    dataRow.Append(cellM5);
 
-					Cell cellM5 = new Cell();
-					cellM5.CellReference = $"M{i}";
-					cellM5.DataType = CellValues.String;
-					cellM5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Июль!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Июль!M{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Август!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Август!M{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Сентябрь!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Сентябрь!M{i};\"Да\");1;0)");
-					dataRow.Append(cellM5);
+                    score29 = sumExcel.GetSumN(us.Id, 3);
+                    Cell cellN5 = new Cell();
+                    cellN5.CellReference = $"N{i}";
+                    cellN5.DataType = CellValues.String;
+                    cellN5.CellValue = new CellValue(score29.ToString());
+                    dataRow.Append(cellN5);
 
-					Cell cellN5 = new Cell();
-					cellN5.CellReference = $"N{i}";
-					cellN5.DataType = CellValues.String;
-					cellN5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Июль!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Июль!N{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Август!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Август!N{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Сентябрь!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Сентябрь!N{i};\"Да\");1;0)");
-					dataRow.Append(cellN5);
+                    score30 = sumExcel.GetSumO(us.Id, 3);
+                    Cell cellO5 = new Cell();
+                    cellO5.CellReference = $"O{i}";
+                    cellO5.DataType = CellValues.String;
+                    cellO5.CellValue = new CellValue(score30.ToString());
+                    dataRow.Append(cellO5);
 
-					Cell cellO5 = new Cell();
-					cellO5.CellReference = $"O{i}";
-					cellO5.DataType = CellValues.String;
-					cellO5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Июль!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Июль!O{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Август!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Август!O{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Сентябрь!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Сентябрь!O{i};\"Да\");1;0)");
-					dataRow.Append(cellO5);
+                    var score = await scoresController.GetScoreByDetail(us.Id, 9, year);
 
-					Cell cellQ5 = new Cell();
-					cellQ5.CellReference = $"Q{i}";
-					cellQ5.DataType = CellValues.String;
-					cellQ5.CellValue = new CellValue($"=Сентябрь!Q{i}");
-					dataRow.Append(cellQ5);
-				}
+                    Cell cellQ5 = new Cell()
+                    {
+                        CellReference = $"Q{i}",
+                        DataType = CellValues.Number,
+                        CellValue = new CellValue(score.FinalScore.ToString())
+                    };
+                    dataRow.Append(cellQ5);
+                }
 				else if (int.TryParse(id, out int idValue15) && idValue15 == 16)
-				{
-					Cell cellE5 = new Cell();
-					cellE5.CellReference = $"E{i}";
-					cellE5.DataType = CellValues.String;
-					cellE5.CellValue = new CellValue($"=(ЕСЛИ(Октябрь!E{i}=5;1;0)+ЕСЛИ(Октябрь!E{i}=10;2;0)+ЕСЛИ(Октябрь!E{i}=15;3;0)+ЕСЛИ(Октябрь!E{i}=20;4;0))+(ЕСЛИ(Ноябрь!E{i}=5;1;0)+ЕСЛИ(Ноябрь!E{i}=10;2;0)+ЕСЛИ(Ноябрь!E{i}=15;3;0)+ЕСЛИ(Ноябрь!E{i}=20;4;0))+(ЕСЛИ(Декабрь!E{i}=5;1;0)+ЕСЛИ(Декабрь!E{i}=10;2;0)+ЕСЛИ(Декабрь!E{i}=15;3;0)+ЕСЛИ(Декабрь!E{i}=20;4;0))");
-					dataRow.Append(cellE5);
+                {
+                    score31 = sumExcel.GetSumE(us.Id, 4);
+                    Cell cellE5 = new Cell();
+                    cellE5.CellReference = $"E{i}";
+                    cellE5.DataType = CellValues.Number;
+                    cellE5.CellValue = new CellValue(score31.ToString());
+                    dataRow.Append(cellE5);
 
+                    score32 = sumExcel.GetSumF(us.Id, 4);
+                    Cell cellF5 = new Cell();
+                    cellF5.CellReference = $"F{i}";
+                    cellF5.DataType = CellValues.Number;
+                    cellF5.CellValue = new CellValue(score32.ToString());
+                    dataRow.Append(cellF5);
 
-					Cell cellF5 = new Cell();
-					cellF5.CellReference = $"F{i}";
-					cellF5.DataType = CellValues.String;
-					cellF5.CellValue = new CellValue($"=(ЕСЛИ(Октябрь!F{i}=5;0,5;0)+ЕСЛИ(Октябрь!F{i}=10;1;0)+ЕСЛИ(Октябрь!F{i}=20;2;0))+(ЕСЛИ(Ноябрь!F{i}=5;0,5;0)+ЕСЛИ(Ноябрь!F{i}=10;1;0)+ЕСЛИ(Ноябрь!F{i}=20;2;0))+(ЕСЛИ(Декабрь!F{i}=5;0,5;0)+ЕСЛИ(Декабрь!F{i}=10;1;0)+ЕСЛИ(Декабрь!F{i}=20;2;0))");
-					dataRow.Append(cellF5);
+                    score33 = sumExcel.GetSumG(us.Id, 4);
+                    Cell cellG5 = new Cell();
+                    cellG5.CellReference = $"G{i}";
+                    cellG5.DataType = CellValues.Number;
+                    cellG5.CellValue = new CellValue(score33.ToString());
+                    dataRow.Append(cellG5);
 
-					Cell cellG5 = new Cell();
-					cellG5.CellReference = $"G{i}";
-					cellG5.DataType = CellValues.String;
-					cellG5.CellValue = new CellValue($"=ЕСЛИ(Октябрь!G{i}=\"Да\";1;0)+ЕСЛИ(Ноябрь!G{i}=\"Да\";1;0)+ЕСЛИ(Декабрь!G{i}=\"Да\";1;0)");
-					dataRow.Append(cellG5);
+                    score34 = sumExcel.GetSumI(us.Id, 4);
+                    Cell cellI5 = new Cell();
+                    cellI5.CellReference = $"I{i}";
+                    cellI5.DataType = CellValues.Number;
+                    cellI5.CellValue = new CellValue(score34.ToString());
+                    dataRow.Append(cellI5);
 
-					Cell cellI5 = new Cell();
-					cellI5.CellReference = $"I{i}";
-					cellI5.DataType = CellValues.String;
-					cellI5.CellValue = new CellValue($"=ЕСЛИ(Октябрь!I{i}=\"Да\";1;0)+ЕСЛИ(Ноябрь!I{i}=\"Да\";1;0)+ЕСЛИ(Декабрь!I{i}=\"Да\";1;0)");
-					dataRow.Append(cellI5);
+                    score35 = sumExcel.GetSumJ(us.Id, 4);
+                    Cell cellJ5 = new Cell();
+                    cellJ5.CellReference = $"J{i}";
+                    cellJ5.DataType = CellValues.Number;
+                    cellJ5.CellValue = new CellValue(score35.ToString());
+                    dataRow.Append(cellJ5);
 
-					Cell cellJ5 = new Cell();
-					cellJ5.CellReference = $"J{i}";
-					cellJ5.DataType = CellValues.String;
-					cellJ5.CellValue = new CellValue($"=ЕСЛИ(Октябрь!J{i}=\"Да\";1;0)+ЕСЛИ(Ноябрь!J{i}=\"Да\";1;0)+ЕСЛИ(Декабрь!J{i}=\"Да\";1;0)");
-					dataRow.Append(cellJ5);
+                    score36 = sumExcel.GetSumK(us.Id, 4);
+                    Cell cellK5 = new Cell();
+                    cellK5.CellReference = $"K{i}";
+                    cellK5.DataType = CellValues.Number;
+                    cellK5.CellValue = new CellValue(score36.ToString());
+                    dataRow.Append(cellK5);
 
-					Cell cellK5 = new Cell();
-					cellK5.CellReference = $"K{i}";
-					cellK5.DataType = CellValues.String;
-					cellK5.CellValue = new CellValue($"=ЕСЛИ(Октябрь!K{i}=\"Да\";1;0)+ЕСЛИ(Ноябрь!K{i}=\"Да\";1;0)+ЕСЛИ(Декабрь!K{i}=\"Да\";1;0)");
-					dataRow.Append(cellK5);
+                    score37 = sumExcel.GetSumL(us.Id, 4);
+                    Cell cellL5 = new Cell();
+                    cellL5.CellReference = $"L{i}";
+                    cellL5.DataType = CellValues.Number;
+                    cellL5.CellValue = new CellValue(score37.ToString());
+                    dataRow.Append(cellL5);
 
-					Cell cellL5 = new Cell();
-					cellL5.CellReference = $"L{i}";
-					cellL5.DataType = CellValues.String;
-					cellL5.CellValue = new CellValue($"=ЕСЛИ(Октябрь!L{i}=\"Да\";1;0)+ЕСЛИ(Ноябрь!L{i}=\"Да\";1;0)+ЕСЛИ(Декабрь!L{i}=\"Да\";1;0)");
-					dataRow.Append(cellL5);
+                    score38 = sumExcel.GetSumM(us.Id, 4);
+                    Cell cellM5 = new Cell();
+                    cellM5.CellReference = $"M{i}";
+                    cellM5.DataType = CellValues.Number;
+                    cellM5.CellValue = new CellValue(score38.ToString());
+                    dataRow.Append(cellM5);
 
-					Cell cellM5 = new Cell();
-					cellM5.CellReference = $"M{i}";
-					cellM5.DataType = CellValues.String;
-					cellM5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Октябрь!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Октябрь!M{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Ноябрь!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Ноябрь!M{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Декабрь!M{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Декабрь!M{i};\"Да\");1;0)");
-					dataRow.Append(cellM5);
+                    score39 = sumExcel.GetSumN(us.Id, 4);
+                    Cell cellN5 = new Cell();
+                    cellN5.CellReference = $"N{i}";
+                    cellN5.DataType = CellValues.String;
+                    cellN5.CellValue = new CellValue(score39.ToString());
+                    dataRow.Append(cellN5);
 
-					Cell cellN5 = new Cell();
-					cellN5.CellReference = $"N{i}";
-					cellN5.DataType = CellValues.String;
-					cellN5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Октябрь!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Октябрь!N{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Ноябрь!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Ноябрь!N{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Декабрь!N{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Декабрь!N{i};\"Да\");1;0)");
-					dataRow.Append(cellN5);
+                    score40 = sumExcel.GetSumO(us.Id, 4);
+                    Cell cellO5 = new Cell();
+                    cellO5.CellReference = $"O{i}";
+                    cellO5.DataType = CellValues.String;
+                    cellO5.CellValue = new CellValue(score40.ToString());
+                    dataRow.Append(cellO5);
 
-					Cell cellO5 = new Cell();
-					cellO5.CellReference = $"O{i}";
-					cellO5.DataType = CellValues.String;
-					cellO5.CellValue = new CellValue($"=ЕСЛИ(СОВПАД(Октябрь!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Октябрь!O{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Ноябрь!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Ноябрь!O{i};\"Да\");1;0)+ЕСЛИ(СОВПАД(Декабрь!O{i};\"да\");0,5;0)+ЕСЛИ(СОВПАД(Декабрь!O{i};\"Да\");1;0)");
-					dataRow.Append(cellO5);
+                    var score = await scoresController.GetScoreByDetail(us.Id, 12, year);
 
-					Cell cellQ5 = new Cell();
-					cellQ5.CellReference = $"Q{i}";
-					cellQ5.DataType = CellValues.String;
-					cellQ5.CellValue = new CellValue($"=Декабрь!Q{i}");
-					dataRow.Append(cellQ5);
-				}
+                    Cell cellQ5 = new Cell()
+                    {
+                        CellReference = $"Q{i}",
+                        DataType = CellValues.Number,
+                        CellValue = new CellValue(score.FinalScore.ToString())
+                    };
+                    dataRow.Append(cellQ5);
+                }
 				else if (int.TryParse(id, out int idValue16) && idValue16 == 17)
-				{
-					Cell cellE5 = new Cell();
-					cellE5.CellReference = $"E{i}";
-					cellE5.DataType = CellValues.String;
-					cellE5.CellValue = new CellValue($"='1 квартал'!E{i}+'2 квартал'!E{i}+'3 квартал'!E{i}+'4 квартал'!E{i}");
-					dataRow.Append(cellE5);
+                {
+                    int sc = score1 + score11 + score21 + score31;
+                    Cell cellE5 = new Cell();
+                    cellE5.CellReference = $"E{i}";
+                    cellE5.DataType = CellValues.Number;
+                    cellE5.CellValue = new CellValue(sc.ToString());
+                    dataRow.Append(cellE5);
 
 
-					Cell cellF5 = new Cell();
-					cellF5.CellReference = $"F{i}";
-					cellF5.DataType = CellValues.String;
-					cellF5.CellValue = new CellValue($"='1 квартал'!F{i}+'2 квартал'!F{i}+'3 квартал'!F{i}+'4 квартал'!F{i}");
-					dataRow.Append(cellF5);
+                    int sc1 = score2 + score12 + score22 + score32;
+                    Cell cellF5 = new Cell();
+                    cellF5.CellReference = $"F{i}";
+                    cellF5.DataType = CellValues.String;
+                    cellF5.CellValue = new CellValue(sc1.ToString());
+                    dataRow.Append(cellF5);
 
-					Cell cellG5 = new Cell();
-					cellG5.CellReference = $"G{i}";
-					cellG5.DataType = CellValues.String;
-					cellG5.CellValue = new CellValue($"='1 квартал'!G{i}+'2 квартал'!G{i}+'3 квартал'!G{i}+'4 квартал'!G{i}");
-					dataRow.Append(cellG5);
 
-					Cell cellI5 = new Cell();
-					cellI5.CellReference = $"I{i}";
-					cellI5.DataType = CellValues.String;
-					cellI5.CellValue = new CellValue($"='1 квартал'!I{i}+'2 квартал'!I{i}+'3 квартал'!I{i}+'4 квартал'!I{i}");
-					dataRow.Append(cellI5);
+                    int sc2 = score3 + score13 + score23 + score33;
+                    Cell cellG5 = new Cell();
+                    cellG5.CellReference = $"G{i}";
+                    cellG5.DataType = CellValues.String;
+                    cellG5.CellValue = new CellValue(sc2.ToString());
+                    dataRow.Append(cellG5);
 
-					Cell cellJ5 = new Cell();
-					cellJ5.CellReference = $"J{i}";
-					cellJ5.DataType = CellValues.String;
-					cellJ5.CellValue = new CellValue($"='1 квартал'!J{i}+'2 квартал'!J{i}+'3 квартал'!J{i}+'4 квартал'!J{i}");
-					dataRow.Append(cellJ5);
 
-					Cell cellK5 = new Cell();
-					cellK5.CellReference = $"K{i}";
-					cellK5.DataType = CellValues.String;
-					cellK5.CellValue = new CellValue($"='1 квартал'!K{i}+'2 квартал'!K{i}+'3 квартал'!K{i}+'4 квартал'!K{i}");
-					dataRow.Append(cellK5);
+                    int sc3 = score4 + score14 + score24 + score34;
+                    Cell cellI5 = new Cell();
+                    cellI5.CellReference = $"I{i}";
+                    cellI5.DataType = CellValues.String;
+                    cellI5.CellValue = new CellValue(sc3.ToString());
+                    dataRow.Append(cellI5);
 
-					Cell cellL5 = new Cell();
-					cellL5.CellReference = $"L{i}";
-					cellL5.DataType = CellValues.String;
-					cellL5.CellValue = new CellValue($"='1 квартал'!L{i}+'2 квартал'!L{i}+'3 квартал'!L{i}+'4 квартал'!L{i}");
-					dataRow.Append(cellL5);
 
-					Cell cellM5 = new Cell();
-					cellM5.CellReference = $"M{i}";
-					cellM5.DataType = CellValues.String;
-					cellM5.CellValue = new CellValue($"='1 квартал'!M{i}+'2 квартал'!M{i}+'3 квартал'!M{i}+'4 квартал'!M{i}");
-					dataRow.Append(cellM5);
+                    int sc4 = score5 + score15 + score25 + score35;
+                    Cell cellJ5 = new Cell();
+                    cellJ5.CellReference = $"J{i}";
+                    cellJ5.DataType = CellValues.String;
+                    cellJ5.CellValue = new CellValue(sc4.ToString());
+                    dataRow.Append(cellJ5);
 
-					Cell cellN5 = new Cell();
-					cellN5.CellReference = $"N{i}";
-					cellN5.DataType = CellValues.String;
-					cellN5.CellValue = new CellValue($"='1 квартал'!N{i}+'2 квартал'!N{i}+'3 квартал'!N{i}+'4 квартал'!N{i}");
-					dataRow.Append(cellN5);
 
-					Cell cellO5 = new Cell();
-					cellO5.CellReference = $"O{i}";
-					cellO5.DataType = CellValues.String;
-					cellO5.CellValue = new CellValue($"='1 квартал'!O{i}+'2 квартал'!O{i}+'3 квартал'!O{i}+'4 квартал'!O{i}");
-					dataRow.Append(cellO5);
+                    int sc5 = score6 + score16 + score26 + score36;
+                    Cell cellK5 = new Cell();
+                    cellK5.CellReference = $"K{i}";
+                    cellK5.DataType = CellValues.String;
+                    cellK5.CellValue = new CellValue(sc5.ToString());
+                    dataRow.Append(cellK5);
 
-					Cell cellQ5 = new Cell();
-					cellQ5.CellReference = $"Q{i}";
-					cellQ5.DataType = CellValues.String;
-					cellQ5.CellValue = new CellValue($"='4 квартал'!Q{i}");
-					dataRow.Append(cellQ5);
-				}
+
+                    int sc6 = score7 + score17 + score27 + score37;
+                    Cell cellL5 = new Cell();
+                    cellL5.CellReference = $"L{i}";
+                    cellL5.DataType = CellValues.String;
+                    cellL5.CellValue = new CellValue(sc6.ToString());
+                    dataRow.Append(cellL5);
+
+
+                    int sc7 = score8 + score18 + score28 + score38;
+                    Cell cellM5 = new Cell();
+                    cellM5.CellReference = $"M{i}";
+                    cellM5.DataType = CellValues.String;
+                    cellM5.CellValue = new CellValue(sc7.ToString());
+                    dataRow.Append(cellM5);
+
+
+                    int sc8 = score9 + score19 + score29 + score39;
+                    Cell cellN5 = new Cell();
+                    cellN5.CellReference = $"N{i}";
+                    cellN5.DataType = CellValues.String;
+                    cellN5.CellValue = new CellValue(sc8.ToString());
+                    dataRow.Append(cellN5);
+
+
+                    int sc9 = score10 + score20 + score30 + score40;
+                    Cell cellO5 = new Cell();
+                    cellO5.CellReference = $"O{i}";
+                    cellO5.DataType = CellValues.String;
+                    cellO5.CellValue = new CellValue(sc9.ToString());
+                    dataRow.Append(cellO5);
+
+                    var score = await scoresController.GetScoreByDetail(user.Id, 12, year);
+
+                    Cell cellQ5 = new Cell()
+                    {
+                        CellReference = $"Q{i}",
+                        DataType = CellValues.Number,
+                        CellValue = new CellValue(score.FinalScore.ToString())
+                    };
+                    dataRow.Append(cellQ5);
+                }
 
 
 				sheetData.Append(dataRow);

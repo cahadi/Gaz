@@ -4,6 +4,7 @@ using Gaz.Data;
 using Gaz.Domain.Entities;
 using Gaz.HelpFolder.Check;
 using Gaz.HelpFolder.CheckMonth;
+using Gaz.HelpFolder.Edit;
 using Gaz.HelpFolder.GetElement;
 using Gaz.HelpFolder.GetList;
 using Gaz.HelpFolder.Sum;
@@ -30,6 +31,8 @@ namespace Gaz.Controllers
         private readonly ScoresController scoresController;
         private readonly GetMonth getMonth;
         private readonly EstimationsMarksController estimationsMarksController;
+        private readonly UsersRolesController usersRolesController;
+        private readonly CanEditDay canEditDay;
 
         public EvaluationTableController(freedb_testdbgazContext context)
 		{
@@ -46,6 +49,8 @@ namespace Gaz.Controllers
             scoresController = new ScoresController(_context);
             getMonth = new GetMonth();
             estimationsMarksController = new EstimationsMarksController(_context);
+            usersRolesController = new UsersRolesController(_context);
+            canEditDay = new CanEditDay(_context);
         }
 
 		public async Task<IActionResult> Apparat(int userId, string param)
@@ -88,6 +93,7 @@ namespace Gaz.Controllers
             checkRoles.GetRolesList(user.Id);
             var viewModel = new SidebarModel
             {
+                CanEdit = canEditDay.CanEdit(userId),
                 User = user,
                 Users = users,
                 AllUsers = listUsersForTable.GetAllUsers(),
@@ -165,6 +171,8 @@ namespace Gaz.Controllers
             int month)
         {
             DateTime now = DateTime.Now;
+            int day = now.Day;
+            int mon = now.Month;
             int year = now.Year;
 
             var user = checkRoles.GetUse(userId);
@@ -191,14 +199,17 @@ namespace Gaz.Controllers
             var polls = await _context.Polls
                 .Where(p => p.Month == month && p.Year == year).ToListAsync();
 
-            int preMonth = month;
-            int prePreMonth = month - 1;
-            string monthName = getMonth.GetMonths(month + 1);
+            int preMonth = mon - 1;
+            int prePreMonth = mon - 2;
+            string monthName = getMonth.GetMonths(mon);
             string preMonthName = getMonth.GetMonths(preMonth);
             string prePreMonthName = getMonth.GetMonths(prePreMonth);
 
+            checkRoles.GetRolesList(user.Id);
+
             var viewModel = new SidebarModel
             {
+                CanEdit = canEditDay.CanEdit(userId),
                 User = user,
                 Users = users,
                 AllUsers = listUsersForTable.GetAllUsers(),
@@ -412,47 +423,6 @@ namespace Gaz.Controllers
                 .Where(e => e.Month == month && e.Year == year).ToListAsync();
             var scores =viewModel.Scores;
             await estimationsMarksController.GetEstimationsMarks();
-            viewModel = new SidebarModel
-            {
-                UserId = userId,
-                User = checkRoles.GetUse(userId),
-                Users = listUsersForTable.GetListUsersForTable(user.Division),
-                AllUsers = listUsersForTable.GetAllUsers(),
-                MainAdmin = checkRoles.MainAdmin(),
-                Admin = checkRoles.Admin(),
-                Discipline = checkRoles.Discipline(),
-                Side = checkRoles.Side(),
-                Dis = checkRoles.Dis(),
-                Stop = checkRoles.Stop(),
-                Rac = checkRoles.Rac(),
-                Ber = checkRoles.Ber(),
-                Ruk = checkRoles.Ruk(userId),
-                Pol = checkRoles.Pol(),
-                Nast = checkRoles.Nast(),
-                Prof = checkRoles.Prof(),
-                Ecolog = checkRoles.Ecolog(),
-                Sport = checkRoles.Sport(),
-                Kult = checkRoles.Kult(),
-                Blag = checkRoles.Blag(),
-
-                Explanations = exs,
-                Scores = scores,
-                EstimationsMarks1 = estimationsMarksController.GetListForTable(1),
-                EstimationsMarks2 = estimationsMarksController.GetListForTable(2),
-                EstimationsMarks3 = estimationsMarksController.GetListForTable(3),
-                EstimationsMarks4 = estimationsMarksController.GetListForTable(4),
-                EstimationsMarks5 = estimationsMarksController.GetListForTable(5),
-                EstimationsMarks6 = estimationsMarksController.GetListForTable(6),
-                EstimationsMarks7 = estimationsMarksController.GetListForTable(7),
-                EstimationsMarks8 = estimationsMarksController.GetListForTable(8),
-                EstimationsMarks9 = estimationsMarksController.GetListForTable(9),
-                EstimationsMarks10 = estimationsMarksController.GetListForTable(10),
-                EstimationsMarks11 = estimationsMarksController.GetListForTable(11),
-                EstimationsMarks12 = estimationsMarksController.GetListForTable(12),
-                Polls = polls,
-
-                Name = name
-            };
             switch (string.IsNullOrWhiteSpace(name))
             {
                 case false:

@@ -47,6 +47,7 @@ namespace Gaz.HelpFolder.Check
                 .Include(u => u.User)
                 .ToList();
         }
+        //доступ к sidebar
         public bool MainAdmin()
         {
             if (roles.Any(z => z.RoleId == 1))
@@ -55,17 +56,7 @@ namespace Gaz.HelpFolder.Check
             }
             return false;
         }
-        public bool Admin()
-        {
-            if (roles.Any(z => z.RoleId == 1 ||
-                z.RoleId == 2 ||
-                z.RoleId == 3))
-            {
-                return true;
-            }
-            return false;
-        }
-        public bool Discipline()
+        public bool Dis()
         {
             if (roles.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||
@@ -86,7 +77,20 @@ namespace Gaz.HelpFolder.Check
             }
             return false;
         }
-        public bool Dis()
+        //
+
+
+        public bool Admin()
+        {
+            if (roles.Any(z => z.RoleId == 1 ||
+                z.RoleId == 2 ||
+                z.RoleId == 3))
+            {
+                return true;
+            }
+            return false;
+        }
+        public bool Discipline()
         {
             if (roles.Any(z => z.RoleId == 1 ||
                 z.RoleId == 2 ||

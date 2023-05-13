@@ -22,17 +22,20 @@ namespace SerGaz.Controllers
         {
             _context = context;
         }
-
+        List<UsersRole> usersRoles;
 		[Authorize]
 		[HttpGet(nameof(GetUsersRoles))]
         public async Task<ActionResult<IEnumerable<UsersRole>>> GetUsersRoles()
 		{
 			try
 			{
-                return await _context.UsersRoles
+                usersRoles = await _context.UsersRoles
                     .Include("User")
-                    .Include("Role").ToListAsync();
-			}
+                    .Include("Role")
+                    .Include("Role.RolesLaws")
+                    .Include("Role.RolesLaws.Law").ToListAsync();
+                return usersRoles;
+            }
 			catch (Exception ex)
 			{
 				throw;
@@ -40,14 +43,11 @@ namespace SerGaz.Controllers
 		}
 
         [HttpGet]
-        public async Task<List<UsersRole>> GetRolesByUser(int id)
+        public List<UsersRole> GetRolesByUser(int id)
         {
             try
             {
-                return await _context.UsersRoles
-                    .Include("Role")
-                    .Include("User")
-                    .Where(z => z.UserId == id).ToListAsync();
+                return usersRoles.Where(z => z.UserId == id).ToList();
             }
             catch (Exception ex)
             {
@@ -79,18 +79,11 @@ namespace SerGaz.Controllers
         [HttpGet]
         public async Task<UsersRole> GetUR(int userId, int roleId)
         {
-            try
-            {
-                var ur = await _context.UsersRoles
-                    .Include("Role")
-                    .Include("User")
-                    .FirstOrDefaultAsync(z => z.UserId == userId && z.RoleId == roleId);
-                return ur;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            var ur = await _context.UsersRoles
+                .Include("Role")
+                .Include("User")
+                .FirstOrDefaultAsync(z => z.UserId == userId && z.RoleId == roleId);
+            return ur;
         }
 
 		[Authorize]

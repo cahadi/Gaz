@@ -55,19 +55,27 @@
                     <div class="card shadow mb-4">
                         <div class="card-body">
                             <div class="table-responsive">
-                                <form class="user" asp-area="" asp-controller="EvalutionTable"
+                                <form class="user" asp-area="" asp-controller="EvaluationTable"
                                       asp-action="Apparat" asp-route-userId="@Model.User.Id"
                                       asp-route-param="@Model.Name">
+                                    <input type="hidden" name="UserId" value="@Model.User.Id">
+                                    <input type="hidden" name="Name" value="@Model.Name" />
                                     <input class="btn btn-primary btn-user btn-block" type="submit" value="@Model.CurrentMonth" />
                                 </form>
-                                <form class="user" asp-area="" asp-controller="EvalutionTable"
+
+                                <form class="user" asp-area="" asp-controller="EvaluationTable"
                                       asp-action="PreviousMonths" asp-route-userId="@Model.User.Id"
                                       asp-route-param="@Model.Name" asp-route-month="@Model.PM">
+                                    <input type="hidden" name="UserId" value="@Model.User.Id">
+                                    <input type="hidden" name="Name" value="@Model.Name" />
                                     <input class="btn btn-primary btn-user btn-block" type="submit" value="@Model.PreviousMonth" />
                                 </form>
-                                <form class="user" asp-area="" asp-controller="EvalutionTable"
+
+                                <form class="user" asp-area="" asp-controller="EvaluationTable"
                                       asp-action="PreviousMonths" asp-route-userId="@Model.User.Id"
                                       asp-route-param="@Model.Name" asp-route-month="@Model.TMA">
+                                    <input type="hidden" name="UserId" value="@Model.User.Id">
+                                    <input type="hidden" name="Name" value="@Model.Name" />
                                     <input class="btn btn-primary btn-user btn-block" type="submit" value="@Model.TwoMonthsAgo" />
                                 </form>
                             </div>
@@ -120,26 +128,18 @@
                                                     <input type="hidden" name="EditUserId" value="@user.Id" />
                                                     <td>@user.Fio</td>
                                                     <td name="Explanation1">
-                                                        @if (Model.Dis == true || Model.User.Id == user.Id)
+                                                        @if (Model.Dis == true)
                                                         {
                                                             @if (Model.Explanations.Where(z => z.UserId == user.Id).Count() == 0)
                                                             {
-                                                                <input type="text" id="explanation" name="Explanation" value="" required>
-
-                                                                <br>
-
-                                                                <br>
+                                                                <input type="text" id="explanation" name="Explanation" value="" required><br><br>
                                                             }
                                                             @foreach (var ex in Model.Explanations.Where(z => z.UserId == user.Id))
                                                             {
-                                                                <input type="text" id="explanation" name="Explanation" value="@ex.Explanation1" required>
-
-                                                                <br>
-
-                                                                <br>
+                                                                <input type="text" id="explanation" name="Explanation" value="@ex.Explanation1" required><br><br>
                                                             }
                                                         }
-                                                        @if (Model.User.Id != user.Id)
+                                                        else
                                                         {
                                                             @foreach (var ex in Model.Explanations.Where(z => z.UserId == user.Id))
                                                             {
@@ -148,158 +148,470 @@
                                                         }
                                                     </td>
                                                     <td>
-                                                        @foreach (var em in Model.EstimationsMarks1)
+                                                        @if (Model.Dis == true)
                                                         {
-                                                            @if(em.Mark.YesNo != null || em.Mark.YesNo != "")
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 1))
                                                             {
-                                                                <a>@em.Mark.YesNo</a>
+                                                                <select id="mark1" name="MarkId1">
+                                                                    <option value="@po.EstimationsMarks.Mark.YesNo">@po.EstimationsMarks.Mark.YesNo</option>
+                                                                    @foreach (var em in Model.EstimationsMarks1)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
                                                             }
-                                                            else
+                                                            @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 1).Count() == 0)
                                                             {
-                                                                <a>Нет</a>                                                                
+                                                                <select id="mark1" name="MarkId1">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks1)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            @foreach (var em in Model.EstimationsMarks1)
+                                                            {
+                                                                @if(em.Mark.YesNo != null || em.Mark.YesNo != "")
+                                                                {
+                                                                    <a>@em.Mark.YesNo</a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a>Нет</a>                                                                
+                                                                }
+                                                            }                                                            
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (Model.Dis == true)
+                                                        {
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 2))
+                                                            {
+                                                                <select id="mark2" name="MarkId2">
+                                                                    <option value="@po.EstimationsMarks.Mark.BigMark">@po.EstimationsMarks.Mark.BigMark</option>
+                                                                    @foreach (var em in Model.EstimationsMarks2)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.BigMark</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 2).Count() == 0)
+                                                            {
+                                                                <select id="mark2" name="MarkId2">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks2)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.BigMark</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            @foreach (var em in Model.EstimationsMarks2)
+                                                            {
+                                                                @if (em.Mark.BigMark != null || em.Mark.BigMark != 0)
+                                                                {
+                                                                    <a>@em.Mark.BigMark</a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a>0</a>
+                                                                }
+                                                            }
+                                                        }
+                                                    </td>
+                                                    <td>                                                        
+                                                        @if (Model.Dis == true)
+                                                        {
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 3))
+                                                            {
+                                                                <select id="mark3" name="MarkId3">
+                                                                    <option value="@po.EstimationsMarks.Mark.BigMark">@po.EstimationsMarks.Mark.BigMark</option>
+                                                                    @foreach (var em in Model.EstimationsMarks3)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.BigMark</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 3).Count() == 0)
+                                                            {
+                                                                <select id="mark3" name="MarkId3">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks3)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.BigMark</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            @foreach (var em in Model.EstimationsMarks3)
+                                                            {
+                                                                @if (em.Mark.LowMark != null || em.Mark.LowMark != 0)
+                                                                {
+                                                                    <a>@em.Mark.LowMark</a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a>0</a>
+                                                                }
+                                                            }
+                                                        }                                                        
+                                                    </td>
+                                                    <td>                               
+                                                        @if (Model.Dis == true)
+                                                        {
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 4))
+                                                            {
+                                                                <select id="mark4" name="MarkId4">
+                                                                    <option value="@po.EstimationsMarks.Mark.YesNo">@po.EstimationsMarks.Mark.YesNo</option>
+                                                                    @foreach (var em in Model.EstimationsMarks4)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 4).Count() == 0)
+                                                            {
+                                                                <select id="mark4" name="MarkId4">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks4)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            @foreach (var em in Model.EstimationsMarks4)
+                                                            {
+                                                                @if(em.Mark.YesNo != null || em.Mark.YesNo != "")
+                                                                {
+                                                                    <a>@em.Mark.YesNo</a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a>Нет</a>                                                                
+                                                                }
+                                                            }                                                           
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (Model.Dis == true)
+                                                        {
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 5))
+                                                            {
+                                                                <select id="mark5" name="MarkId5">
+                                                                    <option value="@po.EstimationsMarks.Mark.LowMark">@po.EstimationsMarks.Mark.LowMark</option>
+                                                                    @foreach (var em in Model.EstimationsMarks5)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.LowMark</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 5).Count() == 0)
+                                                            {
+                                                                <select id="mark5" name="MarkId5">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks5)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.LowMark</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            @foreach (var em in Model.EstimationsMarks5)
+                                                            {
+                                                                @if (em.Mark.LowMark != null || em.Mark.LowMark != 0)
+                                                                {
+                                                                    <a>@em.Mark.LowMark</a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a>0</a>
+                                                                }
                                                             }
                                                         }
                                                     </td>
                                                     <td>
-                                                        @foreach (var em in Model.EstimationsMarks2)
+                                                        @if (Model.Dis == true)
                                                         {
-                                                            @if (em.Mark.BigMark != null || em.Mark.BigMark != 0)
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 6))
                                                             {
-                                                                <a>@em.Mark.BigMark</a>
+                                                                <select id="mark6" name="MarkId6">
+                                                                    <option value="@po.EstimationsMarks.Mark.YesNo">@po.EstimationsMarks.Mark.YesNo</option>
+                                                                    @foreach (var em in Model.EstimationsMarks6)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
                                                             }
-                                                            else
+                                                            @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 6).Count() == 0)
                                                             {
-                                                                <a>0</a>
+                                                                <select id="mark6" name="MarkId6">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks6)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            @foreach (var em in Model.EstimationsMarks6)
+                                                            {
+                                                                @if (em.Mark.YesNo != null || em.Mark.YesNo != "")
+                                                                {
+                                                                    <a>@em.Mark.YesNo</a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a>Нет</a>
+                                                                }
                                                             }
                                                         }
                                                     </td>
                                                     <td>
-                                                        @foreach (var em in Model.EstimationsMarks3)
+                                                        @if (Model.Dis == true)
                                                         {
-                                                            @if (em.Mark.LowMark != null || em.Mark.LowMark != 0)
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 7))
                                                             {
-                                                                <a>@em.Mark.LowMark</a>
+                                                                <select id="mark7" name="MarkId7">
+                                                                    <option value="@po.EstimationsMarks.Mark.YesNo">@po.EstimationsMarks.Mark.YesNo</option>
+                                                                    @foreach (var em in Model.EstimationsMarks7)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
                                                             }
-                                                            else
+                                                            @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 7).Count() == 0)
                                                             {
-                                                                <a>0</a>
+                                                                <select id="mark7" name="MarkId7">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks7)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            @foreach (var em in Model.EstimationsMarks7)
+                                                            {
+                                                                @if (em.Mark.YesNo != null || em.Mark.YesNo != "")
+                                                                {
+                                                                    <a>@em.Mark.YesNo</a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a>Нет</a>
+                                                                }
                                                             }
                                                         }
                                                     </td>
                                                     <td>
-                                                        @foreach (var em in Model.EstimationsMarks4)
+                                                        @if (Model.Dis == true)
                                                         {
-                                                            @if(em.Mark.YesNo != null || em.Mark.YesNo != "")
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 8))
                                                             {
-                                                                <a>@em.Mark.YesNo</a>
+                                                                <select id="mark8" name="MarkId8">
+                                                                    <option value="@po.EstimationsMarks.Mark.YesNo">@po.EstimationsMarks.Mark.YesNo</option>
+                                                                    @foreach (var em in Model.EstimationsMarks8)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
                                                             }
-                                                            else
+                                                            @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 8).Count() == 0)
                                                             {
-                                                                <a>Нет</a>                                                                
+                                                                <select id="mark8" name="MarkId8">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks8)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            @foreach (var em in Model.EstimationsMarks8)
+                                                            {
+                                                                @if (em.Mark.YesNo != null || em.Mark.YesNo != "")
+                                                                {
+                                                                    <a>@em.Mark.YesNo</a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a>Нет</a>
+                                                                }
                                                             }
                                                         }
                                                     </td>
                                                     <td>
-                                                        @foreach (var em in Model.EstimationsMarks5)
+                                                        @if (Model.Dis == true)
                                                         {
-                                                            @if (em.Mark.LowMark != null || em.Mark.LowMark != 0)
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 9))
                                                             {
-                                                                <a>@em.Mark.LowMark</a>
+                                                                <select id="mark9" name="MarkId9">
+                                                                    <option value="@po.EstimationsMarks.Mark.YesNo">@po.EstimationsMarks.Mark.YesNo</option>
+                                                                    @foreach (var em in Model.EstimationsMarks9)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
                                                             }
-                                                            else
+                                                            @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 9).Count() == 0)
                                                             {
-                                                                <a>0</a>
+                                                                <select id="mark9" name="MarkId9">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks9)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            @foreach (var em in Model.EstimationsMarks9)
+                                                            {
+                                                                @if (em.Mark.YesNo != null || em.Mark.YesNo != "")
+                                                                {
+                                                                    <a>@em.Mark.YesNo</a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a>Нет</a>
+                                                                }
                                                             }
                                                         }
                                                     </td>
                                                     <td>
-                                                        @foreach (var em in Model.EstimationsMarks6)
+                                                        @if (Model.Dis == true)
                                                         {
-                                                            @if (em.Mark.YesNo != null || em.Mark.YesNo != "")
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 10))
                                                             {
-                                                                <a>@em.Mark.YesNo</a>
+                                                                <select id="mark10" name="MarkId10">
+                                                                    <option value="@po.EstimationsMarks.Mark.YesNo">@po.EstimationsMarks.Mark.YesNo</option>
+                                                                    @foreach (var em in Model.EstimationsMarks10)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
                                                             }
-                                                            else
+                                                            @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 10).Count() == 0)
                                                             {
-                                                                <a>Нет</a>
+                                                                <select id="mark10" name="MarkId10">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks10)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            @foreach (var em in Model.EstimationsMarks10)
+                                                            {
+                                                                @if (em.Mark.YesNo != null || em.Mark.YesNo != "")
+                                                                {
+                                                                    <a>@em.Mark.YesNo</a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a>Нет</a>
+                                                                }
                                                             }
                                                         }
                                                     </td>
                                                     <td>
-                                                        @foreach (var em in Model.EstimationsMarks7)
+                                                        @if (Model.Dis == true)
                                                         {
-                                                            @if(em.Mark.YesNo != null || em.Mark.YesNo != "")
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 11))
                                                             {
-                                                                <a>@em.Mark.YesNo</a>
+                                                                <select id="mark11" name="MarkId11">
+                                                                    <option value="@po.EstimationsMarks.Mark.YesNo">@po.EstimationsMarks.Mark.YesNo</option>
+                                                                    @foreach (var em in Model.EstimationsMarks11)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
                                                             }
-                                                            else
+                                                            @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 11).Count() == 0)
                                                             {
-                                                                <a>Нет</a>                                                                
+                                                                <select id="mark11" name="MarkId11">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks11)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            @foreach (var em in Model.EstimationsMarks11)
+                                                            {
+                                                                @if (em.Mark.YesNo != null || em.Mark.YesNo != "")
+                                                                {
+                                                                    <a>@em.Mark.YesNo</a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a>Нет</a>
+                                                                }
                                                             }
                                                         }
                                                     </td>
                                                     <td>
-                                                        @foreach (var em in Model.EstimationsMarks8)
+                                                        @if (Model.Dis == true)
                                                         {
-                                                            @if(em.Mark.YesNo != null || em.Mark.YesNo != "")
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 12))
                                                             {
-                                                                <a>@em.Mark.YesNo</a>
+                                                                <select id="mark12" name="MarkId12">
+                                                                    <option value="@po.EstimationsMarks.Mark.YesNo">@po.EstimationsMarks.Mark.YesNo</option>
+                                                                    @foreach (var em in Model.EstimationsMarks12)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
                                                             }
-                                                            else
+                                                            @if (Model.Polls.Where(p => p.UserId == user.Id && p.EstimationsMarks.EstimationId == 12).Count() == 0)
                                                             {
-                                                                <a>Нет</a>                                                                
+                                                                <select id="mark12" name="MarkId12">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks12)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
                                                             }
                                                         }
-                                                    </td>
-                                                    <td>
-                                                        @foreach (var em in Model.EstimationsMarks9)
+                                                        else
                                                         {
-                                                            @if(em.Mark.YesNo != null || em.Mark.YesNo != "")
+                                                            @foreach (var em in Model.EstimationsMarks12)
                                                             {
-                                                                <a>@em.Mark.YesNo</a>
-                                                            }
-                                                            else
-                                                            {
-                                                                <a>Нет</a>                                                                
-                                                            }
-                                                        }
-                                                    </td>
-                                                    <td>
-                                                        @foreach (var em in Model.EstimationsMarks10)
-                                                        {
-                                                            @if(em.Mark.YesNo != null || em.Mark.YesNo != "")
-                                                            {
-                                                                <a>@em.Mark.YesNo</a>
-                                                            }
-                                                            else
-                                                            {
-                                                                <a>Нет</a>                                                                
-                                                            }
-                                                        }
-                                                    </td>
-                                                    <td>
-                                                        @foreach (var em in Model.EstimationsMarks11)
-                                                        {
-                                                            @if(em.Mark.YesNo != null || em.Mark.YesNo != "")
-                                                            {
-                                                                <a>@em.Mark.YesNo</a>
-                                                            }
-                                                            else
-                                                            {
-                                                                <a>Нет</a>                                                                
-                                                            }
-                                                        }
-                                                    </td>
-                                                    <td>
-                                                        @foreach (var em in Model.EstimationsMarks12)
-                                                        {
-                                                            @if(em.Mark.YesNo != null || em.Mark.YesNo != "")
-                                                            {
-                                                                <a>@em.Mark.YesNo</a>
-                                                            }
-                                                            else
-                                                            {
-                                                                <a>Нет</a>                                                                
+                                                                @if (em.Mark.YesNo != null || em.Mark.YesNo != "")
+                                                                {
+                                                                    <a>@em.Mark.YesNo</a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a>Нет</a>
+                                                                }
                                                             }
                                                         }
                                                     </td>
