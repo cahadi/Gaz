@@ -179,7 +179,7 @@ namespace Gaz.Controllers
             var pos = viewModel.Position;
 
             List<Role> roles = Request.Form["Roles"].Select(x => new Role { Id = int.Parse(x) }).ToList();
-            List<UsersRole> ur = await usersRolesController.GetRolesByUser(edId);
+            List<UsersRole> ur = usersRolesController.GetRolesByUser(edId);
 
             viewModel.EditUserId = edId;
             viewModel.EditUser = checkRoles.GetUse(edId);
@@ -285,7 +285,7 @@ namespace Gaz.Controllers
                 Roles = roless,
                 AllUsers = listUsersForTable.GetUsers()
             };
-            List<UsersRole> ur = await usersRolesController.GetRolesByUser(edId);
+            List<UsersRole> ur = usersRolesController.GetRolesByUser(edId);
             foreach (var role in ur)
             {
                 UsersRole urs = new UsersRole();
