@@ -18,7 +18,6 @@ namespace Gaz.HelpFolder.Edit
         {
             DateTime now = DateTime.Now;
             int day = now.Day;
-            usersRolesController.GetUsersRoles();
             List<UsersRole> usersRoles = usersRolesController.GetRolesByUser(userId);
             if(usersRoles.Any(z=>z.Role.RoleName == "Стоп-РИСК" ||
             z.Role.RoleName == "Рационализаторская деятельность" || 

@@ -47,7 +47,10 @@ namespace SerGaz.Controllers
 			try
 			{
                 var user = await _context.Users
-                    .Include("Type").FirstOrDefaultAsync(u=>u.Id==id);
+                    .Include("Type")
+                    .Include("UsersRoles")
+                    .Include("UsersRoles.Role")
+					.FirstOrDefaultAsync(u=>u.Id==id);
                 return user;
 			}
 			catch (Exception ex)
@@ -62,7 +65,10 @@ namespace SerGaz.Controllers
 			try
 			{
 				var user = await _context.Users
-					.Include("Type").FirstOrDefaultAsync(u => u.Email == email);
+					.Include("Type")
+                    .Include("UsersRoles")
+                    .Include("UsersRoles.Role")
+					.FirstOrDefaultAsync(u => u.Email == email);
 				return user;
 			}
 			catch (Exception ex)

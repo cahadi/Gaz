@@ -9,18 +9,34 @@ namespace Gaz.HelpFolder.Check
     public class CheckRoles
     {
         private readonly freedb_testdbgazContext _context;
+        private readonly UsersController usersController;
 
         public CheckRoles(freedb_testdbgazContext context)
         {
             _context = context;
+            usersController = new UsersController(_context);
         }
+
+        public bool Direct(int id)
+        {
+            User user = _context.Users
+                    .Include("Type")
+                    .Include("UsersRoles")
+                    .Include("UsersRoles.Role")
+                    .FirstOrDefault(u => u.Id == id);
+            if (user.UsersRoles.Any(z => z.Role.RoleName == "Директор"))
+                return true;
+
+            return false;
+        }
+
         public User GetUse(int id)
         {
             User user = _context.Users
-                .Include("Type")
-                .Include("UsersRoles")
-                .Include("UsersRoles.Role")
-                .FirstOrDefault(u => u.Id == id);
+                    .Include("Type")
+                    .Include("UsersRoles")
+                    .Include("UsersRoles.Role")
+                    .FirstOrDefault(u => u.Id == id);
             return user;
         }
 

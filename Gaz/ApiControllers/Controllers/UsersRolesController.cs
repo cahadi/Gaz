@@ -47,7 +47,12 @@ namespace SerGaz.Controllers
         {
             try
             {
-                return usersRoles.Where(z => z.UserId == id).ToList();
+                return  _context.UsersRoles
+                    .Include("User")
+                    .Include("Role")
+                    .Include("Role.RolesLaws")
+                    .Include("Role.RolesLaws.Law")
+                    .Where(z => z.UserId == id).ToList();
             }
             catch (Exception ex)
             {

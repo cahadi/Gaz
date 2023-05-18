@@ -25,6 +25,7 @@ namespace Gaz.Controllers
         private readonly PollsController pollsController;
         private readonly ScoresController scoresController;
         private readonly ListForTable listForTable;
+        private readonly IndicatorsController indicatorsController;
 
         public HRController(freedb_testdbgazContext context)
         {
@@ -39,6 +40,7 @@ namespace Gaz.Controllers
             pollsController = new PollsController(_context);
             scoresController = new ScoresController(_context);
             listForTable = new ListForTable(_context);
+            indicatorsController = new IndicatorsController(_context);
         }
 
         public async Task<IActionResult> AddUsers(int userId)
@@ -84,8 +86,10 @@ namespace Gaz.Controllers
                 roless = checkRoles.GetOtherRoles();
             }
             else if (user.UsersRoles.Any(u => u.Role.RoleName == "Главный администратор"))
-                roless = checkRoles.GetRoles();
-
+                roless = checkRoles.GetRoles(); 
+            viewModel.Divisions = Request.Form["Divisions"].Select(x => new Indicator { Id = int.Parse(x) }).ToList();
+            viewModel.Division = viewModel.Divisions.FirstOrDefault();
+            viewModel.Division = indicatorsController.GetIndicator(viewModel.Division.Id);
             viewModel.User.Password = "";
             viewModel.User.TypeId = viewModel.TypeId;
             viewModel.User.Type = await onetypesController.GetOnetype(viewModel.User.TypeId);

@@ -3,6 +3,7 @@ using Gaz.ApiControllers.Auth.Controllers;
 using Gaz.Data;
 using Gaz.Domain;
 using Gaz.Domain.Entities;
+using Gaz.HelpFolder.Check;
 using Gaz.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -18,12 +19,14 @@ namespace Gaz.Controllers
         private readonly freedb_testdbgazContext _context;
         private readonly AuthenticateController authenticateController;
         private readonly UsersController usersController;
+        private readonly CheckRoles checkRoles;
 
         public AuthController(freedb_testdbgazContext context)
         {
             _context = context;
             authenticateController = new AuthenticateController(_context);
             usersController = new UsersController(_context);
+            checkRoles = new CheckRoles(_context);
         }
 
         public IActionResult Login()
@@ -46,7 +49,12 @@ namespace Gaz.Controllers
             };
             User useR = viewModel.User;
             authenticateController.Login(model).ToString();
-            //SendMessage.WelcomeBack(useR.Email, useR.Fio);
+            bool dirct = checkRoles.Direct(useR.Id);
+            switch (dirct)
+            {
+                case true:
+                    return RedirectToAction("ListUser", "HRController", new { userId = viewModel.User.Id });
+            }
             switch (string.IsNullOrWhiteSpace(useR.Division))
             {
                 case false:

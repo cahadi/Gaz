@@ -54,6 +54,7 @@ namespace Gaz.Controllers
             {
                 return NotFound();
             }
+            checkRoles.GetRolesList(user.Id);
             var viewModel = new SidebarModel
             {
                 MainAdmin = checkRoles.MainAdmin(),

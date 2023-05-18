@@ -38,15 +38,11 @@ namespace SerGaz.Controllers
 
 		[Authorize]
 		[HttpGet("GetIndicator/{id}")]
-        public async Task<ActionResult<Indicator>> GetIndicator(int id)
+        public Indicator GetIndicator(int id)
 		{
 			try
 			{
-				var indicator = await _context.Indicators.FindAsync(id);
-                if (indicator == null)
-				{
-					return NotFound();
-				}
+				var indicator = _context.Indicators.Find(id);
 				return indicator;
 			}
 			catch (Exception ex)
