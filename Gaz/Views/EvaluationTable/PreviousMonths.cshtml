@@ -19,7 +19,7 @@
         @await Html.PartialAsync("SidebarPartial", Model)
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
-                @if (Model.Side == true)
+                @*@if (Model.Side == true)
                 {
                     <div class="container-fluid">
                         <div class="card shadow mb-4">
@@ -50,7 +50,7 @@
                         </div>
                     </div>
                 }
-
+*@
                 <div class="container-fluid">
                     <div class="card shadow mb-4">
                         <div class="card-body">
@@ -90,6 +90,10 @@
                         <div class="card shadow mb-4">
                             <div class="card-body">
                                 <input class="btn btn-primary btn-user btn-block" type="submit" value="Сохранить">
+                                @if (Model.Name == "Аппарат")
+                                {
+                                    <input type="text" id="coefficient" name="Coefficient" value="@Model.Coefficient" required />
+                                }
                                 <div class="table-responsive">
                                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                         <tbody>
@@ -121,9 +125,9 @@
                                                 <td>За текущий месяц</td>
                                                 <td>Суммарный годовой (январь - декабрь)</td>
                                             </tr>
-                                            <tr>
                                                 @foreach (User user in Model.Users)
                                                 {
+                                            <tr>
                                                     <input type="hidden" name="UserId" value="@Model.User.Id">
                                                     <input type="hidden" name="EditUserId" value="@user.Id" />
                                                     <td>@user.Fio</td>
@@ -635,8 +639,8 @@
                                                             <a>0</a>
                                                         }
                                                     </td>
-                                                }
                                             </tr>
+                                                }
                                         </tbody>
                                     </table>
                                 </div>

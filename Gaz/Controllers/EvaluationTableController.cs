@@ -93,6 +93,7 @@ namespace Gaz.Controllers
             checkRoles.GetRolesList(user.Id);
             var viewModel = new SidebarModel
             {
+                Coefficient = 30,
                 CanEdit = canEditDay.CanEdit(userId),
                 User = user,
                 Users = users,
@@ -264,6 +265,8 @@ namespace Gaz.Controllers
             int month = now.Month;
             int year = now.Year;
 
+            int coeff = viewModel.Coefficient;
+
             Explanation ex = new Explanation();
             ex.Explanation1 = viewModel.Explanation;
             ex.UserId = viewModel.EditUserId;
@@ -414,7 +417,7 @@ namespace Gaz.Controllers
             }
 
             Score score =  await sumScore.Score(viewModel.EditUserId,
-                month, year);
+                month, year, viewModel.Name, viewModel.Coefficient);
 
             int userId = viewModel.UserId;
             var polls = await _context.Polls

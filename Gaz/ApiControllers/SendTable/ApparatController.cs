@@ -16,6 +16,8 @@ using SerGaz.SendTable.Header;
 using Gaz.Data;
 using Gaz.Domain.Entities;
 using DocumentFormat.OpenXml.Bibliography;
+using Gaz.ApiControllers.SendTable.CreateQuarter;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace SerGaz.SendTable
 {
@@ -61,9 +63,10 @@ namespace SerGaz.SendTable
 					&& s.Year == year).ToListAsync();
 			}
 
-			CreateTable(name, user, ex, score); 
+			CreateTable(name, user, ex, score);
+			CreateQuarter();
 
-			string recipientEmail = email;
+            string recipientEmail = email;
 			string senderEmail = "makarov0xi4g@rambler.ru";
 			string smtpServer = "smtp.rambler.ru";
 			int smtpPort = 587;
@@ -82,8 +85,7 @@ namespace SerGaz.SendTable
 			return Ok();
 		}
 
-
-		public async void CreateTable(string name, User user, List<Explanation> ex, List<Score> score)
+        public async void CreateTable(string name, User user, List<Explanation> ex, List<Score> score)
 		{
 			DateTime now = DateTime.Now;
 			int month = now.Month;
@@ -91,8 +93,7 @@ namespace SerGaz.SendTable
 			List<User> users = _context.Users
 				.Where(u => u.Division == name).ToList();
 			users = users.OrderBy(u => u.Fio).ToList();
-
-
+            #region Explanations
             Explanation ex1 = ex.FirstOrDefault(e => e.Month == 1) ?? new Explanation();
             Explanation ex2 = ex.FirstOrDefault(e => e.Month == 2) ?? new Explanation();
             Explanation ex3 = ex.FirstOrDefault(e => e.Month == 3) ?? new Explanation();
@@ -105,8 +106,8 @@ namespace SerGaz.SendTable
             Explanation ex10 = ex.FirstOrDefault(e => e.Month == 10) ?? new Explanation();
             Explanation ex11 = ex.FirstOrDefault(e => e.Month == 11) ?? new Explanation();
             Explanation ex12 = ex.FirstOrDefault(e => e.Month == 12) ?? new Explanation();
-
-
+            #endregion
+			#region Scores
             Score score1 = score.FirstOrDefault(e => e.Month == 1) ?? new Score();
             Score score2 = score.FirstOrDefault(e => e.Month == 2) ?? new Score();
             Score score3 = score.FirstOrDefault(e => e.Month == 3) ?? new Score();
@@ -119,10 +120,9 @@ namespace SerGaz.SendTable
             Score score10 = score.FirstOrDefault(e => e.Month == 10) ?? new Score();
             Score score11 = score.FirstOrDefault(e => e.Month == 11) ?? new Score();
             Score score12 = score.FirstOrDefault(e => e.Month == 12) ?? new Score();
-
-
+            #endregion
 			await explanationsController.GetExplanations();
-
+            #region List<Explanation>
             List<Explanation> explanations1 = await explanationsController.GetExplanationsByMY(1, year);
             List<Explanation> explanations2 = await explanationsController.GetExplanationsByMY(2, year);
             List<Explanation> explanations3 = await explanationsController.GetExplanationsByMY(3, year);
@@ -135,11 +135,10 @@ namespace SerGaz.SendTable
             List<Explanation> explanations10 = await explanationsController.GetExplanationsByMY(10, year);
             List<Explanation> explanations11 = await explanationsController.GetExplanationsByMY(11, year);
             List<Explanation> explanations12 = await explanationsController.GetExplanationsByMY(12, year);
-
-
+            #endregion
 			await pollsController.GetPolls();
-
-			List<Poll> polls1 = await pollsController.GetPollsByMY(1, year);
+            #region List<Poll>
+            List<Poll> polls1 = await pollsController.GetPollsByMY(1, year);
             List<Poll> polls2 = await pollsController.GetPollsByMY(2, year);
             List<Poll> polls3 = await pollsController.GetPollsByMY(3, year);
             List<Poll> polls4 = await pollsController.GetPollsByMY(4, year);
@@ -151,10 +150,10 @@ namespace SerGaz.SendTable
             List<Poll> polls10 = await pollsController.GetPollsByMY(10, year);
             List<Poll> polls11 = await pollsController.GetPollsByMY(11, year);
             List<Poll> polls12 = await pollsController.GetPollsByMY(12, year);
-
+            #endregion
 			await scoresController.GetScores();
-
-			List<Score> scores1 = await scoresController.GetScoreByMY(1, year);
+            #region List<Score>
+            List<Score> scores1 = await scoresController.GetScoreByMY(1, year);
             List<Score> scores2 = await scoresController.GetScoreByMY(2, year);
             List<Score> scores3 = await scoresController.GetScoreByMY(3, year);
             List<Score> scores4 = await scoresController.GetScoreByMY(4, year);
@@ -166,6 +165,7 @@ namespace SerGaz.SendTable
             List<Score> scores10 = await scoresController.GetScoreByMY(10, year);
             List<Score> scores11 = await scoresController.GetScoreByMY(11, year);
             List<Score> scores12 = await scoresController.GetScoreByMY(12, year);
+            #endregion
 
             string filePath = $"Excel/{name}.xlsx";
             if (System.IO.File.Exists(filePath))
@@ -350,5 +350,113 @@ namespace SerGaz.SendTable
 				spreadsheetDocument.Close();
 			}
 		}
-	}
+
+
+        public async void CreateQuarter()
+        {
+            string filePath = "Excel/Квартал.xlsx";
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+            }
+            using (SpreadsheetDocument spreadsheetDocument
+                = SpreadsheetDocument.Create
+                (filePath, SpreadsheetDocumentType.Workbook))
+            {
+                WorkbookPart workbookPart = spreadsheetDocument.AddWorkbookPart();
+                workbookPart.Workbook = new Workbook();
+                #region Создание страниц
+                Sheets sheets = workbookPart.Workbook.AppendChild(new Sheets());
+                #region Страницы
+                Sheet all = new Sheet()
+                {
+                    Id = workbookPart
+                    .GetIdOfPart(workbookPart.AddNewPart<WorksheetPart>()),
+                    SheetId = 1,
+                    Name = "All"
+
+                };
+                Sheet firstQuarterITR = new Sheet()
+                {
+                    Id = workbookPart
+                    .GetIdOfPart(workbookPart.AddNewPart<WorksheetPart>()),
+                    SheetId = 2,
+                    Name = "1 квартал ИТР"
+
+                };
+                Sheet firstQuarterWorker = new Sheet()
+                {
+                    Id = workbookPart
+                    .GetIdOfPart(workbookPart.AddNewPart<WorksheetPart>()),
+                    SheetId = 3,
+                    Name = "1 квартал рабочие"
+
+                };
+                Sheet secondQuarterITR = new Sheet()
+                {
+                    Id = workbookPart
+                    .GetIdOfPart(workbookPart.AddNewPart<WorksheetPart>()),
+                    SheetId = 4,
+                    Name = "2 квартал ИТР"
+
+                };
+                Sheet secondQuarterWorker = new Sheet()
+                {
+                    Id = workbookPart
+                    .GetIdOfPart(workbookPart.AddNewPart<WorksheetPart>()),
+                    SheetId = 5,
+                    Name = "2 квартал рабочие"
+
+                };
+                Sheet thirdQuarterITR = new Sheet()
+                {
+                    Id = workbookPart
+                    .GetIdOfPart(workbookPart.AddNewPart<WorksheetPart>()),
+                    SheetId = 6,
+                    Name = "3 квартал ИТР"
+
+                };
+                Sheet thirdQuarterWorker = new Sheet()
+                {
+                    Id = workbookPart
+                    .GetIdOfPart(workbookPart.AddNewPart<WorksheetPart>()),
+                    SheetId = 7,
+                    Name = "3 квартал рабочие"
+
+                };
+                Sheet fourthQuarterITR = new Sheet()
+                {
+                    Id = workbookPart
+                    .GetIdOfPart(workbookPart.AddNewPart<WorksheetPart>()),
+                    SheetId = 8,
+                    Name = "4 квартал ИТР"
+
+                };
+                Sheet fourthQuarterWorker = new Sheet()
+                {
+                    Id = workbookPart
+                    .GetIdOfPart(workbookPart.AddNewPart<WorksheetPart>()),
+                    SheetId = 9,
+                    Name = "4 квартал рабочие"
+
+                };
+                #endregion
+                sheets.Append(all); 
+				sheets.Append(firstQuarterITR);
+                sheets.Append(firstQuarterWorker);
+                sheets.Append(secondQuarterITR);
+                sheets.Append(secondQuarterWorker);
+                sheets.Append(thirdQuarterITR);
+                sheets.Append(thirdQuarterWorker);
+                sheets.Append(fourthQuarterITR);
+                sheets.Append(fourthQuarterWorker);
+                #endregion
+
+                List<User> users = _context.Users
+                    .Where(u => u.Division != null || u.Division != "").ToList();
+                CreateAll.CreateSheet(workbookPart, all.Id, users);
+
+            }
+        }
+    }
 }
