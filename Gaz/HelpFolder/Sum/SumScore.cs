@@ -15,7 +15,13 @@ namespace Gaz.HelpFolder.Sum
             scoresController = new ScoresController(_context);
             pollsController = new PollsController(_context);
         }
-        public async Task<Score> Score(int userId, int month, int year)
+        // переделать подсчёт
+        // для Аппарата отделные формулы
+        // параметр coeff только для Аппарата
+        // через параметр name опряделяется способ подсчёта
+
+        // не забудь поднять Аппарат вверх списка
+        public async Task<Score> Score(int userId, int month, int year, string name, int coeff)
         {
             Score score = null;
             score = await scoresController.GetScoreByDetail(userId, month, year);
@@ -50,22 +56,36 @@ namespace Gaz.HelpFolder.Sum
                     var poll10 = await pollsController.GetPollByMoreDetail(10);
                     var poll11 = await pollsController.GetPollByMoreDetail(11);
                     var poll12 = await pollsController.GetPollByMoreDetail(12);
+
                     if (poll1 != null && poll5 != null && poll1.EstimationsMarks.Mark.YesNo == "Да" && poll5.EstimationsMarks.Mark.LowMark == 1)
                     {
                         monthScore = monthScore + 15;
                     }
+                    else if(poll1 != null && poll5 != null && poll1.EstimationsMarks.Mark.YesNo == "Да" && poll5.EstimationsMarks.Mark.LowMark == 1.1)
+                    {
+                        monthScore = monthScore + 21;
+                    }
+                    else if (poll1 != null && poll5 != null && poll1.EstimationsMarks.Mark.YesNo == "Да" && poll5.EstimationsMarks.Mark.LowMark == 1.2)
+                    {
+                        monthScore = monthScore + 27;
+                    }
+                    else if (poll1 != null && poll5 != null && poll1.EstimationsMarks.Mark.YesNo == "Да" && poll5.EstimationsMarks.Mark.LowMark == 1.3)
+                    {
+                        monthScore = monthScore + 33;
+                    }
+                    else if (poll1 != null && poll5 != null && poll1.EstimationsMarks.Mark.YesNo == "Да" && poll5.EstimationsMarks.Mark.LowMark == 1.4)
+                    {
+                        monthScore = monthScore + 39;
+                    }
+                    else if (poll1 != null && poll5 != null && poll1.EstimationsMarks.Mark.YesNo == "Да" && poll5.EstimationsMarks.Mark.LowMark == 1.5)
+                    {
+                        monthScore = monthScore + 45;
+                    }
                     else
                     {
                         monthScore = monthScore + 0;
                     }
-                    if (poll1 != null && poll5 != null && poll1.EstimationsMarks.Mark.YesNo == "Да" && poll5.EstimationsMarks.Mark.LowMark != 1)
-                    {
-                        monthScore = monthScore + poll5.EstimationsMarks.Mark.BigMark.Value;
-                    }
-                    else
-                    {
-                        monthScore = monthScore + 0;
-                    }
+
                     if (poll2 != null && poll2.EstimationsMarks.Mark.YesNo == "Нет")
                     {
                         monthScore = monthScore + 0;

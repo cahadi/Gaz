@@ -26,7 +26,6 @@ namespace SerGaz.Controllers
 
 		List<Poll> polls;
 
-		[Authorize]
 		[HttpGet(nameof(GetPolls))]
         public async Task<List<Poll>> GetPolls()
 		{
@@ -34,11 +33,12 @@ namespace SerGaz.Controllers
 				.Include("EstimationsMarks")
 				.Include("User")
 				.Include("EstimationsMarks.Mark")
-				.Include("EstimationsMarks.Estimation").ToListAsync();
+				.Include("EstimationsMarks.Estimation")
+				.ToListAsync();
 			return polls;
-		}
+        }
 
-		[HttpGet(nameof(GetPollsByMY))]
+        [HttpGet(nameof(GetPollsByMY))]
 		public async Task<List<Poll>> GetPollsByMY(int month, int year)
 		{
 			return polls.Where(p => p.Month == month &&

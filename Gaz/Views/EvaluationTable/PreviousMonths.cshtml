@@ -19,38 +19,6 @@
         @await Html.PartialAsync("SidebarPartial", Model)
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
-                @if (Model.Side == true)
-                {
-                    <div class="container-fluid">
-                        <div class="card shadow mb-4">
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <form class="user" asp-area="" asp-controller="EvaluationTable"
-                                      asp-action="ApparatSend" method="post">
-                                        <input type="hidden" name="User.Id" value="@Model.User.Id">
-                                        @if (Model.Admin == true)
-                                        {
-                                            <input type="email" id="input-email" name="Email">
-
-                                            <br>
-
-                                            <br>
-                                        }
-                                        <select id="email" name="Email">
-                                            <option value=""></option>
-                                            @foreach (var user in Model.AllUsers)
-                                            {
-                                                <option value="@user.Email">@user.Email</option>
-                                            }
-                                        </select><br><br>
-                                        <input class="btn btn-primary btn-user btn-block" type="submit" value="Отправить"><br><br>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
-
                 <div class="container-fluid">
                     <div class="card shadow mb-4">
                         <div class="card-body">
@@ -90,6 +58,10 @@
                         <div class="card shadow mb-4">
                             <div class="card-body">
                                 <input class="btn btn-primary btn-user btn-block" type="submit" value="Сохранить">
+                                @if (Model.Name == "Аппарат")
+                                {
+                                    <input type="text" id="coefficient" name="Coefficient" value="@Model.Coefficient" required />
+                                }
                                 <div class="table-responsive">
                                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                         <tbody>
@@ -121,9 +93,453 @@
                                                 <td>За текущий месяц</td>
                                                 <td>Суммарный годовой (январь - декабрь)</td>
                                             </tr>
-                                            <tr>
-                                                @foreach (User user in Model.Users)
+                                            @if (Model.UserRuc != null)
+                                            {
+                                                <tr>
+                                                    <input type="hidden" name="UserId" value="@Model.User.Id">
+                                                    <input type="hidden" name="EditUserId" value="@Model.UserRuc.Id" />
+                                                    <td>@Model.UserRuc.Fio</td>
+                                                    <td name="Explanation1">
+                                                        @if (Model.Dis == true || (Model.User.Id == Model.UserRuc.Id && Model.CanEdit == true))
+                                                        {
+                                                            @if (Model.Explanations.Where(z => z.UserId == Model.UserRuc.Id).Count() == 0)
+                                                            {
+                                                                <input type="text" id="explanation" name="Explanation" value="" required>
+
+                                                                <br>
+
+                                                                <br>
+                                                            }
+                                                            else
+                                                            {
+                                                                @foreach (var ex in Model.Explanations.Where(z => z.UserId == Model.UserRuc.Id))
+                                                                {
+                                                                    <input type="text" id="explanation" name="Explanation" value="@ex.Explanation1" required>
+
+                                                                    <br>
+
+                                                                    <br>
+                                                                }
+                                                            }
+                                                        }
+                                                        else if (Model.User.Id != Model.UserRuc.Id || Model.CanEdit == false)
+                                                        {
+                                                            @foreach (var ex in Model.Explanations.Where(z => z.UserId == Model.UserRuc.Id))
+                                                            {
+                                                                <a>@ex.Explanation1</a>
+                                                            }
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (Model.Dis == true || (Model.User.Id == Model.UserRuc.Id && Model.CanEdit == true))
+                                                        {
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 1))
+                                                            {
+                                                                <select id="mark1" name="MarkId1">
+                                                                    <option value="@po.EstimationsMarks.Mark.YesNo">@po.EstimationsMarks.Mark.YesNo</option>
+                                                                    @foreach (var em in Model.EstimationsMarks1)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            @if (Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 1).Count() == 0)
+                                                            {
+                                                                <select id="mark1" name="MarkId1">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks1)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else if (Model.Dis == false || Model.User.Id != Model.UserRuc.Id || Model.CanEdit == false)
+                                                        {
+                                                            @foreach (var p in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id))
+                                                            {
+                                                                <a>@p.EstimationsMarks.Mark.YesNo</a>
+                                                            }
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (Model.Stop == true || (Model.User.Id == Model.UserRuc.Id && Model.CanEdit == true))
+                                                        {
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 2))
+                                                            {
+                                                                <select id="mark2" name="MarkId2">
+                                                                    <option value="@po.EstimationsMarks.Mark.BigMark">@po.EstimationsMarks.Mark.BigMark</option>
+                                                                    @foreach (var em in Model.EstimationsMarks2)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.BigMark</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            @if (Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 2).Count() == 0)
+                                                            {
+                                                                <select id="mark2" name="MarkId2">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks2)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.BigMark</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else if (Model.Stop == false || Model.User.Id != Model.UserRuc.Id || Model.CanEdit == false)
+                                                        {
+                                                            @foreach (var p in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id))
+                                                            {
+                                                                <a>@p.EstimationsMarks.Mark.BigMark</a>
+                                                            }
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (Model.Rac == true || (Model.User.Id == Model.UserRuc.Id && Model.CanEdit == true))
+                                                        {
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 3))
+                                                            {
+                                                                <select id="mark3" name="MarkId3">
+                                                                    <option value="@po.EstimationsMarks.Mark.BigMark">@po.EstimationsMarks.Mark.BigMark</option>
+                                                                    @foreach (var em in Model.EstimationsMarks3)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.BigMark</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            @if (Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 3).Count() == 0)
+                                                            {
+                                                                <select id="mark3" name="MarkId3">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks3)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.BigMark</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else if (Model.Rac == false || Model.User.Id != Model.UserRuc.Id || Model.CanEdit == false)
+                                                        {
+                                                            @foreach (var p in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id))
+                                                            {
+                                                                <a>@p.EstimationsMarks.Mark.BigMark</a>
+                                                            }
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (Model.Ber == true || (Model.User.Id == Model.UserRuc.Id && Model.CanEdit == true))
+                                                        {
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 4))
+                                                            {
+                                                                <select id="mark4" name="MarkId4">
+                                                                    <option value="@po.EstimationsMarks.Mark.YesNo">@po.EstimationsMarks.Mark.YesNo</option>
+                                                                    @foreach (var em in Model.EstimationsMarks4)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            @if (Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 4).Count() == 0)
+                                                            {
+                                                                <select id="mark4" name="MarkId4">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks4)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else if (Model.Ber == false || Model.User.Id != Model.UserRuc.Id || Model.CanEdit == false)
+                                                        {
+                                                            @foreach (var p in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id))
+                                                            {
+                                                                <a>@p.EstimationsMarks.Mark.YesNo</a>
+                                                            }
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (Model.Ruk == true || (Model.User.Id == Model.UserRuc.Id && Model.CanEdit == true))
+                                                        {
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 5))
+                                                            {
+                                                                <select id="mark5" name="MarkId5">
+                                                                    <option value="@po.EstimationsMarks.Mark.LowMark">@po.EstimationsMarks.Mark.LowMark</option>
+                                                                    @foreach (var em in Model.EstimationsMarks5)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.LowMark</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            @if (Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 5).Count() == 0)
+                                                            {
+                                                                <select id="mark5" name="MarkId5">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks5)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.LowMark</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else if (Model.Ruk == false || Model.User.Id != Model.UserRuc.Id || Model.CanEdit == false)
+                                                        {
+                                                            @foreach (var p in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id))
+                                                            {
+                                                                <a>@p.EstimationsMarks.Mark.LowMark</a>
+                                                            }
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (Model.Pol == true || (Model.User.Id == Model.UserRuc.Id && Model.CanEdit == true))
+                                                        {
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 6))
+                                                            {
+                                                                <select id="mark6" name="MarkId6">
+                                                                    <option value="@po.EstimationsMarks.Mark.YesNo">@po.EstimationsMarks.Mark.YesNo</option>
+                                                                    @foreach (var em in Model.EstimationsMarks6)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            @if (Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 6).Count() == 0)
+                                                            {
+                                                                <select id="mark6" name="MarkId6">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks6)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else if (Model.Pol == false || Model.User.Id != Model.UserRuc.Id || Model.CanEdit == false)
+                                                        {
+                                                            @foreach (var p in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id))
+                                                            {
+                                                                <a>@p.EstimationsMarks.Mark.YesNo</a>
+                                                            }
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (Model.Nast == true || (Model.User.Id == Model.UserRuc.Id && Model.CanEdit == true))
+                                                        {
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 7))
+                                                            {
+                                                                <select id="mark7" name="MarkId7">
+                                                                    <option value="@po.EstimationsMarks.Mark.YesNo">@po.EstimationsMarks.Mark.YesNo</option>
+                                                                    @foreach (var em in Model.EstimationsMarks7)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            @if (Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 7).Count() == 0)
+                                                            {
+                                                                <select id="mark7" name="MarkId7">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks7)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else if (Model.Nast == false || Model.User.Id != Model.UserRuc.Id || Model.CanEdit == false)
+                                                        {
+                                                            @foreach (var p in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id))
+                                                            {
+                                                                <a>@p.EstimationsMarks.Mark.YesNo</a>
+                                                            }
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (Model.Prof == true || (Model.User.Id == Model.UserRuc.Id && Model.CanEdit == true))
+                                                        {
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 8))
+                                                            {
+                                                                <select id="mark8" name="MarkId8">
+                                                                    <option value="@po.EstimationsMarks.Mark.YesNo">@po.EstimationsMarks.Mark.YesNo</option>
+                                                                    @foreach (var em in Model.EstimationsMarks8)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            @if (Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 8).Count() == 0)
+                                                            {
+                                                                <select id="mark8" name="MarkId8">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks8)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else if (Model.Prof == false || Model.User.Id != Model.UserRuc.Id || Model.CanEdit == false)
+                                                        {
+                                                            @foreach (var p in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id))
+                                                            {
+                                                                <a>@p.EstimationsMarks.Mark.YesNo</a>
+                                                            }
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (Model.Ecolog == true || (Model.User.Id == Model.UserRuc.Id && Model.CanEdit == true))
+                                                        {
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 9))
+                                                            {
+                                                                <select id="mark9" name="MarkId9">
+                                                                    <option value="@po.EstimationsMarks.Mark.YesNo">@po.EstimationsMarks.Mark.YesNo</option>
+                                                                    @foreach (var em in Model.EstimationsMarks9)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            @if (Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 9).Count() == 0)
+                                                            {
+                                                                <select id="mark9" name="MarkId9">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks9)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else if (Model.Ecolog == false || Model.User.Id != Model.UserRuc.Id || Model.CanEdit == false)
+                                                        {
+                                                            @foreach (var p in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id))
+                                                            {
+                                                                <a>@p.EstimationsMarks.Mark.YesNo</a>
+                                                            }
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (Model.Sport == true || (Model.User.Id == Model.UserRuc.Id) && Model.CanEdit == true)
+                                                        {
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 10))
+                                                            {
+                                                                <select id="mark10" name="MarkId10">
+                                                                    <option value="@po.EstimationsMarks.Mark.YesNo">@po.EstimationsMarks.Mark.YesNo</option>
+                                                                    @foreach (var em in Model.EstimationsMarks10)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            @if (Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 10).Count() == 0)
+                                                            {
+                                                                <select id="mark10" name="MarkId10">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks10)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else if (Model.Sport == false || Model.User.Id != Model.UserRuc.Id || Model.CanEdit == false)
+                                                        {
+                                                            @foreach (var p in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id))
+                                                            {
+                                                                <a>@p.EstimationsMarks.Mark.YesNo</a>
+                                                            }
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (Model.Kult == true || (Model.User.Id == Model.UserRuc.Id && Model.CanEdit == true))
+                                                        {
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 11))
+                                                            {
+                                                                <select id="mark11" name="MarkId11">
+                                                                    <option value="@po.EstimationsMarks.Mark.YesNo">@po.EstimationsMarks.Mark.YesNo</option>
+                                                                    @foreach (var em in Model.EstimationsMarks11)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            @if (Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 11).Count() == 0)
+                                                            {
+                                                                <select id="mark11" name="MarkId11">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks11)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else if (Model.Kult == false || Model.User.Id != Model.UserRuc.Id || Model.CanEdit == false)
+                                                        {
+                                                            @foreach (var p in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id))
+                                                            {
+                                                                <a>@p.EstimationsMarks.Mark.YesNo</a>
+                                                            }
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (Model.Blag == true || (Model.User.Id == Model.UserRuc.Id && Model.CanEdit == true))
+                                                        {
+                                                            @foreach (var po in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 12))
+                                                            {
+                                                                <select id="mark12" name="MarkId12">
+                                                                    <option value="@po.EstimationsMarks.Mark.YesNo">@po.EstimationsMarks.Mark.YesNo</option>
+                                                                    @foreach (var em in Model.EstimationsMarks12)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            @if (Model.Polls.Where(p => p.UserId == Model.UserRuc.Id && p.EstimationsMarks.EstimationId == 12).Count() == 0)
+                                                            {
+                                                                <select id="mark12" name="MarkId12">
+                                                                    <option></option>
+                                                                    @foreach (var em in Model.EstimationsMarks12)
+                                                                    {
+                                                                        <option value="@em.Id">@em.Mark.YesNo</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        }
+                                                        else if (Model.Blag == false || (Model.User.Id != Model.UserRuc.Id && Model.CanEdit == false))
+                                                        {
+                                                            @foreach (var p in Model.Polls.Where(p => p.UserId == Model.UserRuc.Id))
+                                                            {
+                                                                <a>@p.EstimationsMarks.Mark.YesNo</a>
+                                                            }
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @foreach (var sc in Model.Scores.Where(s => s.UserId == Model.UserRuc.Id))
+                                                        {
+                                                            <a>@sc.MonthScore</a>
+                                                        }
+                                                        @if (Model.Scores.Count() == 0)
+                                                        {
+                                                            <a>0</a>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @foreach (var sc in Model.Scores.Where(s => s.UserId == Model.UserRuc.Id))
+                                                        {
+                                                            <a>@sc.FinalScore</a>
+                                                        }
+                                                        @if (Model.Scores.Count() == 0)
+                                                        {
+                                                            <a>0</a>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+
+                                            @foreach (User user in Model.Users)
                                                 {
+                                            <tr>
                                                     <input type="hidden" name="UserId" value="@Model.User.Id">
                                                     <input type="hidden" name="EditUserId" value="@user.Id" />
                                                     <td>@user.Fio</td>
@@ -635,8 +1051,8 @@
                                                             <a>0</a>
                                                         }
                                                     </td>
-                                                }
                                             </tr>
+                                                }
                                         </tbody>
                                     </table>
                                 </div>

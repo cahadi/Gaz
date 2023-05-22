@@ -23,15 +23,15 @@ namespace SerGaz.Controllers
         {
             _context = context;
         }
-
+// AC?DPiH=Fu:e&
 		List<Explanation> exs;
 
-		[Authorize]
 		[HttpGet(nameof(GetExplanations))]
         public async Task<List<Explanation>> GetExplanations()
 		{
             exs = await _context.Explanations
-				.Include("User").ToListAsync();
+				.Include("User")
+                .ToListAsync();
             return exs;
         }
 
@@ -50,7 +50,6 @@ namespace SerGaz.Controllers
 				.Include("User").Where(z => z.UserId == userId).ToListAsync();
 		}
 
-		[Authorize]
 		[HttpGet("GetExplanation/{id}")]
         public async Task<ActionResult<Explanation>> GetExplanation(int id)
 		{
@@ -89,7 +88,6 @@ namespace SerGaz.Controllers
         }
 
 
-        [Authorize]
 		[HttpPost(nameof(PostExplanation))]
         public async Task<ActionResult<Explanation>> PostExplanation(Explanation explanation)
 		{
@@ -119,7 +117,6 @@ namespace SerGaz.Controllers
 		}
 
 
-		[Authorize]
 		[HttpPut("PutExplanation/{id}")]
         public async Task<IActionResult> PutExplanation(int id, Explanation explanation)
 		{
@@ -151,8 +148,6 @@ namespace SerGaz.Controllers
 		}
 
         
-
-		[Authorize]
 		[HttpDelete("DeleteExplanation/{id}")]
         public async Task<IActionResult> DeleteExplanation(int id)
 		{

@@ -24,7 +24,7 @@ namespace SerGaz.Controllers
 		List<Score> scores;
 		[Authorize]
 		[HttpGet(nameof(GetScores))]
-        public async Task<ActionResult<IEnumerable<Score>>> GetScores()
+        public async Task<List<Score>> GetScores()
 		{
 			scores = await _context.Scores
 				.Include("User").ToListAsync();

@@ -18,8 +18,15 @@ namespace Gaz.HelpFolder.GetList
         public List<User> GetListUsersForTable(string div)
         {
             var u = _context.Users
-                .Where(e => e.Division == div).ToList();
+                .Where(e => e.Division == div && e.UsersRoles.Any(x=>x.Role.RoleName != $"Руководитель {div}")).ToList();
             return u;
+        }
+
+        public User GetUserRucForTable(string div)
+        {
+            var us = _context.Users
+                .FirstOrDefault(u => u.Division == div && u.UsersRoles.Any(x => x.Role.RoleName == $"Руководитель {div}"));
+            return us;
         }
 
         public List<User> GetAllUsers()

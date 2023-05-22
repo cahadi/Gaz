@@ -189,10 +189,9 @@ namespace Gaz.Controllers
             viewModel.EditUser = checkRoles.GetUse(edId);
             viewModel.TypeId = viewModel.EditUser.TypeId;
             viewModel.Type = await onetypesController.GetOnetype(viewModel.TypeId);
-            viewModel.DivisionName = viewModel.EditUser.Division;
-            viewModel.Division = await _context.Indicators
-                .FirstOrDefaultAsync(i => i.IndicatorName == 
-                viewModel.DivisionName);
+            viewModel.Divisions = Request.Form["Divisions"].Select(x => new Indicator { Id = int.Parse(x) }).ToList();
+            viewModel.Division = viewModel.Divisions.FirstOrDefault();
+            viewModel.Division = indicatorsController.GetIndicator(viewModel.Division.Id);
             viewModel.EditUser.TypeId = viewModel.TypeId;
             viewModel.EditUser.Type = viewModel.Type;
             viewModel.EditUser.Fio = fio;

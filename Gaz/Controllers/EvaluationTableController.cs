@@ -62,6 +62,8 @@ namespace Gaz.Controllers
 
             var user = checkRoles.GetUse(userId);
             var users = listUsersForTable.GetListUsersForTable(param);
+            var userRuc = listUsersForTable.GetUserRucForTable(param);
+            
             var ex = await _context.Explanations
 				.Where(e => e.Month == month && e.Year == year).ToListAsync();
 
@@ -93,6 +95,8 @@ namespace Gaz.Controllers
             checkRoles.GetRolesList(user.Id);
             var viewModel = new SidebarModel
             {
+                Coefficient = 30,
+                UserRuc = userRuc,
                 CanEdit = canEditDay.CanEdit(userId),
                 User = user,
                 Users = users,
@@ -144,25 +148,9 @@ namespace Gaz.Controllers
         public async Task<IActionResult> ApparatSend(SidebarModel viewModel)
         {
             string name = viewModel.Name;
-            viewModel.AllUsers = listUsersForTable.GetAllUsers();
             string email = string.IsNullOrEmpty(viewModel.Email) ? Request.Form["Email"] : viewModel.Email;
             await apparatController.Send(name, email);
-
-            DateTime now = DateTime.Now;
-            int month = now.Month;
-            int year = now.Year;
-
             int useId = viewModel.User.Id;
-            var users = listUsersForTable.GetListUsersForTable(name);
-
-            var ex = await _context.Explanations
-                .Where(e => e.Month == month && e.Year == year).ToListAsync();
-
-            var sc = viewModel.Scores;
-
-            var polls = await _context.Polls
-                .Where(p => p.Month == month && p.Year == year).ToListAsync();
-
             return RedirectToAction("Apparat", "EvaluationTable", new { userId = useId, param = name });
         }
 
@@ -177,6 +165,7 @@ namespace Gaz.Controllers
 
             var user = checkRoles.GetUse(userId);
             var users = listUsersForTable.GetListUsersForTable(param);
+            var userRuc = listUsersForTable.GetUserRucForTable(param);
             var ex = await _context.Explanations
                 .Where(e => e.Month == month && e.Year == year).ToListAsync();
 
@@ -210,6 +199,7 @@ namespace Gaz.Controllers
             var viewModel = new SidebarModel
             {
                 CanEdit = canEditDay.CanEdit(userId),
+                UserRuc = userRuc,
                 User = user,
                 Users = users,
                 AllUsers = listUsersForTable.GetAllUsers(),
@@ -263,6 +253,8 @@ namespace Gaz.Controllers
             DateTime now = DateTime.Now;
             int month = now.Month;
             int year = now.Year;
+
+            int coeff = viewModel.Coefficient;
 
             Explanation ex = new Explanation();
             ex.Explanation1 = viewModel.Explanation;
@@ -414,7 +406,7 @@ namespace Gaz.Controllers
             }
 
             Score score =  await sumScore.Score(viewModel.EditUserId,
-                month, year);
+                month, year, viewModel.Name, viewModel.Coefficient);
 
             int userId = viewModel.UserId;
             var polls = await _context.Polls
