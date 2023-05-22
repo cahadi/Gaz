@@ -90,8 +90,8 @@ namespace SerGaz.Controllers
         [HttpGet(nameof(GetPollsForExcel1))]
 		public async Task<List<Poll>> GetPollsForExcel1(int year)
 		{
-            pollsExcel1 = polls.Where(z => z.Year == year &&
-				z.Month >= 1 && z.Month <= 3).ToList();
+            pollsExcel1 = await _context.Polls.Where(z => z.Year == year &&
+				z.Month >= 1 && z.Month <= 3).ToListAsync();
 			return pollsExcel1;
         }
 
