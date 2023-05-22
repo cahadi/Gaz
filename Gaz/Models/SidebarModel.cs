@@ -21,8 +21,7 @@ namespace Gaz.Models
         public bool Sport { get; set; }
         public bool Kult { get; set; }
         public bool Blag { get; set; }
-        [Required]
-        public int Coefficient { get; set; }
+
         public bool CanEdit { get; set; }
         [Required]
         public List<Score> Scores { get; set; }

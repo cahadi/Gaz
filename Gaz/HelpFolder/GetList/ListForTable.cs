@@ -16,7 +16,7 @@ namespace Gaz.HelpFolder.GetList
         public List<Indicator> GetDivisions()
         {
             var divisions = _context.Indicators
-                .Where(i => i.Id > 9 && i.Id < 22).OrderBy(d => d.IndicatorName).ToList();
+                .Where(i => i.Id > 9 && i.Id < 22).ToList();
             return divisions;
         }
     }
