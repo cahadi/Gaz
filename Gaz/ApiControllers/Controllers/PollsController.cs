@@ -90,8 +90,8 @@ namespace SerGaz.Controllers
         [HttpGet(nameof(GetPollsForExcel1))]
 		public async Task<List<Poll>> GetPollsForExcel1(int year)
 		{
-            pollsExcel1 = await _context.Polls.Where(z => z.Year == year &&
-				z.Month >= 1 && z.Month <= 3).ToListAsync();
+            pollsExcel1 = polls.Where(z => z.Year == year &&
+				z.Month >= 1 && z.Month <= 3).ToList();
 			return pollsExcel1;
         }
 
@@ -126,15 +126,29 @@ namespace SerGaz.Controllers
 		{
 			var polls = new List<Poll>();
 			if (quarter == 1)
-				polls = pollsExcel1;
+			{
+				if(pollsExcel1 != null)
+					polls = pollsExcel1;
+			}
 			else if (quarter == 2)
-				polls = pollsExcel2;
+			{
+				if(pollsExcel2 != null)
+					polls = pollsExcel2;
+			}
             else if (quarter == 3)
+			{
+				if(pollsExcel3 != null)
                 polls = pollsExcel3;
+			}
             else if (quarter == 4)
-                polls = pollsExcel4;
-			pollsL = polls.Where(z => z.UserId == userId
-			&& z.EstimationsMarks.EstimationId == estiId).ToList();
+			{
+				if(pollsExcel4 != null)
+					polls = pollsExcel4;
+			}
+
+			if(polls != null)
+				pollsL = polls.Where(z => z.UserId == userId
+					&& z.EstimationsMarks.EstimationId == estiId).ToList();
 			return pollsL;
         }
 
@@ -143,13 +157,25 @@ namespace SerGaz.Controllers
 		{
 			var poll = new Poll();
 			if (quarter == 1)
-				poll = pollsL.FirstOrDefault(z => z.Month == 1);
+			{
+				if(pollsL != null)
+					poll = pollsL.FirstOrDefault(z => z.Month == 1);
+			}
             if (quarter == 2)
-                poll = pollsL.FirstOrDefault(z => z.Month == 4);
+			{
+				if(pollsL != null)
+					poll = pollsL.FirstOrDefault(z => z.Month == 4);
+			}
             if (quarter == 3)
-                poll = pollsL.FirstOrDefault(z => z.Month == 7);
+			{
+				if(pollsL != null)
+					poll = pollsL.FirstOrDefault(z => z.Month == 7);
+			}
             if (quarter == 4)
-                poll = pollsL.FirstOrDefault(z => z.Month == 10);
+			{
+				if(pollsL != null)
+					poll = pollsL.FirstOrDefault(z => z.Month == 10);
+			}
 			return poll;
         }
 
@@ -158,13 +184,25 @@ namespace SerGaz.Controllers
         {
             var poll = new Poll();
             if (quarter == 1)
-                poll = pollsL.FirstOrDefault(z => z.Month == 2);
+			{
+				if(pollsL != null)
+					poll = pollsL.FirstOrDefault(z => z.Month == 2);
+			}
             if (quarter == 2)
-                poll = pollsL.FirstOrDefault(z => z.Month == 5);
+			{
+				if(pollsL != null)
+					poll = pollsL.FirstOrDefault(z => z.Month == 5);
+			}
             if (quarter == 3)
-                poll = pollsL.FirstOrDefault(z => z.Month == 8);
+			{
+				if(pollsL != null)
+					poll = pollsL.FirstOrDefault(z => z.Month == 8);
+			}
             if (quarter == 4)
-                poll = pollsL.FirstOrDefault(z => z.Month == 11);
+			{
+				if(pollsL != null)
+					poll = pollsL.FirstOrDefault(z => z.Month == 11);
+			}
             return poll;
         }
 
@@ -173,13 +211,25 @@ namespace SerGaz.Controllers
         {
             var poll = new Poll();
             if (quarter == 1)
-                poll = pollsL.FirstOrDefault(z => z.Month == 3);
+			{
+				if (pollsL != null)
+					poll = pollsL.FirstOrDefault(z => z.Month == 3);
+			}
             if (quarter == 2)
-                poll = pollsL.FirstOrDefault(z => z.Month == 6);
+			{
+				if (pollsL != null)
+					poll = pollsL.FirstOrDefault(z => z.Month == 6);
+			}
             if (quarter == 3)
-                poll = pollsL.FirstOrDefault(z => z.Month == 9);
+			{
+				if (pollsL != null)
+					poll = pollsL.FirstOrDefault(z => z.Month == 9);
+			}
             if (quarter == 4)
-                poll = pollsL.FirstOrDefault(z => z.Month == 12);
+			{
+				if (pollsL != null)
+					poll = pollsL.FirstOrDefault(z => z.Month == 12);
+			}
             return poll;
         }
 

@@ -39,64 +39,51 @@ namespace SerGaz.SendTable
 			scoresController = new ScoresController(_context);
 			quarterHeaderTable = new QuarterHeaderTable(_context);
         }
-
-		[HttpPost(nameof(Send))]
-		public async Task<IActionResult> Send(string name, string email)
-		{
-			DateTime now = DateTime.Now;
-			int month = now.Month;
-			int year = now.Year;
-
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.UsersRoles.Any(z => z.Role.RoleName == $"Руководитель {name}")
-                && u.Division == name);
-
+        [HttpPost(nameof(Send))]
+        public async Task<IActionResult> Send(string name, string email)
+        {
+            DateTime now = DateTime.Now;
+            int month = now.Month;
+            int year = now.Year;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UsersRoles.Any(z => z.Role.RoleName == $"Руководитель {name}") && u.Division == name);
             List<Explanation> ex = new List<Explanation>();
             List<Score> score = new List<Score>();
-            List<Poll> polls = new List<Poll>();
-            List<Score> scores = new List<Score>();
             if (user != null)
-			{
-				ex = await _context.Explanations
-					.Where(e => e.UserId == user.Id 
-					&& e.Year == year).ToListAsync();
-				score = await _context.Scores
-					.Where(s=>s.UserId == user.Id
-					&& s.Year == year).ToListAsync();
-                polls = await pollsController.GetPolls();
-                scores = await scoresController.GetScores();
+            {
+                ex = await _context.Explanations.Where(e => e.UserId == user.Id && e.Year == year).ToListAsync();
+                score = await _context.Scores.Where(s => s.UserId == user.Id && s.Year == year).ToListAsync();
             }
-
-			CreateTable(name, user, ex, score, polls, scores);
-			//CreateQuarter();
+            List<Poll> polls = await pollsController.GetPolls();
+            List<Score> scores = await scoresController.GetScores();
+            List<User> users = _context.Users.Where(u => u.Division == name && u.UsersRoles.Any(z => z.Role.RoleName != $"Руководитель {name}")).ToList();
+            users = users.OrderBy(u => u.Fio).ToList();
+            List<Explanation> explanations = await explanationsController.GetExplanations();
+            CreateTable(name, user, ex, score, polls, scores, users, explanations);
+            //CreateQuarter();
 
             string recipientEmail = email;
-			string senderEmail = "makarov0xi4g@rambler.ru";
-			string smtpServer = "smtp.rambler.ru";
-			int smtpPort = 587;
-
+            string senderEmail = "makarov0xi4g@rambler.ru";
+            string smtpServer = "smtp.rambler.ru";
+            int smtpPort = 587;
             string filePath = $"Excel/{name}.xlsx";
-
             var message = new MailMessage(senderEmail, recipientEmail);
-			Attachment attachment = new Attachment(filePath);
-			message.Attachments.Add(attachment);
-			using (var client = new SmtpClient(smtpServer, smtpPort))
-			{
-				client.Credentials = new NetworkCredential(senderEmail, "K8sUUTBK325fGm");
-				client.EnableSsl = true;
-				client.Send(message);
-			}			
-			return Ok();
-		}
+            Attachment attachment = new Attachment(filePath);
+            message.Attachments.Add(attachment);
+            using (var client = new SmtpClient(smtpServer, smtpPort))
+            {
+                client.Credentials = new NetworkCredential(senderEmail, "K8sUUTBK325fGm");
+                client.EnableSsl = true;
+                client.Send(message);
+            }
+            return Ok();
+        }
 
-        public async void CreateTable(string name, User user, 
-			List<Explanation> ex, List<Score> score, List<Poll> polls,
-            List<Score> scores)
-		{
-			DateTime now = DateTime.Now;
-			int month = now.Month;
-			int year = now.Year;
-            
+
+        public async Task CreateTable(string name, User user, List<Explanation> ex, List<Score> score, List<Poll> polls, List<Score> scores, List<User> users, List<Explanation> explanations)
+        {
+            DateTime now = DateTime.Now;
+            int month = now.Month;
+            int year = now.Year;
             string filePath = $"Excel/{name}.xlsx";
             if (System.IO.File.Exists(filePath))
             {
@@ -108,9 +95,6 @@ namespace SerGaz.SendTable
 				= SpreadsheetDocument.Create
 				(filePath, SpreadsheetDocumentType.Workbook))
             {
-                List<User> users = _context.Users
-                .Where(u => u.Division == name).ToList();
-                users = users.OrderBy(u => u.Fio).ToList();
                 #region Explanations
                 Explanation ex1 = ex.FirstOrDefault(e => e.Month == 1) ?? new Explanation();
                 Explanation ex2 = ex.FirstOrDefault(e => e.Month == 2) ?? new Explanation();
@@ -154,20 +138,34 @@ namespace SerGaz.SendTable
                     score12 = score.FirstOrDefault(e => e.Month == 12) ?? new Score();
                 }
                 #endregion
-                await explanationsController.GetExplanations();
                 #region List<Explanation>
-                List<Explanation> explanations1 = await explanationsController.GetExplanationsByMY(1, year);
-                List<Explanation> explanations2 = await explanationsController.GetExplanationsByMY(2, year);
-                List<Explanation> explanations3 = await explanationsController.GetExplanationsByMY(3, year);
-                List<Explanation> explanations4 = await explanationsController.GetExplanationsByMY(4, year);
-                List<Explanation> explanations5 = await explanationsController.GetExplanationsByMY(5, year);
-                List<Explanation> explanations6 = await explanationsController.GetExplanationsByMY(6, year);
-                List<Explanation> explanations7 = await explanationsController.GetExplanationsByMY(7, year);
-                List<Explanation> explanations8 = await explanationsController.GetExplanationsByMY(8, year);
-                List<Explanation> explanations9 = await explanationsController.GetExplanationsByMY(9, year);
-                List<Explanation> explanations10 = await explanationsController.GetExplanationsByMY(10, year);
-                List<Explanation> explanations11 = await explanationsController.GetExplanationsByMY(11, year);
-                List<Explanation> explanations12 = await explanationsController.GetExplanationsByMY(12, year);
+                List<Explanation> explanations1 = new List<Explanation>();
+                List<Explanation> explanations2 = new List<Explanation>();
+                List<Explanation> explanations3 = new List<Explanation>();
+                List<Explanation> explanations4 = new List<Explanation>();
+                List<Explanation> explanations5 = new List<Explanation>();
+                List<Explanation> explanations6 = new List<Explanation>();
+                List<Explanation> explanations7 = new List<Explanation>();
+                List<Explanation> explanations8 = new List<Explanation>();
+                List<Explanation> explanations9 = new List<Explanation>();
+                List<Explanation> explanations10 = new List<Explanation>();
+                List<Explanation> explanations11 = new List<Explanation>();
+                List<Explanation> explanations12 = new List<Explanation>();
+                if (explanations.Count != 0)
+                {
+                    explanations1 = await explanationsController.GetExplanationsByMY(1, year);
+                    explanations2 = await explanationsController.GetExplanationsByMY(2, year);
+                    explanations3 = await explanationsController.GetExplanationsByMY(3, year);
+                    explanations4 = await explanationsController.GetExplanationsByMY(4, year);
+                    explanations5 = await explanationsController.GetExplanationsByMY(5, year);
+                    explanations6 = await explanationsController.GetExplanationsByMY(6, year);
+                    explanations7 = await explanationsController.GetExplanationsByMY(7, year);
+                    explanations8 = await explanationsController.GetExplanationsByMY(8, year);
+                    explanations9 = await explanationsController.GetExplanationsByMY(9, year);
+                    explanations10 = await explanationsController.GetExplanationsByMY(10, year);
+                    explanations11 = await explanationsController.GetExplanationsByMY(11, year);
+                    explanations12 = await explanationsController.GetExplanationsByMY(12, year);
+                }
                 #endregion
                 #region List<Poll>
                 List<Poll> polls1 = new List<Poll>();
@@ -376,26 +374,26 @@ namespace SerGaz.SendTable
 				#endregion
 
 				#region Месяцы
-				HeaderTable.CreateHeader(workbookPart, month1.Id, user, users, ex1, explanations1, polls1, score1, scores1);
-				HeaderTable.CreateHeader(workbookPart, month2.Id, user, users, ex2, explanations2, polls2, score2, scores1);
-				HeaderTable.CreateHeader(workbookPart, month3.Id, user, users, ex3, explanations3, polls3, score3, scores1);
-				HeaderTable.CreateHeader(workbookPart, month4.Id, user, users, ex4, explanations4, polls4, score4, scores1);
-				HeaderTable.CreateHeader(workbookPart, month5.Id, user, users, ex5, explanations5, polls5, score5, scores1);
-				HeaderTable.CreateHeader(workbookPart, month6.Id, user, users, ex6, explanations6, polls6, score6, scores1);
-				HeaderTable.CreateHeader(workbookPart, month7.Id, user, users, ex7, explanations7, polls7, score7, scores1);
-				HeaderTable.CreateHeader(workbookPart, month8.Id, user, users, ex8, explanations8, polls8, score8, scores1);
-				HeaderTable.CreateHeader(workbookPart, month9.Id, user, users, ex9, explanations9, polls9, score9, scores1);
-				HeaderTable.CreateHeader(workbookPart, month10.Id, user, users, ex10, explanations10, polls10, score10, scores1);
-				HeaderTable.CreateHeader(workbookPart, month11.Id, user, users, ex11, explanations11, polls11, score11, scores1);
-				HeaderTable.CreateHeader(workbookPart, month12.Id, user, users, ex12, explanations12, polls12, score12, scores1);
+				HeaderTable.CreateHeader(workbookPart, month1.Id, user, users, ex1, explanations1, polls1, score1, scores1, 1, year);
+				HeaderTable.CreateHeader(workbookPart, month2.Id, user, users, ex2, explanations2, polls2, score2, scores2, 2, year);
+				HeaderTable.CreateHeader(workbookPart, month3.Id, user, users, ex3, explanations3, polls3, score3, scores3, 3, year);
+				HeaderTable.CreateHeader(workbookPart, month4.Id, user, users, ex4, explanations4, polls4, score4, scores4, 4, year);
+				HeaderTable.CreateHeader(workbookPart, month5.Id, user, users, ex5, explanations5, polls5, score5, scores5, 5, year);
+				HeaderTable.CreateHeader(workbookPart, month6.Id, user, users, ex6, explanations6, polls6, score6, scores6, 6, year);
+				HeaderTable.CreateHeader(workbookPart, month7.Id, user, users, ex7, explanations7, polls7, score7, scores7, 7, year);
+				HeaderTable.CreateHeader(workbookPart, month8.Id, user, users, ex8, explanations8, polls8, score8, scores8, 8, year);
+				HeaderTable.CreateHeader(workbookPart, month9.Id, user, users, ex9, explanations9, polls9, score9, scores9, 9, year);
+				HeaderTable.CreateHeader(workbookPart, month10.Id, user, users, ex10, explanations10, polls10, score10, scores10, 10, year);
+				HeaderTable.CreateHeader(workbookPart, month11.Id, user, users, ex11, explanations11, polls11, score11, scores11, 11, year);
+				HeaderTable.CreateHeader(workbookPart, month12.Id, user, users, ex12, explanations12, polls12, score12, scores12, 12, year);
                 #endregion
 
                 #region Кварталы
-                quarterHeaderTable.CreateHeader(workbookPart, quarter1.Id, user, users);
-                quarterHeaderTable.CreateHeader(workbookPart, quarter2.Id, user, users);
-                quarterHeaderTable.CreateHeader(workbookPart, quarter3.Id, user, users);
-                quarterHeaderTable.CreateHeader(workbookPart, quarter4.Id, user, users);
-                quarterHeaderTable.CreateHeader(workbookPart, yearS.Id, user, users);
+                quarterHeaderTable.CreateHeader(workbookPart, quarter1.Id, user, users, 13);
+                quarterHeaderTable.CreateHeader(workbookPart, quarter2.Id, user, users, 14);
+                quarterHeaderTable.CreateHeader(workbookPart, quarter3.Id, user, users, 15);
+                quarterHeaderTable.CreateHeader(workbookPart, quarter4.Id, user, users, 16);
+                quarterHeaderTable.CreateHeader(workbookPart, yearS.Id, user, users, 17);
 				#endregion
 
 				spreadsheetDocument.WorkbookPart.Workbook.Save(); 

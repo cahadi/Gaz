@@ -47,10 +47,10 @@ namespace SerGaz.Controllers
         }
 
 		[HttpGet(nameof(GetScoreByDetail))]
-		public async Task<Score> GetScoreByDetail(int userId, int month, int year)
-		{
-			Score score = await _context.Scores.Include("User")
-				.FirstOrDefaultAsync(z => z.UserId == userId
+		public Score GetScoreByDetail(int userId, int month, int year)
+        {
+            Score score = _context.Scores.Include("User")
+                .FirstOrDefault(z => z.UserId == userId
 				&& z.Month == month
 				&& z.Year == year);
 			return score;

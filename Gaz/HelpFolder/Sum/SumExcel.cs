@@ -16,19 +16,19 @@ namespace Gaz.HelpFolder.Sum
             pollsController = new PollsController(_context);
             getSum = new GetSum(_context);
         }
-        public async void GetListsForSumExcel()
+        public void GetListsForSumExcel()
         {
             int year = now.Year;
-            await pollsController.GetPolls();
-            await pollsController.GetPollsForExcel1(year);
-            await pollsController.GetPollsForExcel2(year);
-            await pollsController.GetPollsForExcel3(year);
-            await pollsController.GetPollsForExcel4(year);
+            pollsController.GetPolls();
+            pollsController.GetPollsForExcel1(year);
+            pollsController.GetPollsForExcel2(year);
+            pollsController.GetPollsForExcel3(year);
+            pollsController.GetPollsForExcel4(year);
         }
 
-        public int GetSumE(int userId, int quarter)
+        public async Task<int> GetSumE(int userId, int quarter)
         {
-            int score = getSum.GetSumBigMark(userId, quarter, 2).Result;
+            int score = await getSum.GetSumBigMark(userId, quarter, 2);
             return score;
         }
 

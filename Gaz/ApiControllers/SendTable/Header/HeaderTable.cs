@@ -14,10 +14,11 @@ namespace SerGaz.SendTable.Header
             _context = context;
         }
 
-        public static void CreateHeader(WorkbookPart workbookPart, StringValue id, 
+        public static async Task CreateHeader(WorkbookPart workbookPart, StringValue id, 
             User user, List<User> users,
 			Explanation ex, List<Explanation> explanations,
-            List<Poll> polls, Score score, List<Score> scores)
+            List<Poll> polls, Score score, List<Score> scores, 
+            int month, int year)
         {
             WorksheetPart worksheetPart = workbookPart.GetPartById(id) as WorksheetPart;
 
@@ -379,6 +380,13 @@ namespace SerGaz.SendTable.Header
 
             #endregion
 
+
+            sheetData.Append(row);
+            sheetData.Append(row2);
+            sheetData.Append(row3);
+            sheetData.Append(row4);
+
+
             int i = 5;
 
 			if (user!=null)
@@ -391,12 +399,23 @@ namespace SerGaz.SendTable.Header
                 cellB5.CellValue = new CellValue($"{user.Fio}");
                 row5.Append(cellB5);
 
-                if(ex != null)
+                if (ex == null)
                 {
                     Cell cellC5 = new Cell();
                     cellC5.CellReference = $"C{i}";
                     cellC5.DataType = CellValues.String;
-                    cellC5.CellValue = new CellValue($"{ex.Explanation1}");
+                    cellC5.CellValue = new CellValue("Нет пояснений");
+                    row5.Append(cellC5);
+                }
+                else
+                {
+                    Cell cellC5 = new Cell();
+                    cellC5.CellReference = $"C{i}";
+                    cellC5.DataType = CellValues.String;
+                    if(ex.Explanation1 == null)
+                        cellC5.CellValue = new CellValue("Нет пояснений");
+                    else
+                        cellC5.CellValue = new CellValue($"{ex.Explanation1}");
                     row5.Append(cellC5);
                 }
 
@@ -434,7 +453,7 @@ namespace SerGaz.SendTable.Header
                 else if (poll2.EstimationsMarks.Mark.YesNo != null)
 					cellF5.CellValue = new CellValue($"{poll2.EstimationsMarks.Mark.YesNo}");
 				else
-					cellE5.CellValue = new CellValue($"{poll1.EstimationsMarks.Mark.BigMark}");
+					cellE5.CellValue = new CellValue($"{poll2.EstimationsMarks.Mark.BigMark}");
 				row5.Append(cellF5);
 
 				Poll poll3 = polls2.FirstOrDefault(p => p.EstimationsMarks.EstimationId == 4);
@@ -452,7 +471,7 @@ namespace SerGaz.SendTable.Header
 				cellH5.CellReference = $"H{i}";
 				cellH5.DataType = CellValues.String;
                 if (poll4 == null)
-                    cellH5.CellValue = new CellValue("0");
+                    cellH5.CellValue = new CellValue("1");
                 else
                     cellH5.CellValue = new CellValue($"{poll4.EstimationsMarks.Mark.LowMark}");
 				row5.Append(cellH5);
@@ -527,35 +546,41 @@ namespace SerGaz.SendTable.Header
                     cellO5.CellValue = new CellValue($"{poll11.EstimationsMarks.Mark.YesNo}");
 				row5.Append(cellO5);
 
-
 				Cell cellP5 = new Cell();
 				cellP5.CellReference = $"P{i}";
-				cellP5.DataType = CellValues.SharedString;
+				cellP5.DataType = CellValues.String;
                 if (score == null)
-                    cellP5.CellValue = new CellValue("0");
+                    cellP5.CellValue = new CellValue($"{0}");
                 else
-                    cellP5.CellValue = new CellValue($"{score.MonthScore}");
+                {
+                    if(score.MonthScore == 0 || score.MonthScore == null)
+                        cellP5.CellValue = new CellValue($"{0}");
+                    else
+                        cellP5.CellValue = new CellValue($"{score.MonthScore}");
+
+                }
                 row5.Append(cellP5);
 
 
 				Cell cellQ5 = new Cell();
 				cellQ5.CellReference = $"Q{i}";
-				cellQ5.DataType = CellValues.SharedString;
+				cellQ5.DataType = CellValues.String;
                 if (score == null)
-                    cellQ5.CellValue = new CellValue("0");
+                    cellQ5.CellValue = new CellValue($"{0}");
                 else
-                    cellQ5.CellValue = new CellValue($"{score.FinalScore}");
+                {
+                    if( score.FinalScore == 0 || score.FinalScore == null)
+                        cellQ5.CellValue = new CellValue($"{0}");
+                    else
+                        cellQ5.CellValue = new CellValue($"{score.FinalScore}");
+
+                }
 				row5.Append(cellQ5);
 
 
 				sheetData.Append(row5);
-                i ++;
+                i = 6;
             }
-
-            sheetData.Append(row);
-            sheetData.Append(row2);
-            sheetData.Append(row3);
-            sheetData.Append(row4);
 
             foreach (User us in users)
             {
@@ -596,7 +621,12 @@ namespace SerGaz.SendTable.Header
                 if (poll == null)
 					cellD5.CellValue = new CellValue($"Нет");
                 else
-				    cellD5.CellValue = new CellValue($"{poll.EstimationsMarks.Mark.YesNo}");
+                {
+                    if(poll.EstimationsMarks.Mark.YesNo == null)
+                        cellD5.CellValue = new CellValue($"Нет");
+                    else
+                        cellD5.CellValue = new CellValue($"{poll.EstimationsMarks.Mark.YesNo}");
+                }
 				dataRow.Append(cellD5);
 
 
@@ -614,54 +644,64 @@ namespace SerGaz.SendTable.Header
 				dataRow.Append(cellE5);
 
 
-				Poll poll2 = polls2.FirstOrDefault(p => p.EstimationsMarks.EstimationId == 3); 
+				Poll poll2 = polls2.FirstOrDefault(p => p.EstimationsMarks.EstimationId == 3);
 
-				Cell cellF5 = new Cell();
-				cellF5.CellReference = $"F{i}";
-				cellF5.DataType = CellValues.String;
+                Cell cellF5 = new Cell();
+                cellF5.CellReference = $"F{i}";
+                cellF5.DataType = CellValues.String;
+                if (poll2 == null)
+                    cellF5.CellValue = new CellValue("Нет");
+                else if (poll2.EstimationsMarks.Mark.YesNo != null)
+                    cellF5.CellValue = new CellValue($"{poll2.EstimationsMarks.Mark.YesNo}");
+                else
+                    cellF5.CellValue = new CellValue($"{poll2.EstimationsMarks.Mark.BigMark}");
+                dataRow.Append(cellF5);
 
-				if (poll2 == null)
-					cellF5.CellValue = new CellValue($"Нет");
-				 else if (poll2.EstimationsMarks.Mark.YesNo != null)
-					cellF5.CellValue = new CellValue($"{poll2.EstimationsMarks.Mark.YesNo}");
-				else
-					cellE5.CellValue = new CellValue($"{poll1.EstimationsMarks.Mark.BigMark}");
-				dataRow.Append(cellF5);
 
-
-				Poll poll3 = polls2.FirstOrDefault(p => p.EstimationsMarks.EstimationId == 4);
+                Poll poll3 = polls2.FirstOrDefault(p => p.EstimationsMarks.EstimationId == 4);
 
 				Cell cellG5 = new Cell();
 				cellG5.CellReference = $"G{i}";
 				cellG5.DataType = CellValues.String;
 				if (poll3 == null)
 					cellG5.CellValue = new CellValue($"Нет");
-				else 
-                    cellG5.CellValue = new CellValue($"{poll3.EstimationsMarks.Mark.YesNo}");
+				else
+                {
+                    if (poll3.EstimationsMarks.Mark.YesNo == null)
+                        cellG5.CellValue = new CellValue($"Нет");
+                    else
+                        cellG5.CellValue = new CellValue($"{poll3.EstimationsMarks.Mark.YesNo}");
+                }
 				dataRow.Append(cellG5);
 
 
 				Poll poll4 = polls2.FirstOrDefault(p => p.EstimationsMarks.EstimationId == 5);
 
-				Cell cellH5 = new Cell();
-				cellH5.CellReference = $"H{i}";
-				cellH5.DataType = CellValues.Number;
-				if (poll4 == null)
-					cellH5.CellValue = new CellValue("1");
-				else 
+
+                Cell cellH5 = new Cell();
+                cellH5.CellReference = $"H{i}";
+                cellH5.DataType = CellValues.String;
+                if (poll4 == null)
+                    cellH5.CellValue = new CellValue("1");
+                else
                     cellH5.CellValue = new CellValue($"{poll4.EstimationsMarks.Mark.LowMark}");
-				dataRow.Append(cellH5);
+                dataRow.Append(cellH5);
 
 
-				Poll poll5 = polls2.FirstOrDefault(p => p.EstimationsMarks.EstimationId == 6);
+                Poll poll5 = polls2.FirstOrDefault(p => p.EstimationsMarks.EstimationId == 6);
 
 				Cell cellI5 = new Cell();
 				cellI5.CellReference = $"I{i}";
 				cellI5.DataType = CellValues.String;
 				if (poll5 == null)
 					cellI5.CellValue = new CellValue($"Нет");
-				else
-					cellI5.CellValue = new CellValue($"{poll5.EstimationsMarks.Mark.YesNo}");
+                else
+                {
+                    if(poll5.EstimationsMarks.Mark.YesNo == null)
+                        cellI5.CellValue = new CellValue($"Нет");
+                    else
+                        cellI5.CellValue = new CellValue($"{poll5.EstimationsMarks.Mark.YesNo}");
+                }
 				dataRow.Append(cellI5);
 
 				Poll poll6 = polls2.FirstOrDefault(p => p.EstimationsMarks.EstimationId == 12);
@@ -671,8 +711,13 @@ namespace SerGaz.SendTable.Header
 				cellJ5.DataType = CellValues.String;
 				if (poll6 == null)
 					cellJ5.CellValue = new CellValue($"Нет");
-				else
-					cellJ5.CellValue = new CellValue($"{poll6.EstimationsMarks.Mark.YesNo}");
+                else
+                {
+                    if(poll6.EstimationsMarks.Mark.YesNo == null)
+                        cellJ5.CellValue = new CellValue($"Нет");
+                    else
+                        cellJ5.CellValue = new CellValue($"{poll6.EstimationsMarks.Mark.YesNo}");
+                }
 				dataRow.Append(cellJ5);
 
 
@@ -683,8 +728,13 @@ namespace SerGaz.SendTable.Header
 				cellK5.DataType = CellValues.String;
 				if (poll7 == null)
 					cellK5.CellValue = new CellValue($"Нет");
-				else
-					cellK5.CellValue = new CellValue($"{poll7.EstimationsMarks.Mark.YesNo}");
+                else
+                {
+                    if(poll7.EstimationsMarks.Mark.YesNo == null)
+                        cellK5.CellValue = new CellValue($"Нет");
+                    else
+                        cellK5.CellValue = new CellValue($"{poll7.EstimationsMarks.Mark.YesNo}");
+                }
 				dataRow.Append(cellK5);
 
 
@@ -695,8 +745,13 @@ namespace SerGaz.SendTable.Header
 				cellL5.DataType = CellValues.String;
 				if (poll8 == null)
 					cellL5.CellValue = new CellValue($"Нет");
-				else
-					cellL5.CellValue = new CellValue($"{poll8.EstimationsMarks.Mark.YesNo}");
+                else
+                {
+                    if(poll8.EstimationsMarks.Mark.YesNo == null)
+                        cellL5.CellValue = new CellValue($"Нет");
+                    else
+                        cellL5.CellValue = new CellValue($"{poll8.EstimationsMarks.Mark.YesNo}");
+                }
 				dataRow.Append(cellL5);
 
 
@@ -707,8 +762,13 @@ namespace SerGaz.SendTable.Header
 				cellM5.DataType = CellValues.String;
 				if (poll9 == null)
 					cellM5.CellValue = new CellValue($"Нет");
-				else
-					cellM5.CellValue = new CellValue($"{poll9.EstimationsMarks.Mark.YesNo}");
+                else
+                {
+                    if(poll9.EstimationsMarks.Mark.YesNo == null)
+                        cellM5.CellValue = new CellValue($"Нет");
+                    else
+                        cellM5.CellValue = new CellValue($"{poll9.EstimationsMarks.Mark.YesNo}");
+                }
 				dataRow.Append(cellM5);
 
 
@@ -719,8 +779,13 @@ namespace SerGaz.SendTable.Header
 				cellN5.DataType = CellValues.String;
 				if (poll10 == null)
 					cellN5.CellValue = new CellValue($"Нет");
-				else
-					cellN5.CellValue = new CellValue($"{poll10.EstimationsMarks.Mark.YesNo}");
+                else
+                {
+                    if(poll10.EstimationsMarks.Mark.YesNo == null)
+                        cellN5.CellValue = new CellValue($"Нет");
+                    else
+                        cellN5.CellValue = new CellValue($"{poll10.EstimationsMarks.Mark.YesNo}");
+                }
 				dataRow.Append(cellN5);
 
 
@@ -731,29 +796,45 @@ namespace SerGaz.SendTable.Header
 				cellO5.DataType = CellValues.String;
                 if (poll11 == null)
 					cellO5.CellValue = new CellValue($"Нет");
-				else
-					cellO5.CellValue = new CellValue($"{poll11.EstimationsMarks.Mark.YesNo}");
+                else
+                {
+                    if(poll11.EstimationsMarks.Mark.YesNo == null)
+                        cellO5.CellValue = new CellValue($"Нет");
+                    else
+                        cellO5.CellValue = new CellValue($"{poll11.EstimationsMarks.Mark.YesNo}");
+                }
 				dataRow.Append(cellO5);
 
-                Score sc = scores.FirstOrDefault(s => s.UserId == us.Id) ?? new Score();
+                Score sc = scores.FirstOrDefault(s => s.UserId == us.Id && s.Month == month && s.Year == year);
+
 
                 Cell cellP5 = new Cell();
                 cellP5.CellReference = $"P{i}";
-                cellP5.DataType = CellValues.SharedString;
+                cellP5.DataType = CellValues.String;
                 if (sc == null)
-                    cellP5.CellValue = new CellValue("0");
+                    cellP5.CellValue = new CellValue($"{0}");
                 else
-                    cellP5.CellValue = new CellValue($"{sc.MonthScore}");
+                {
+                    if(sc.MonthScore == 0 || sc.MonthScore == null)
+                        cellP5.CellValue = new CellValue($"{0}");
+                    else
+                        cellP5.CellValue = new CellValue($"{sc.MonthScore}");
+                }
                 dataRow.Append(cellP5);
 
 
                 Cell cellQ5 = new Cell();
                 cellQ5.CellReference = $"Q{i}";
-                cellQ5.DataType = CellValues.SharedString;
+                cellQ5.DataType = CellValues.String;
                 if (sc == null)
-                    cellQ5.CellValue = new CellValue("0");
+                    cellQ5.CellValue = new CellValue($"{0}");
                 else
-                    cellQ5.CellValue = new CellValue($"{sc.FinalScore}");
+                {
+                    if(sc.FinalScore == 0 || sc.FinalScore == null)
+                        cellQ5.CellValue = new CellValue($"{0}");
+                    else
+                        cellQ5.CellValue = new CellValue($"{sc.FinalScore}");
+                }
                 dataRow.Append(cellQ5);
 
 

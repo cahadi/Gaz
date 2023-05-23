@@ -1,4 +1,5 @@
 ﻿using Gaz.Data;
+using Gaz.Domain.Entities;
 using SerGaz.Controllers;
 using System.Drawing;
 
@@ -16,10 +17,21 @@ namespace Gaz.HelpFolder.Sum
 
         public async Task<int> GetSumBigMark(int userId, int quarter, int estiMarkId)
         {
+            //List<Poll> polls = await pollsController.GetPolls();
+            DateTime now = DateTime.Now;
+            int year = now.Year;
             int? poll = 0;
             int score = 0;
+            //List<Poll> polls1 = await pollsController.GetPollsForExcel1(year);
 
-            await pollsController.GetPollForExcel(quarter, userId, estiMarkId);
+            //List<Poll> polls2 = await pollsController.GetPollsForExcel2(year);
+
+            //List<Poll> polls3 = await pollsController.GetPollsForExcel3(year);
+
+            //List<Poll> polls4 = await pollsController.GetPollsForExcel4(year);
+
+            //List<Poll> pollse = await pollsController.GetPollForExcel(quarter, userId, estiMarkId);
+
             var pollFirstM = await pollsController.GetPollForExcelFirst(quarter);
             var pollSecondM = await pollsController.GetPollForExcelSecond(quarter);
             var pollThirdM = await pollsController.GetPollForExcelThird(quarter);
@@ -27,11 +39,28 @@ namespace Gaz.HelpFolder.Sum
             for (int i = 0; i < 3; i++)
             {
                 if (i == 0)
-                    poll = pollFirstM.EstimationsMarks.Mark.BigMark;
+                {
+                    if (pollFirstM == null || pollFirstM.EstimationsMarksId == 0)
+                        poll = 0;
+                    else
+                        poll = pollFirstM.EstimationsMarks.Mark.BigMark;
+                    
+                }
                 else if (i == 1)
-                    poll = pollSecondM.EstimationsMarks.Mark.BigMark;
+                {
+                    if (pollFirstM == null || pollSecondM.EstimationsMarksId == 0)
+                        poll = 0;
+                    else
+                        poll = pollSecondM.EstimationsMarks.Mark.BigMark;
+                }
                 else if (i == 2)
-                    poll = pollThirdM.EstimationsMarks.Mark.BigMark;
+                {
+                    if (pollFirstM == null || pollThirdM.EstimationsMarksId == 0)
+                        poll = 0;  
+                    else
+                        poll = pollThirdM.EstimationsMarks.Mark.BigMark;
+                                  
+                }
 
                 if(estiMarkId == 2)
                 {
@@ -86,11 +115,26 @@ namespace Gaz.HelpFolder.Sum
             for(int i = 0; i < 3; i++)
             {
                 if (i == 0)
-                    poll = pollFirstM.EstimationsMarks.Mark.YesNo;
+                {
+                    if (pollFirstM == null || pollFirstM.EstimationsMarksId == 0)
+                        poll = "Нет";
+                    else
+                        poll = pollFirstM.EstimationsMarks.Mark.YesNo;
+                }
                 else if (i == 1)
-                    poll = pollSecondM.EstimationsMarks.Mark.YesNo;
+                {
+                    if (pollFirstM == null || pollSecondM.EstimationsMarksId == 0)
+                        poll = "Нет";
+                    else
+                        poll = pollSecondM.EstimationsMarks.Mark.YesNo;
+                }
                 else if (i == 2)
-                    poll = pollThirdM.EstimationsMarks.Mark.YesNo;
+                {
+                    if (pollFirstM == null || pollThirdM.EstimationsMarksId == 0)
+                        poll = "Нет";
+                    else
+                        poll = pollThirdM.EstimationsMarks.Mark.YesNo;
+                }
 
                 if(estiMarkId == 4 || 
                     estiMarkId == 6 ||

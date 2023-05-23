@@ -23,14 +23,14 @@ namespace SerGaz.Controllers
         {
             _context = context;
         }
-// AC?DPiH=Fu:e&
+
 		List<Explanation> exs;
 
 		[HttpGet(nameof(GetExplanations))]
         public async Task<List<Explanation>> GetExplanations()
 		{
             exs = await _context.Explanations
-				.Include("User")
+				//.Include("User")
                 .ToListAsync();
             return exs;
         }

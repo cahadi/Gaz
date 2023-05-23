@@ -24,12 +24,12 @@ namespace Gaz.HelpFolder.Sum
         public async Task<Score> Score(int userId, int month, int year, string name, int coeff)
         {
             Score score = null;
-            score = await scoresController.GetScoreByDetail(userId, month, year);
+            score = scoresController.GetScoreByDetail(userId, month, year);
             if (score != null)
             {
                 Score sc = null;
                 int mo = month == 1 ? 12 : month - 1;
-                if (mo != 0) sc = await scoresController.GetScoreByDetail(userId, mo, year);
+                if (mo != 0) sc = scoresController.GetScoreByDetail(userId, mo, year);
                 if (month == 1) score.FinalScore = score.MonthScore;
                 else
                 {
@@ -182,7 +182,7 @@ namespace Gaz.HelpFolder.Sum
 
                     Score sc = null;
                     int mo = month == 1 ? 12 : month - 1;
-                    if (mo != 0) sc = await scoresController.GetScoreByDetail(userId, mo, year);
+                    if (mo != 0) sc = scoresController.GetScoreByDetail(userId, mo, year);
                     if (month == 1) score.FinalScore = score.MonthScore;
                     else
                     {

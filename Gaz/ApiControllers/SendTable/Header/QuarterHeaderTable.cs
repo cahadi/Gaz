@@ -21,14 +21,15 @@ namespace SerGaz.SendTable.Header
 			_context = context;
 			pollsController = new PollsController(_context);
 			scoresController = new ScoresController(_context);
+            sumExcel = new SumExcel(_context);
         }
 
-        public async void CreateHeader(WorkbookPart workbookPart, StringValue id, 
-            User user, List<User> users)
+        public async Task CreateHeader(WorkbookPart workbookPart, StringValue id, 
+            User user, List<User> users, int sheetId)
         {
 			DateTime now = DateTime.Now;
 			int year = now.Year;
-			sumExcel.GetListsForSumExcel();
+			//sumExcel.GetListsForSumExcel();
 
             WorksheetPart worksheetPart = workbookPart.GetPartById(id) as WorksheetPart;
 
@@ -406,8 +407,14 @@ namespace SerGaz.SendTable.Header
 
             #region Списки
 
-            int i = 5;
+			sheetData.Append(row);
+            sheetData.Append(row2);
+            sheetData.Append(row3);
+            sheetData.Append(row4);
 
+            //await scoresController.GetScores();
+
+            int i = 5;
 			if (user != null)
 			{
                 Row row5 = new Row();
@@ -420,341 +427,459 @@ namespace SerGaz.SendTable.Header
 				row5.Append(cellB5);
 
 
-				if (int.TryParse(id, out int idValue12) && idValue12 == 13)
+				if (sheetId == 13)
                 {
-					score1 = sumExcel.GetSumE(user.Id, 1);
+					score1 = await sumExcel.GetSumE(user.Id, 1);
                     Cell cellE5 = new Cell();
 					cellE5.CellReference = $"E{i}";
-					cellE5.DataType = CellValues.Number;
-					cellE5.CellValue = new CellValue(score1.ToString());
+					cellE5.DataType = CellValues.String;
+					cellE5.CellValue = new CellValue($"{score1}");
 					row5.Append(cellE5);
 
 					score2 = sumExcel.GetSumF(user.Id, 1);
                     Cell cellF5 = new Cell();
 					cellF5.CellReference = $"F{i}";
-					cellF5.DataType = CellValues.Number;
-					cellF5.CellValue = new CellValue(score2.ToString());
+					cellF5.DataType = CellValues.String;
+					cellF5.CellValue = new CellValue($"{score2}");
 					row5.Append(cellF5);
 
 					score3 = sumExcel.GetSumG(user.Id, 1);
 					Cell cellG5 = new Cell();
 					cellG5.CellReference = $"G{i}";
-					cellG5.DataType = CellValues.Number;
-					cellG5.CellValue = new CellValue(score3.ToString());
+					cellG5.DataType = CellValues.String;
+					cellG5.CellValue = new CellValue($"{score3}");
 					row5.Append(cellG5);
 
                     score4 = sumExcel.GetSumI(user.Id, 1);
                     Cell cellI5 = new Cell();
 					cellI5.CellReference = $"I{i}";
-					cellI5.DataType = CellValues.Number;
-					cellI5.CellValue = new CellValue(score4.ToString());
+					cellI5.DataType = CellValues.String;
+					cellI5.CellValue = new CellValue($"{score4}");
 					row5.Append(cellI5);
 
                     score5 = sumExcel.GetSumJ(user.Id, 1);
                     Cell cellJ5 = new Cell();
 					cellJ5.CellReference = $"J{i}";
-					cellJ5.DataType = CellValues.Number;
-					cellJ5.CellValue = new CellValue(score5.ToString());
+					cellJ5.DataType = CellValues.String;
+					cellJ5.CellValue = new CellValue($"{score5}");
 					row5.Append(cellJ5);
 
                     score6 = sumExcel.GetSumK(user.Id, 1);
                     Cell cellK5 = new Cell();
 					cellK5.CellReference = $"K{i}";
-					cellK5.DataType = CellValues.Number;
-					cellK5.CellValue = new CellValue(score6.ToString());
+					cellK5.DataType = CellValues.String;
+					cellK5.CellValue = new CellValue($"{score6}");
 					row5.Append(cellK5);
 
                     score7 = sumExcel.GetSumL(user.Id, 1);
                     Cell cellL5 = new Cell();
 					cellL5.CellReference = $"L{i}";
-					cellL5.DataType = CellValues.Number;
-					cellL5.CellValue = new CellValue(score7.ToString());
+					cellL5.DataType = CellValues.String;
+					cellL5.CellValue = new CellValue($"{score7}");
 					row5.Append(cellL5);
 
                     score8 = sumExcel.GetSumM(user.Id, 1);
                     Cell cellM5 = new Cell();
 					cellM5.CellReference = $"M{i}";
-					cellM5.DataType = CellValues.Number;
-					cellM5.CellValue = new CellValue(score8.ToString());
+					cellM5.DataType = CellValues.String;
+					cellM5.CellValue = new CellValue($"{score8}");
 					row5.Append(cellM5);
 
                     score9 = sumExcel.GetSumN(user.Id, 1);
                     Cell cellN5 = new Cell();
 					cellN5.CellReference = $"N{i}";
 					cellN5.DataType = CellValues.String;
-					cellN5.CellValue = new CellValue(score9.ToString());
+					cellN5.CellValue = new CellValue($"{score9}");
 					row5.Append(cellN5);
 
                     score10 = sumExcel.GetSumO(user.Id, 1);
                     Cell cellO5 = new Cell();
 					cellO5.CellReference = $"O{i}";
 					cellO5.DataType = CellValues.String;
-					cellO5.CellValue = new CellValue(score10.ToString());
+					cellO5.CellValue = new CellValue($"{score10}");
 					row5.Append(cellO5);
 
-                    var score = await scoresController.GetScoreByDetail(user.Id, 3, year);
-
-                    Cell cellQ5 = new Cell()
+                    var score = scoresController.GetScoreByDetail(user.Id, 3, year);
+                    if (score == null)
                     {
-                        CellReference = $"Q{i}",
-                        DataType = CellValues.Number,
-                        CellValue = new CellValue(score.FinalScore.ToString())
-                    };
+                        score = scoresController.GetScoreByDetail(user.Id, 2, year);
+                        if (score == null)
+                            score = scoresController.GetScoreByDetail(user.Id, 1, year);
+                    }
+                    
+                    Cell cellQ5 = new Cell();
+                    cellQ5.CellReference = $"Q{i}";
+                    cellQ5.DataType = CellValues.String;
+                    if (score == null)
+                    {
+                        cellQ5.CellValue = new CellValue($"{0}");
+                    }
+                    else
+                    {
+                        cellQ5.CellValue = new CellValue($"{score.FinalScore}");
+                    }
                     row5.Append(cellQ5);
 				}
-				else if (int.TryParse(id, out int idValue13) && idValue13 == 14)
+				else if (sheetId == 14)
                 {
-                    score11 = sumExcel.GetSumE(user.Id, 2);
+                    score11 = await sumExcel.GetSumE(user.Id, 2);
                     Cell cellE5 = new Cell();
                     cellE5.CellReference = $"E{i}";
-                    cellE5.DataType = CellValues.Number;
-                    cellE5.CellValue = new CellValue(score11.ToString());
+                    cellE5.DataType = CellValues.String;
+                    cellE5.CellValue = new CellValue($"{score11}");
                     row5.Append(cellE5);
 
                     score12 = sumExcel.GetSumF(user.Id, 2);
                     Cell cellF5 = new Cell();
                     cellF5.CellReference = $"F{i}";
-                    cellF5.DataType = CellValues.Number;
-                    cellF5.CellValue = new CellValue(score12.ToString());
+                    cellF5.DataType = CellValues.String;
+                    cellF5.CellValue = new CellValue($"{score12}");
                     row5.Append(cellF5);
 
                     score13 = sumExcel.GetSumG(user.Id, 2);
                     Cell cellG5 = new Cell();
                     cellG5.CellReference = $"G{i}";
-                    cellG5.DataType = CellValues.Number;
-                    cellG5.CellValue = new CellValue(score13.ToString());
+                    cellG5.DataType = CellValues.String;
+                    cellG5.CellValue = new CellValue($"{score13}");
                     row5.Append(cellG5);
 
                     score14 = sumExcel.GetSumI(user.Id, 2);
                     Cell cellI5 = new Cell();
                     cellI5.CellReference = $"I{i}";
-                    cellI5.DataType = CellValues.Number;
-                    cellI5.CellValue = new CellValue(score14.ToString());
+                    cellI5.DataType = CellValues.String;
+                    cellI5.CellValue = new CellValue($"{score14}");
                     row5.Append(cellI5);
 
                     score15 = sumExcel.GetSumJ(user.Id, 2);
                     Cell cellJ5 = new Cell();
                     cellJ5.CellReference = $"J{i}";
-                    cellJ5.DataType = CellValues.Number;
-                    cellJ5.CellValue = new CellValue(score15.ToString());
+                    cellJ5.DataType = CellValues.String;
+                    cellJ5.CellValue = new CellValue($"{score15}");
                     row5.Append(cellJ5);
 
                     score16 = sumExcel.GetSumK(user.Id, 2);
                     Cell cellK5 = new Cell();
                     cellK5.CellReference = $"K{i}";
-                    cellK5.DataType = CellValues.Number;
-                    cellK5.CellValue = new CellValue(score16.ToString());
+                    cellK5.DataType = CellValues.String;
+                    cellK5.CellValue = new CellValue($"{score16}");
                     row5.Append(cellK5);
 
                     score17 = sumExcel.GetSumL(user.Id, 2);
                     Cell cellL5 = new Cell();
                     cellL5.CellReference = $"L{i}";
-                    cellL5.DataType = CellValues.Number;
-                    cellL5.CellValue = new CellValue(score17.ToString());
+                    cellL5.DataType = CellValues.String;
+                    cellL5.CellValue = new CellValue($"{score17}");
                     row5.Append(cellL5);
 
                     score18 = sumExcel.GetSumM(user.Id, 2);
                     Cell cellM5 = new Cell();
                     cellM5.CellReference = $"M{i}";
-                    cellM5.DataType = CellValues.Number;
-                    cellM5.CellValue = new CellValue(score18.ToString());
+                    cellM5.DataType = CellValues.String;
+                    cellM5.CellValue = new CellValue($"{score18}");
                     row5.Append(cellM5);
 
                     score19 = sumExcel.GetSumN(user.Id, 2);
                     Cell cellN5 = new Cell();
                     cellN5.CellReference = $"N{i}";
                     cellN5.DataType = CellValues.String;
-                    cellN5.CellValue = new CellValue(score19.ToString());
+                    cellN5.CellValue = new CellValue($"{score19}");
                     row5.Append(cellN5);
 
                     score20 = sumExcel.GetSumO(user.Id, 2);
                     Cell cellO5 = new Cell();
                     cellO5.CellReference = $"O{i}";
                     cellO5.DataType = CellValues.String;
-                    cellO5.CellValue = new CellValue(score20.ToString());
+                    cellO5.CellValue = new CellValue($"{score20}");
                     row5.Append(cellO5);
 
-                    var score = await scoresController.GetScoreByDetail(user.Id, 6, year);
-
-                    Cell cellQ5 = new Cell()
+                    var score = scoresController.GetScoreByDetail(user.Id, 6, year);
+                    if (score == null)
                     {
-                        CellReference = $"Q{i}",
-                        DataType = CellValues.Number,
-                        CellValue = new CellValue(score.FinalScore.ToString())
-                    };
+                        score = scoresController.GetScoreByDetail(user.Id, 5, year);
+                        if (score == null)
+                        {
+                            score = scoresController.GetScoreByDetail(user.Id, 4, year);
+                            if(score == null)
+                            {
+                                score = scoresController.GetScoreByDetail(user.Id, 3, year);
+                                if (score == null)
+                                {
+                                    score = scoresController.GetScoreByDetail(user.Id, 2, year);
+                                    if (score == null)
+                                        score = scoresController.GetScoreByDetail(user.Id, 1, year);
+                                }
+                            }
+                             
+                        }
+                    }
+
+                    Cell cellQ5 = new Cell();
+                    cellQ5.CellReference = $"Q{i}";
+                    cellQ5.DataType = CellValues.String;
+                    if (score == null)
+                    {
+                        cellQ5.CellValue = new CellValue($"{0}");
+                    }
+                    else
+                    {
+                        cellQ5.CellValue = new CellValue($"{score.FinalScore}");
+                    }
                     row5.Append(cellQ5);
                 }
-				else if (int.TryParse(id, out int idValue14) && idValue14 == 15)
+				else if (sheetId == 15)
                 {
-                    score21 = sumExcel.GetSumE(user.Id, 3);
+                    score21 =  await sumExcel.GetSumE(user.Id, 3);
                     Cell cellE5 = new Cell();
                     cellE5.CellReference = $"E{i}";
-                    cellE5.DataType = CellValues.Number;
-                    cellE5.CellValue = new CellValue(score21.ToString());
+                    cellE5.DataType = CellValues.String;
+                    cellE5.CellValue = new CellValue($"{score21}");
                     row5.Append(cellE5);
 
                     score22 = sumExcel.GetSumF(user.Id, 3);
                     Cell cellF5 = new Cell();
                     cellF5.CellReference = $"F{i}";
-                    cellF5.DataType = CellValues.Number;
-                    cellF5.CellValue = new CellValue(score22.ToString());
+                    cellF5.DataType = CellValues.String;
+                    cellF5.CellValue = new CellValue($"{score22}");
                     row5.Append(cellF5);
 
                     score23 = sumExcel.GetSumG(user.Id, 3);
                     Cell cellG5 = new Cell();
                     cellG5.CellReference = $"G{i}";
-                    cellG5.DataType = CellValues.Number;
-                    cellG5.CellValue = new CellValue(score23.ToString());
+                    cellG5.DataType = CellValues.String;
+                    cellG5.CellValue = new CellValue($"{score23}");
                     row5.Append(cellG5);
 
                     score24 = sumExcel.GetSumI(user.Id, 3);
                     Cell cellI5 = new Cell();
                     cellI5.CellReference = $"I{i}";
-                    cellI5.DataType = CellValues.Number;
-                    cellI5.CellValue = new CellValue(score24.ToString());
+                    cellI5.DataType = CellValues.String;
+                    cellI5.CellValue = new CellValue($"{score24}");
                     row5.Append(cellI5);
 
                     score25 = sumExcel.GetSumJ(user.Id, 3);
                     Cell cellJ5 = new Cell();
                     cellJ5.CellReference = $"J{i}";
-                    cellJ5.DataType = CellValues.Number;
-                    cellJ5.CellValue = new CellValue(score25.ToString());
+                    cellJ5.DataType = CellValues.String;
+                    cellJ5.CellValue = new CellValue($"{score25}");
                     row5.Append(cellJ5);
 
                     score26 = sumExcel.GetSumK(user.Id, 3);
                     Cell cellK5 = new Cell();
                     cellK5.CellReference = $"K{i}";
-                    cellK5.DataType = CellValues.Number;
-                    cellK5.CellValue = new CellValue(score26.ToString());
+                    cellK5.DataType = CellValues.String;
+                    cellK5.CellValue = new CellValue($"{score26}");
                     row5.Append(cellK5);
 
                     score27 = sumExcel.GetSumL(user.Id, 3);
                     Cell cellL5 = new Cell();
                     cellL5.CellReference = $"L{i}";
-                    cellL5.DataType = CellValues.Number;
-                    cellL5.CellValue = new CellValue(score27.ToString());
+                    cellL5.DataType = CellValues.String;
+                    cellL5.CellValue = new CellValue($"{score27}");
                     row5.Append(cellL5);
 
                     score28 = sumExcel.GetSumM(user.Id, 3);
                     Cell cellM5 = new Cell();
                     cellM5.CellReference = $"M{i}";
-                    cellM5.DataType = CellValues.Number;
-                    cellM5.CellValue = new CellValue(score28.ToString());
+                    cellM5.DataType = CellValues.String;
+                    cellM5.CellValue = new CellValue($"{score28}");
                     row5.Append(cellM5);
 
                     score29 = sumExcel.GetSumN(user.Id, 3);
                     Cell cellN5 = new Cell();
                     cellN5.CellReference = $"N{i}";
                     cellN5.DataType = CellValues.String;
-                    cellN5.CellValue = new CellValue(score29.ToString());
+                    cellN5.CellValue = new CellValue($"{score29}");
                     row5.Append(cellN5);
 
                     score30 = sumExcel.GetSumO(user.Id, 3);
                     Cell cellO5 = new Cell();
                     cellO5.CellReference = $"O{i}";
                     cellO5.DataType = CellValues.String;
-                    cellO5.CellValue = new CellValue(score30.ToString());
+                    cellO5.CellValue = new CellValue($"{score30}");
                     row5.Append(cellO5);
 
-                    var score = await scoresController.GetScoreByDetail(user.Id, 9, year);
-
-                    Cell cellQ5 = new Cell()
+                    var score = scoresController.GetScoreByDetail(user.Id, 9, year);
+                    if (score == null)
                     {
-                        CellReference = $"Q{i}",
-                        DataType = CellValues.Number,
-                        CellValue = new CellValue(score.FinalScore.ToString())
-                    };
+                        score = scoresController.GetScoreByDetail(user.Id, 8, year);
+                        if (score == null)
+                        {
+                            score = scoresController.GetScoreByDetail(user.Id, 7, year);
+                            if(score == null) {
+                                score = scoresController.GetScoreByDetail(user.Id, 6, year);
+                                if (score == null)
+                                {
+                                    score = scoresController.GetScoreByDetail(user.Id, 5, year);
+                                    if (score == null)
+                                    {
+                                        score = scoresController.GetScoreByDetail(user.Id, 4, year);
+                                        if (score == null)
+                                        {
+                                            score = scoresController.GetScoreByDetail(user.Id, 3, year);
+                                            if (score == null)
+                                            {
+                                                score = scoresController.GetScoreByDetail(user.Id, 2, year);
+                                                if (score == null)
+                                                    score = scoresController.GetScoreByDetail(user.Id, 1, year);
+                                            }
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    Cell cellQ5 = new Cell();
+                    cellQ5.CellReference = $"Q{i}";
+                    cellQ5.DataType = CellValues.String;
+                    if (score == null)
+                    {
+                        cellQ5.CellValue = new CellValue($"{0}");
+                    }
+                    else
+                    {
+                        cellQ5.CellValue = new CellValue($"{score.FinalScore}");
+                    }
                     row5.Append(cellQ5);
                 }
-				else if (int.TryParse(id, out int idValue15) && idValue15 == 16)
+				else if (sheetId == 16)
                 {
-                    score31 = sumExcel.GetSumE(user.Id, 4);
+                    score31 = await sumExcel.GetSumE(user.Id, 4);
                     Cell cellE5 = new Cell();
                     cellE5.CellReference = $"E{i}";
-                    cellE5.DataType = CellValues.Number;
-                    cellE5.CellValue = new CellValue(score31.ToString());
+                    cellE5.DataType = CellValues.String;
+                    cellE5.CellValue = new CellValue($"{score31}");
                     row5.Append(cellE5);
 
                     score32 = sumExcel.GetSumF(user.Id, 4);
                     Cell cellF5 = new Cell();
                     cellF5.CellReference = $"F{i}";
-                    cellF5.DataType = CellValues.Number;
-                    cellF5.CellValue = new CellValue(score32.ToString());
+                    cellF5.DataType = CellValues.String;
+                    cellF5.CellValue = new CellValue($"{score32}");
                     row5.Append(cellF5);
 
                     score33 = sumExcel.GetSumG(user.Id, 4);
                     Cell cellG5 = new Cell();
                     cellG5.CellReference = $"G{i}";
-                    cellG5.DataType = CellValues.Number;
-                    cellG5.CellValue = new CellValue(score33.ToString());
+                    cellG5.DataType = CellValues.String;
+                    cellG5.CellValue = new CellValue($"{score33}");
                     row5.Append(cellG5);
 
                     score34 = sumExcel.GetSumI(user.Id, 4);
                     Cell cellI5 = new Cell();
                     cellI5.CellReference = $"I{i}";
-                    cellI5.DataType = CellValues.Number;
-                    cellI5.CellValue = new CellValue(score34.ToString());
+                    cellI5.DataType = CellValues.String;
+                    cellI5.CellValue = new CellValue($"{score34}");
                     row5.Append(cellI5);
 
                     score35 = sumExcel.GetSumJ(user.Id, 4);
                     Cell cellJ5 = new Cell();
                     cellJ5.CellReference = $"J{i}";
-                    cellJ5.DataType = CellValues.Number;
-                    cellJ5.CellValue = new CellValue(score35.ToString());
+                    cellJ5.DataType = CellValues.String;
+                    cellJ5.CellValue = new CellValue($"{score35}");
                     row5.Append(cellJ5);
 
                     score36 = sumExcel.GetSumK(user.Id, 4);
                     Cell cellK5 = new Cell();
                     cellK5.CellReference = $"K{i}";
-                    cellK5.DataType = CellValues.Number;
-                    cellK5.CellValue = new CellValue(score36.ToString());
+                    cellK5.DataType = CellValues.String;
+                    cellK5.CellValue = new CellValue($"{score36}");
                     row5.Append(cellK5);
 
                     score37 = sumExcel.GetSumL(user.Id, 4);
                     Cell cellL5 = new Cell();
                     cellL5.CellReference = $"L{i}";
-                    cellL5.DataType = CellValues.Number;
-                    cellL5.CellValue = new CellValue(score37.ToString());
+                    cellL5.DataType = CellValues.String;
+                    cellL5.CellValue = new CellValue($"{score37}");
                     row5.Append(cellL5);
 
                     score38 = sumExcel.GetSumM(user.Id, 4);
                     Cell cellM5 = new Cell();
                     cellM5.CellReference = $"M{i}";
-                    cellM5.DataType = CellValues.Number;
-                    cellM5.CellValue = new CellValue(score38.ToString());
+                    cellM5.DataType = CellValues.String;
+                    cellM5.CellValue = new CellValue($"{score38}");
                     row5.Append(cellM5);
 
                     score39 = sumExcel.GetSumN(user.Id, 4);
                     Cell cellN5 = new Cell();
                     cellN5.CellReference = $"N{i}";
                     cellN5.DataType = CellValues.String;
-                    cellN5.CellValue = new CellValue(score39.ToString());
+                    cellN5.CellValue = new CellValue($"{score39}");
                     row5.Append(cellN5);
 
                     score40 = sumExcel.GetSumO(user.Id, 4);
                     Cell cellO5 = new Cell();
                     cellO5.CellReference = $"O{i}";
                     cellO5.DataType = CellValues.String;
-                    cellO5.CellValue = new CellValue(score40.ToString());
+                    cellO5.CellValue = new CellValue($"{score40}");
                     row5.Append(cellO5);
 
-                    var score = await scoresController.GetScoreByDetail(user.Id, 12, year);
-
-                    Cell cellQ5 = new Cell()
+                    var score = scoresController.GetScoreByDetail(user.Id, 12, year);
+                    if (score == null)
                     {
-                        CellReference = $"Q{i}",
-                        DataType = CellValues.Number,
-                        CellValue = new CellValue(score.FinalScore.ToString())
-                    };
+                        score = scoresController.GetScoreByDetail(user.Id, 11, year);
+                        if (score == null)
+                        {
+                            score = scoresController.GetScoreByDetail(user.Id, 10, year);
+                            if(score == null)
+                            {
+                                score = scoresController.GetScoreByDetail(user.Id, 9, year);
+                                if (score == null)
+                                {
+                                    score = scoresController.GetScoreByDetail(user.Id, 8, year);
+                                    if (score == null)
+                                    {
+                                        score = scoresController.GetScoreByDetail(user.Id, 7, year);
+                                        if (score == null)
+                                        {
+                                            score = scoresController.GetScoreByDetail(user.Id, 6, year);
+                                            if (score == null)
+                                            {
+                                                score = scoresController.GetScoreByDetail(user.Id, 5, year);
+                                                if (score == null)
+                                                {
+                                                    score = scoresController.GetScoreByDetail(user.Id, 4, year);
+                                                    if (score == null)
+                                                    {
+                                                        score = scoresController.GetScoreByDetail(user.Id, 3, year);
+                                                        if (score == null)
+                                                        {
+                                                            score = scoresController.GetScoreByDetail(user.Id, 2, year);
+                                                            if (score == null)
+                                                                score = scoresController.GetScoreByDetail(user.Id, 1, year);
+                                                        }
+                                                    }
+
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    Cell cellQ5 = new Cell();
+                    cellQ5.CellReference = $"Q{i}";
+                    cellQ5.DataType = CellValues.String;
+                    if (score == null)
+                    {
+                        cellQ5.CellValue = new CellValue($"{0}");
+                    }
+                    else
+                    {
+                        cellQ5.CellValue = new CellValue($"{score.FinalScore}");
+                    }
                     row5.Append(cellQ5);
                 }
-				else if (int.TryParse(id, out int idValue16) && idValue16 == 17)
+				else if (sheetId == 17)
 				{
                     int sc = score1 + score11 + score21 + score31;
 					Cell cellE5 = new Cell();
 					cellE5.CellReference = $"E{i}";
-					cellE5.DataType = CellValues.Number;
-					cellE5.CellValue = new CellValue(sc.ToString());
+					cellE5.DataType = CellValues.String;
+					cellE5.CellValue = new CellValue($"{sc}");
 					row5.Append(cellE5);
 
 
@@ -762,7 +887,7 @@ namespace SerGaz.SendTable.Header
                     Cell cellF5 = new Cell();
 					cellF5.CellReference = $"F{i}";
 					cellF5.DataType = CellValues.String;
-					cellF5.CellValue = new CellValue(sc1.ToString());
+					cellF5.CellValue = new CellValue($"{sc1}");
 					row5.Append(cellF5);
 
 
@@ -770,7 +895,7 @@ namespace SerGaz.SendTable.Header
                     Cell cellG5 = new Cell();
 					cellG5.CellReference = $"G{i}";
 					cellG5.DataType = CellValues.String;
-					cellG5.CellValue = new CellValue(sc2.ToString());
+					cellG5.CellValue = new CellValue($"{sc2}");
 					row5.Append(cellG5);
 
 
@@ -778,7 +903,7 @@ namespace SerGaz.SendTable.Header
                     Cell cellI5 = new Cell();
 					cellI5.CellReference = $"I{i}";
 					cellI5.DataType = CellValues.String;
-					cellI5.CellValue = new CellValue(sc3.ToString());
+					cellI5.CellValue = new CellValue($"{sc3}");
 					row5.Append(cellI5);
 
 
@@ -786,7 +911,7 @@ namespace SerGaz.SendTable.Header
                     Cell cellJ5 = new Cell();
 					cellJ5.CellReference = $"J{i}";
 					cellJ5.DataType = CellValues.String;
-					cellJ5.CellValue = new CellValue(sc4.ToString());
+					cellJ5.CellValue = new CellValue($"{sc4}");
 					row5.Append(cellJ5);
 
 
@@ -794,7 +919,7 @@ namespace SerGaz.SendTable.Header
                     Cell cellK5 = new Cell();
 					cellK5.CellReference = $"K{i}";
 					cellK5.DataType = CellValues.String;
-					cellK5.CellValue = new CellValue(sc5.ToString());
+					cellK5.CellValue = new CellValue($"{sc5}");
 					row5.Append(cellK5);
 
 
@@ -802,7 +927,7 @@ namespace SerGaz.SendTable.Header
                     Cell cellL5 = new Cell();
 					cellL5.CellReference = $"L{i}";
 					cellL5.DataType = CellValues.String;
-					cellL5.CellValue = new CellValue(sc6.ToString());
+					cellL5.CellValue = new CellValue($"{sc6}");
 					row5.Append(cellL5);
 
 
@@ -810,7 +935,7 @@ namespace SerGaz.SendTable.Header
                     Cell cellM5 = new Cell();
 					cellM5.CellReference = $"M{i}";
 					cellM5.DataType = CellValues.String;
-					cellM5.CellValue = new CellValue(sc7.ToString());
+					cellM5.CellValue = new CellValue($"{sc7}");
 					row5.Append(cellM5);
 
 
@@ -818,7 +943,7 @@ namespace SerGaz.SendTable.Header
                     Cell cellN5 = new Cell();
 					cellN5.CellReference = $"N{i}";
 					cellN5.DataType = CellValues.String;
-					cellN5.CellValue = new CellValue(sc8.ToString());
+					cellN5.CellValue = new CellValue($"{sc8}");
 					row5.Append(cellN5);
 
 
@@ -826,29 +951,74 @@ namespace SerGaz.SendTable.Header
                     Cell cellO5 = new Cell();
 					cellO5.CellReference = $"O{i}";
 					cellO5.DataType = CellValues.String;
-					cellO5.CellValue = new CellValue(sc9.ToString());
+					cellO5.CellValue = new CellValue($"{sc9}");
 					row5.Append(cellO5);
 
-                    var score = await scoresController.GetScoreByDetail(user.Id, 12, year);
-
-                    Cell cellQ5 = new Cell()
+                    var score = scoresController.GetScoreByDetail(user.Id, 12, year);
+                    if (score == null)
                     {
-                        CellReference = $"Q{i}",
-                        DataType = CellValues.Number,
-                        CellValue = new CellValue(score.FinalScore.ToString())
-                    };
+                        score = scoresController.GetScoreByDetail(user.Id, 11, year);
+                        if (score == null)
+                        {
+                            score = scoresController.GetScoreByDetail(user.Id, 10, year);
+                            if (score == null)
+                            {
+                                score = scoresController.GetScoreByDetail(user.Id, 9, year);
+                                if (score == null)
+                                {
+                                    score = scoresController.GetScoreByDetail(user.Id, 8, year);
+                                    if (score == null)
+                                    {
+                                        score = scoresController.GetScoreByDetail(user.Id, 7, year);
+                                        if (score == null)
+                                        {
+                                            score = scoresController.GetScoreByDetail(user.Id, 6, year);
+                                            if (score == null)
+                                            {
+                                                score = scoresController.GetScoreByDetail(user.Id, 5, year);
+                                                if (score == null)
+                                                {
+                                                    score = scoresController.GetScoreByDetail(user.Id, 4, year);
+                                                    if (score == null)
+                                                    {
+                                                        score = scoresController.GetScoreByDetail(user.Id, 3, year);
+                                                        if (score == null)
+                                                        {
+                                                            score = scoresController.GetScoreByDetail(user.Id, 2, year);
+                                                            if (score == null)
+                                                                score = scoresController.GetScoreByDetail(user.Id, 1, year);
+                                                        }
+                                                    }
+
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+                    Cell cellQ5 = new Cell();
+                    cellQ5.CellReference = $"Q{i}";
+                    cellQ5.DataType = CellValues.String;
+                    if (score == null)
+                    {
+                        cellQ5.CellValue = new CellValue($"{0}");
+                    }
+                    else
+                    {
+                        cellQ5.CellValue = new CellValue($"{score.FinalScore}");
+                    }
                     row5.Append(cellQ5);
-				}
+                }
 
 
 				sheetData.Append(row5);
 				i ++;
 			}
 
-			sheetData.Append(row);
-            sheetData.Append(row2);
-            sheetData.Append(row3);
-            sheetData.Append(row4);
 
 			foreach (User us in users)
 			{
@@ -861,341 +1031,459 @@ namespace SerGaz.SendTable.Header
 				dataRow.Append(dataCell2);
 
 
-				if (int.TryParse(id, out int idValue12) && idValue12 == 13)
+                if (sheetId == 13)
                 {
-                    score1 = sumExcel.GetSumE(us.Id, 1);
+                    score1 = await sumExcel.GetSumE(us.Id, 1);
                     Cell cellE5 = new Cell();
                     cellE5.CellReference = $"E{i}";
-                    cellE5.DataType = CellValues.Number;
-                    cellE5.CellValue = new CellValue(score1.ToString());
+                    cellE5.DataType = CellValues.String;
+                    cellE5.CellValue = new CellValue($"{score1}");
                     dataRow.Append(cellE5);
 
                     score2 = sumExcel.GetSumF(us.Id, 1);
                     Cell cellF5 = new Cell();
                     cellF5.CellReference = $"F{i}";
-                    cellF5.DataType = CellValues.Number;
-                    cellF5.CellValue = new CellValue(score2.ToString());
+                    cellF5.DataType = CellValues.String;
+                    cellF5.CellValue = new CellValue($"{score2}");
                     dataRow.Append(cellF5);
 
                     score3 = sumExcel.GetSumG(us.Id, 1);
                     Cell cellG5 = new Cell();
                     cellG5.CellReference = $"G{i}";
-                    cellG5.DataType = CellValues.Number;
-                    cellG5.CellValue = new CellValue(score3.ToString());
+                    cellG5.DataType = CellValues.String;
+                    cellG5.CellValue = new CellValue($"{score3}");
                     dataRow.Append(cellG5);
 
                     score4 = sumExcel.GetSumI(us.Id, 1);
                     Cell cellI5 = new Cell();
                     cellI5.CellReference = $"I{i}";
-                    cellI5.DataType = CellValues.Number;
-                    cellI5.CellValue = new CellValue(score4.ToString());
+                    cellI5.DataType = CellValues.String;
+                    cellI5.CellValue = new CellValue($"{score4}");
                     dataRow.Append(cellI5);
 
                     score5 = sumExcel.GetSumJ(us.Id, 1);
                     Cell cellJ5 = new Cell();
                     cellJ5.CellReference = $"J{i}";
-                    cellJ5.DataType = CellValues.Number;
-                    cellJ5.CellValue = new CellValue(score5.ToString());
+                    cellJ5.DataType = CellValues.String;
+                    cellJ5.CellValue = new CellValue($"{score5}");
                     dataRow.Append(cellJ5);
 
                     score6 = sumExcel.GetSumK(us.Id, 1);
                     Cell cellK5 = new Cell();
                     cellK5.CellReference = $"K{i}";
-                    cellK5.DataType = CellValues.Number;
-                    cellK5.CellValue = new CellValue(score6.ToString());
+                    cellK5.DataType = CellValues.String;
+                    cellK5.CellValue = new CellValue($"{score6}");
                     dataRow.Append(cellK5);
 
                     score7 = sumExcel.GetSumL(us.Id, 1);
                     Cell cellL5 = new Cell();
                     cellL5.CellReference = $"L{i}";
-                    cellL5.DataType = CellValues.Number;
-                    cellL5.CellValue = new CellValue(score7.ToString());
+                    cellL5.DataType = CellValues.String;
+                    cellL5.CellValue = new CellValue($"{score7}");
                     dataRow.Append(cellL5);
 
                     score8 = sumExcel.GetSumM(us.Id, 1);
                     Cell cellM5 = new Cell();
                     cellM5.CellReference = $"M{i}";
-                    cellM5.DataType = CellValues.Number;
-                    cellM5.CellValue = new CellValue(score8.ToString());
+                    cellM5.DataType = CellValues.String;
+                    cellM5.CellValue = new CellValue($"{score8}");
                     dataRow.Append(cellM5);
 
                     score9 = sumExcel.GetSumN(us.Id, 1);
                     Cell cellN5 = new Cell();
                     cellN5.CellReference = $"N{i}";
                     cellN5.DataType = CellValues.String;
-                    cellN5.CellValue = new CellValue(score9.ToString());
+                    cellN5.CellValue = new CellValue($"{score9}");
                     dataRow.Append(cellN5);
 
                     score10 = sumExcel.GetSumO(us.Id, 1);
                     Cell cellO5 = new Cell();
                     cellO5.CellReference = $"O{i}";
                     cellO5.DataType = CellValues.String;
-                    cellO5.CellValue = new CellValue(score10.ToString());
+                    cellO5.CellValue = new CellValue($"{score10}");
                     dataRow.Append(cellO5);
 
-                    var score = await scoresController.GetScoreByDetail(us.Id, 3, year);
-
-                    Cell cellQ5 = new Cell()
+                    var score = scoresController.GetScoreByDetail(user.Id, 3, year);
+                    if (score == null)
                     {
-                        CellReference = $"Q{i}",
-                        DataType = CellValues.Number,
-                        CellValue = new CellValue(score.FinalScore.ToString())
-                    };
+                        score = scoresController.GetScoreByDetail(user.Id, 2, year);
+                        if (score == null)
+                            score = scoresController.GetScoreByDetail(user.Id, 1, year);
+                    }
+
+                    Cell cellQ5 = new Cell();
+                    cellQ5.CellReference = $"Q{i}";
+                    cellQ5.DataType = CellValues.String;
+                    if (score == null)
+                    {
+                        cellQ5.CellValue = new CellValue($"{0}");
+                    }
+                    else
+                    {
+                        cellQ5.CellValue = new CellValue($"{score.FinalScore}");
+                    }
                     dataRow.Append(cellQ5);
                 }
-				else if (int.TryParse(id, out int idValue13) && idValue13 == 14)
+				else if (sheetId == 14)
                 {
-                    score11 = sumExcel.GetSumE(us.Id, 2);
+                    score11 = await sumExcel.GetSumE(us.Id, 2);
                     Cell cellE5 = new Cell();
                     cellE5.CellReference = $"E{i}";
-                    cellE5.DataType = CellValues.Number;
-                    cellE5.CellValue = new CellValue(score11.ToString());
+                    cellE5.DataType = CellValues.String;
+                    cellE5.CellValue = new CellValue($"{score11}");
                     dataRow.Append(cellE5);
 
                     score12 = sumExcel.GetSumF(us.Id, 2);
                     Cell cellF5 = new Cell();
                     cellF5.CellReference = $"F{i}";
-                    cellF5.DataType = CellValues.Number;
-                    cellF5.CellValue = new CellValue(score12.ToString());
+                    cellF5.DataType = CellValues.String;
+                    cellF5.CellValue = new CellValue($"{score12}");
                     dataRow.Append(cellF5);
 
                     score13 = sumExcel.GetSumG(us.Id, 2);
                     Cell cellG5 = new Cell();
                     cellG5.CellReference = $"G{i}";
-                    cellG5.DataType = CellValues.Number;
-                    cellG5.CellValue = new CellValue(score13.ToString());
+                    cellG5.DataType = CellValues.String;
+                    cellG5.CellValue = new CellValue($"{score13}");
                     dataRow.Append(cellG5);
 
                     score14 = sumExcel.GetSumI(us.Id, 2);
                     Cell cellI5 = new Cell();
                     cellI5.CellReference = $"I{i}";
-                    cellI5.DataType = CellValues.Number;
-                    cellI5.CellValue = new CellValue(score14.ToString());
+                    cellI5.DataType = CellValues.String;
+                    cellI5.CellValue = new CellValue($"{score14}");
                     dataRow.Append(cellI5);
 
                     score15 = sumExcel.GetSumJ(us.Id, 2);
                     Cell cellJ5 = new Cell();
                     cellJ5.CellReference = $"J{i}";
-                    cellJ5.DataType = CellValues.Number;
-                    cellJ5.CellValue = new CellValue(score15.ToString());
+                    cellJ5.DataType = CellValues.String;
+                    cellJ5.CellValue = new CellValue($"{score15}");
                     dataRow.Append(cellJ5);
 
                     score16 = sumExcel.GetSumK(us.Id, 2);
                     Cell cellK5 = new Cell();
                     cellK5.CellReference = $"K{i}";
-                    cellK5.DataType = CellValues.Number;
-                    cellK5.CellValue = new CellValue(score16.ToString());
+                    cellK5.DataType = CellValues.String;
+                    cellK5.CellValue = new CellValue($"{score16}");
                     dataRow.Append(cellK5);
 
                     score17 = sumExcel.GetSumL(us.Id, 2);
                     Cell cellL5 = new Cell();
                     cellL5.CellReference = $"L{i}";
                     cellL5.DataType = CellValues.Number;
-                    cellL5.CellValue = new CellValue(score17.ToString());
+                    cellL5.CellValue = new CellValue($"{score17}");
                     dataRow.Append(cellL5);
 
                     score18 = sumExcel.GetSumM(us.Id, 2);
                     Cell cellM5 = new Cell();
                     cellM5.CellReference = $"M{i}";
-                    cellM5.DataType = CellValues.Number;
-                    cellM5.CellValue = new CellValue(score18.ToString());
+                    cellM5.DataType = CellValues.String;
+                    cellM5.CellValue = new CellValue($"{score18}");
                     dataRow.Append(cellM5);
 
                     score19 = sumExcel.GetSumN(us.Id, 2);
                     Cell cellN5 = new Cell();
                     cellN5.CellReference = $"N{i}";
                     cellN5.DataType = CellValues.String;
-                    cellN5.CellValue = new CellValue(score19.ToString());
+                    cellN5.CellValue = new CellValue($"{score19}");
                     dataRow.Append(cellN5);
 
                     score20 = sumExcel.GetSumO(us.Id, 2);
                     Cell cellO5 = new Cell();
                     cellO5.CellReference = $"O{i}";
                     cellO5.DataType = CellValues.String;
-                    cellO5.CellValue = new CellValue(score20.ToString());
+                    cellO5.CellValue = new CellValue($"{score20}");
                     dataRow.Append(cellO5);
 
-                    var score = await scoresController.GetScoreByDetail(us.Id, 6, year);
-
-                    Cell cellQ5 = new Cell()
+                    var score = scoresController.GetScoreByDetail(us.Id, 6, year);
+                    if(score == null)
                     {
-                        CellReference = $"Q{i}",
-                        DataType = CellValues.Number,
-                        CellValue = new CellValue(score.FinalScore.ToString())
-                    };
+                        score = scoresController.GetScoreByDetail(us.Id, 5, year);
+                        if(score == null)
+                        {
+                            score = scoresController.GetScoreByDetail(us.Id, 4, year);
+                            if(score == null)
+                            {
+                                score = scoresController.GetScoreByDetail(user.Id, 3, year);
+                                if (score == null)
+                                {
+                                    score = scoresController.GetScoreByDetail(user.Id, 2, year);
+                                    if (score == null)
+                                        score = scoresController.GetScoreByDetail(user.Id, 1, year);
+                                }
+                            }
+                        }
+                    }
+
+                    Cell cellQ5 = new Cell();
+                    cellQ5.CellReference = $"Q{i}";
+                    cellQ5.DataType = CellValues.String;
+                    if (score == null)
+                    {
+                        cellQ5.CellValue = new CellValue($"{0}");
+                    }
+                    else
+                    {
+                        cellQ5.CellValue = new CellValue($"{score.FinalScore}");
+                    }
                     dataRow.Append(cellQ5);
                 }
-				else if (int.TryParse(id, out int idValue14) && idValue14 == 15)
+				else if (sheetId == 15)
                 {
-                    score21 = sumExcel.GetSumE(us.Id, 3);
+                    score21 = await sumExcel.GetSumE(us.Id, 3);
                     Cell cellE5 = new Cell();
                     cellE5.CellReference = $"E{i}";
-                    cellE5.DataType = CellValues.Number;
-                    cellE5.CellValue = new CellValue(score21.ToString());
+                    cellE5.DataType = CellValues.String;
+                    cellE5.CellValue = new CellValue($"{score21}");
                     dataRow.Append(cellE5);
 
                     score22 = sumExcel.GetSumF(us.Id, 3);
                     Cell cellF5 = new Cell();
                     cellF5.CellReference = $"F{i}";
-                    cellF5.DataType = CellValues.Number;
-                    cellF5.CellValue = new CellValue(score22.ToString());
+                    cellF5.DataType = CellValues.String;
+                    cellF5.CellValue = new CellValue($"{score22}");
                     dataRow.Append(cellF5);
 
                     score23 = sumExcel.GetSumG(us.Id, 3);
                     Cell cellG5 = new Cell();
                     cellG5.CellReference = $"G{i}";
-                    cellG5.DataType = CellValues.Number;
-                    cellG5.CellValue = new CellValue(score23.ToString());
+                    cellG5.DataType = CellValues.String;
+                    cellG5.CellValue = new CellValue($"{score23}");
                     dataRow.Append(cellG5);
 
                     score24 = sumExcel.GetSumI(us.Id, 3);
                     Cell cellI5 = new Cell();
                     cellI5.CellReference = $"I{i}";
-                    cellI5.DataType = CellValues.Number;
-                    cellI5.CellValue = new CellValue(score24.ToString());
+                    cellI5.DataType = CellValues.String;
+                    cellI5.CellValue = new CellValue($"{score24}");
                     dataRow.Append(cellI5);
 
                     score25 = sumExcel.GetSumJ(us.Id, 3);
                     Cell cellJ5 = new Cell();
                     cellJ5.CellReference = $"J{i}";
-                    cellJ5.DataType = CellValues.Number;
-                    cellJ5.CellValue = new CellValue(score25.ToString());
+                    cellJ5.DataType = CellValues.String;
+                    cellJ5.CellValue = new CellValue($"{score25}");
                     dataRow.Append(cellJ5);
 
                     score26 = sumExcel.GetSumK(us.Id, 3);
                     Cell cellK5 = new Cell();
                     cellK5.CellReference = $"K{i}";
-                    cellK5.DataType = CellValues.Number;
-                    cellK5.CellValue = new CellValue(score26.ToString());
+                    cellK5.DataType = CellValues.String;
+                    cellK5.CellValue = new CellValue($"{score26}");
                     dataRow.Append(cellK5);
 
                     score27 = sumExcel.GetSumL(us.Id, 3);
                     Cell cellL5 = new Cell();
                     cellL5.CellReference = $"L{i}";
-                    cellL5.DataType = CellValues.Number;
-                    cellL5.CellValue = new CellValue(score27.ToString());
+                    cellL5.DataType = CellValues.String;
+                    cellL5.CellValue = new CellValue($"{score27}");
                     dataRow.Append(cellL5);
 
                     score28 = sumExcel.GetSumM(us.Id, 3);
                     Cell cellM5 = new Cell();
                     cellM5.CellReference = $"M{i}";
-                    cellM5.DataType = CellValues.Number;
-                    cellM5.CellValue = new CellValue(score28.ToString());
+                    cellM5.DataType = CellValues.String;
+                    cellM5.CellValue = new CellValue($"{score28}");
                     dataRow.Append(cellM5);
 
                     score29 = sumExcel.GetSumN(us.Id, 3);
                     Cell cellN5 = new Cell();
                     cellN5.CellReference = $"N{i}";
                     cellN5.DataType = CellValues.String;
-                    cellN5.CellValue = new CellValue(score29.ToString());
+                    cellN5.CellValue = new CellValue($"{score29}");
                     dataRow.Append(cellN5);
 
                     score30 = sumExcel.GetSumO(us.Id, 3);
                     Cell cellO5 = new Cell();
                     cellO5.CellReference = $"O{i}";
                     cellO5.DataType = CellValues.String;
-                    cellO5.CellValue = new CellValue(score30.ToString());
+                    cellO5.CellValue = new CellValue($"{score30}");
                     dataRow.Append(cellO5);
 
-                    var score = await scoresController.GetScoreByDetail(us.Id, 9, year);
 
-                    Cell cellQ5 = new Cell()
+                    var score = scoresController.GetScoreByDetail(user.Id, 9, year);
+                    if (score == null)
                     {
-                        CellReference = $"Q{i}",
-                        DataType = CellValues.Number,
-                        CellValue = new CellValue(score.FinalScore.ToString())
-                    };
+                        score = scoresController.GetScoreByDetail(user.Id, 8, year);
+                        if (score == null)
+                        {
+                            score = scoresController.GetScoreByDetail(user.Id, 7, year);
+                            if(score == null)
+                            {
+                                score = scoresController.GetScoreByDetail(us.Id, 6, year);
+                                if (score == null)
+                                {
+                                    score = scoresController.GetScoreByDetail(us.Id, 5, year);
+                                    if (score == null)
+                                    {
+                                        score = scoresController.GetScoreByDetail(us.Id, 4, year);
+                                        if (score == null)
+                                        {
+                                            score = scoresController.GetScoreByDetail(user.Id, 3, year);
+                                            if (score == null)
+                                            {
+                                                score = scoresController.GetScoreByDetail(user.Id, 2, year);
+                                                if (score == null)
+                                                    score = scoresController.GetScoreByDetail(user.Id, 1, year);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    Cell cellQ5 = new Cell();
+                    cellQ5.CellReference = $"Q{i}";
+                    cellQ5.DataType = CellValues.String;
+                    if (score == null)
+                    {
+                        cellQ5.CellValue = new CellValue($"{0}");
+                    }
+                    else
+                    {
+                        cellQ5.CellValue = new CellValue($"{score.FinalScore}");
+                    }
                     dataRow.Append(cellQ5);
                 }
-				else if (int.TryParse(id, out int idValue15) && idValue15 == 16)
+				else if (sheetId == 16)
                 {
-                    score31 = sumExcel.GetSumE(us.Id, 4);
+                    score31 = await sumExcel.GetSumE(us.Id, 4);
                     Cell cellE5 = new Cell();
                     cellE5.CellReference = $"E{i}";
-                    cellE5.DataType = CellValues.Number;
-                    cellE5.CellValue = new CellValue(score31.ToString());
+                    cellE5.DataType = CellValues.String ;
+                    cellE5.CellValue = new CellValue($"{score31}");
                     dataRow.Append(cellE5);
 
                     score32 = sumExcel.GetSumF(us.Id, 4);
                     Cell cellF5 = new Cell();
                     cellF5.CellReference = $"F{i}";
-                    cellF5.DataType = CellValues.Number;
-                    cellF5.CellValue = new CellValue(score32.ToString());
+                    cellF5.DataType = CellValues.String;
+                    cellF5.CellValue = new CellValue($"{score32}");
                     dataRow.Append(cellF5);
 
                     score33 = sumExcel.GetSumG(us.Id, 4);
                     Cell cellG5 = new Cell();
                     cellG5.CellReference = $"G{i}";
-                    cellG5.DataType = CellValues.Number;
-                    cellG5.CellValue = new CellValue(score33.ToString());
+                    cellG5.DataType = CellValues.String;
+                    cellG5.CellValue = new CellValue($"{score33}");
                     dataRow.Append(cellG5);
 
                     score34 = sumExcel.GetSumI(us.Id, 4);
                     Cell cellI5 = new Cell();
                     cellI5.CellReference = $"I{i}";
-                    cellI5.DataType = CellValues.Number;
-                    cellI5.CellValue = new CellValue(score34.ToString());
+                    cellI5.DataType = CellValues.String;
+                    cellI5.CellValue = new CellValue($"{score34}");
                     dataRow.Append(cellI5);
 
                     score35 = sumExcel.GetSumJ(us.Id, 4);
                     Cell cellJ5 = new Cell();
                     cellJ5.CellReference = $"J{i}";
-                    cellJ5.DataType = CellValues.Number;
-                    cellJ5.CellValue = new CellValue(score35.ToString());
+                    cellJ5.DataType = CellValues.String;
+                    cellJ5.CellValue = new CellValue($"{score35}");
                     dataRow.Append(cellJ5);
 
                     score36 = sumExcel.GetSumK(us.Id, 4);
                     Cell cellK5 = new Cell();
                     cellK5.CellReference = $"K{i}";
-                    cellK5.DataType = CellValues.Number;
-                    cellK5.CellValue = new CellValue(score36.ToString());
+                    cellK5.DataType = CellValues.String;
+                    cellK5.CellValue = new CellValue($"{score36}");
                     dataRow.Append(cellK5);
 
                     score37 = sumExcel.GetSumL(us.Id, 4);
                     Cell cellL5 = new Cell();
                     cellL5.CellReference = $"L{i}";
-                    cellL5.DataType = CellValues.Number;
-                    cellL5.CellValue = new CellValue(score37.ToString());
+                    cellL5.DataType = CellValues.String;
+                    cellL5.CellValue = new CellValue($"{score37}");
                     dataRow.Append(cellL5);
 
                     score38 = sumExcel.GetSumM(us.Id, 4);
                     Cell cellM5 = new Cell();
                     cellM5.CellReference = $"M{i}";
-                    cellM5.DataType = CellValues.Number;
-                    cellM5.CellValue = new CellValue(score38.ToString());
+                    cellM5.DataType = CellValues.String;
+                    cellM5.CellValue = new CellValue($"{score38}");
                     dataRow.Append(cellM5);
 
                     score39 = sumExcel.GetSumN(us.Id, 4);
                     Cell cellN5 = new Cell();
                     cellN5.CellReference = $"N{i}";
                     cellN5.DataType = CellValues.String;
-                    cellN5.CellValue = new CellValue(score39.ToString());
+                    cellN5.CellValue = new CellValue($"{score39}");
                     dataRow.Append(cellN5);
 
                     score40 = sumExcel.GetSumO(us.Id, 4);
                     Cell cellO5 = new Cell();
                     cellO5.CellReference = $"O{i}";
                     cellO5.DataType = CellValues.String;
-                    cellO5.CellValue = new CellValue(score40.ToString());
+                    cellO5.CellValue = new CellValue($"{score40}");
                     dataRow.Append(cellO5);
 
-                    var score = await scoresController.GetScoreByDetail(us.Id, 12, year);
 
-                    Cell cellQ5 = new Cell()
+                    var score = scoresController.GetScoreByDetail(user.Id, 12, year);
+                    if (score == null)
                     {
-                        CellReference = $"Q{i}",
-                        DataType = CellValues.Number,
-                        CellValue = new CellValue(score.FinalScore.ToString())
-                    };
+                        score = scoresController.GetScoreByDetail(user.Id, 11, year);
+                        if (score == null)
+                        {
+                            score = scoresController.GetScoreByDetail(user.Id, 10, year);
+                            if(score == null)
+                            {
+                                score = scoresController.GetScoreByDetail(user.Id, 9, year);
+                                if (score == null)
+                                {
+                                    score = scoresController.GetScoreByDetail(user.Id, 8, year);
+                                    if (score == null)
+                                    {
+                                        score = scoresController.GetScoreByDetail(user.Id, 7, year);
+                                        if (score == null)
+                                        {
+                                            score = scoresController.GetScoreByDetail(us.Id, 6, year);
+                                            if (score == null)
+                                            {
+                                                score = scoresController.GetScoreByDetail(us.Id, 5, year);
+                                                if (score == null)
+                                                {
+                                                    score = scoresController.GetScoreByDetail(us.Id, 4, year);
+                                                    if (score == null)
+                                                    {
+                                                        score = scoresController.GetScoreByDetail(user.Id, 3, year);
+                                                        if (score == null)
+                                                        {
+                                                            score = scoresController.GetScoreByDetail(user.Id, 2, year);
+                                                            if (score == null)
+                                                                score = scoresController.GetScoreByDetail(user.Id, 1, year);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    Cell cellQ5 = new Cell();
+                    cellQ5.CellReference = $"Q{i}";
+                    cellQ5.DataType = CellValues.String;
+                    if (score == null)
+                    {
+                        cellQ5.CellValue = new CellValue($"{0}");
+                    }
+                    else
+                    {
+                        cellQ5.CellValue = new CellValue($"{score.FinalScore}");
+                    }
                     dataRow.Append(cellQ5);
                 }
-				else if (int.TryParse(id, out int idValue16) && idValue16 == 17)
+				else if (sheetId == 17)
                 {
                     int sc = score1 + score11 + score21 + score31;
                     Cell cellE5 = new Cell();
                     cellE5.CellReference = $"E{i}";
-                    cellE5.DataType = CellValues.Number;
-                    cellE5.CellValue = new CellValue(sc.ToString());
+                    cellE5.DataType = CellValues.String;
+                    cellE5.CellValue = new CellValue($"{sc}");
                     dataRow.Append(cellE5);
 
 
@@ -1203,7 +1491,7 @@ namespace SerGaz.SendTable.Header
                     Cell cellF5 = new Cell();
                     cellF5.CellReference = $"F{i}";
                     cellF5.DataType = CellValues.String;
-                    cellF5.CellValue = new CellValue(sc1.ToString());
+                    cellF5.CellValue = new CellValue($"{sc1}");
                     dataRow.Append(cellF5);
 
 
@@ -1211,7 +1499,7 @@ namespace SerGaz.SendTable.Header
                     Cell cellG5 = new Cell();
                     cellG5.CellReference = $"G{i}";
                     cellG5.DataType = CellValues.String;
-                    cellG5.CellValue = new CellValue(sc2.ToString());
+                    cellG5.CellValue = new CellValue($"{sc2}");
                     dataRow.Append(cellG5);
 
 
@@ -1219,7 +1507,7 @@ namespace SerGaz.SendTable.Header
                     Cell cellI5 = new Cell();
                     cellI5.CellReference = $"I{i}";
                     cellI5.DataType = CellValues.String;
-                    cellI5.CellValue = new CellValue(sc3.ToString());
+                    cellI5.CellValue = new CellValue($"{sc3}");
                     dataRow.Append(cellI5);
 
 
@@ -1227,7 +1515,7 @@ namespace SerGaz.SendTable.Header
                     Cell cellJ5 = new Cell();
                     cellJ5.CellReference = $"J{i}";
                     cellJ5.DataType = CellValues.String;
-                    cellJ5.CellValue = new CellValue(sc4.ToString());
+                    cellJ5.CellValue = new CellValue($"{sc4}");
                     dataRow.Append(cellJ5);
 
 
@@ -1235,7 +1523,7 @@ namespace SerGaz.SendTable.Header
                     Cell cellK5 = new Cell();
                     cellK5.CellReference = $"K{i}";
                     cellK5.DataType = CellValues.String;
-                    cellK5.CellValue = new CellValue(sc5.ToString());
+                    cellK5.CellValue = new CellValue($"{sc5}");
                     dataRow.Append(cellK5);
 
 
@@ -1243,7 +1531,7 @@ namespace SerGaz.SendTable.Header
                     Cell cellL5 = new Cell();
                     cellL5.CellReference = $"L{i}";
                     cellL5.DataType = CellValues.String;
-                    cellL5.CellValue = new CellValue(sc6.ToString());
+                    cellL5.CellValue = new CellValue($"{sc6}");
                     dataRow.Append(cellL5);
 
 
@@ -1251,7 +1539,7 @@ namespace SerGaz.SendTable.Header
                     Cell cellM5 = new Cell();
                     cellM5.CellReference = $"M{i}";
                     cellM5.DataType = CellValues.String;
-                    cellM5.CellValue = new CellValue(sc7.ToString());
+                    cellM5.CellValue = new CellValue($"{sc7}");
                     dataRow.Append(cellM5);
 
 
@@ -1259,7 +1547,7 @@ namespace SerGaz.SendTable.Header
                     Cell cellN5 = new Cell();
                     cellN5.CellReference = $"N{i}";
                     cellN5.DataType = CellValues.String;
-                    cellN5.CellValue = new CellValue(sc8.ToString());
+                    cellN5.CellValue = new CellValue($"{sc8}");
                     dataRow.Append(cellN5);
 
 
@@ -1267,17 +1555,65 @@ namespace SerGaz.SendTable.Header
                     Cell cellO5 = new Cell();
                     cellO5.CellReference = $"O{i}";
                     cellO5.DataType = CellValues.String;
-                    cellO5.CellValue = new CellValue(sc9.ToString());
+                    cellO5.CellValue = new CellValue($"{sc9}");
                     dataRow.Append(cellO5);
 
-                    var score = await scoresController.GetScoreByDetail(user.Id, 12, year);
 
-                    Cell cellQ5 = new Cell()
+                    var score = scoresController.GetScoreByDetail(user.Id, 12, year);
+                    if (score == null)
                     {
-                        CellReference = $"Q{i}",
-                        DataType = CellValues.Number,
-                        CellValue = new CellValue(score.FinalScore.ToString())
-                    };
+                        score = scoresController.GetScoreByDetail(user.Id, 11, year);
+                        if (score == null)
+                        {
+                            score = scoresController.GetScoreByDetail(user.Id, 10, year);
+                            if (score == null)
+                            {
+                                score = scoresController.GetScoreByDetail(user.Id, 9, year);
+                                if (score == null)
+                                {
+                                    score = scoresController.GetScoreByDetail(user.Id, 8, year);
+                                    if (score == null)
+                                    {
+                                        score = scoresController.GetScoreByDetail(user.Id, 7, year);
+                                        if (score == null)
+                                        {
+                                            score = scoresController.GetScoreByDetail(us.Id, 6, year);
+                                            if (score == null)
+                                            {
+                                                score = scoresController.GetScoreByDetail(us.Id, 5, year);
+                                                if (score == null)
+                                                {
+                                                    score = scoresController.GetScoreByDetail(us.Id, 4, year);
+                                                    if (score == null)
+                                                    {
+                                                        score = scoresController.GetScoreByDetail(user.Id, 3, year);
+                                                        if (score == null)
+                                                        {
+                                                            score = scoresController.GetScoreByDetail(user.Id, 2, year);
+                                                            if (score == null)
+                                                                score = scoresController.GetScoreByDetail(user.Id, 1, year);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    Cell cellQ5 = new Cell();
+                    cellQ5.CellReference = $"Q{i}";
+                    cellQ5.DataType = CellValues.String;
+                    if (score == null)
+                    {
+                        cellQ5.CellValue = new CellValue($"{0}");
+                    }
+                    else
+                    {
+                        cellQ5.CellValue = new CellValue($"{score.FinalScore}");
+                    }
                     dataRow.Append(cellQ5);
                 }
 
